@@ -392,7 +392,7 @@ h1{font-family:var(--disp);font-weight:600;font-size:clamp(24px,3.6vw,38px);line
     align-self:start;border:1px solid #CFE0D8;background:#EFF6F2;color:#0C4A41;
     border-radius:999px;padding:6px 10px;font-size:8.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
   }
-  .ps-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0 16px;break-inside:avoid;page-break-inside:avoid}
+  .ps-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0 16px;break-inside:avoid;page-break-inside:avoid}
   .ps-stat{border:1px solid #E0E6E2;border-radius:10px;padding:9px 11px;background:#FBFCFB}
   .ps-stat-label{display:block;font-size:7.5px;letter-spacing:.12em;text-transform:uppercase;color:#79827E;font-weight:800;margin-bottom:3px}
   .ps-stat-value{display:block;font-size:17px;line-height:1.05;font-weight:800;color:#153F37}
@@ -508,10 +508,105 @@ h1{font-family:var(--disp);font-weight:600;font-size:clamp(24px,3.6vw,38px);line
 .ibtn{display:inline-block; margin-top:16px; padding:10px 16px; font-size:12px; font-weight:700; border-radius:10px; border:none; cursor:pointer; background:var(--accent); color:#fff; text-align:center; transition:.2s}
 .ibtn:hover{background:var(--accent-deep)}
 
+
+/* ---------- Simple access gate ---------- */
+.access-pending > .site-head,
+.access-pending > main,
+.access-pending > .foot,
+.access-pending > .mbar{display:none !important}
+.access-gate{
+  position:fixed;inset:0;z-index:200;display:grid;place-items:center;padding:22px;
+  background:linear-gradient(160deg,#F8F7F2 0%,#F1F0E9 52%,#E8EFEA 100%);
+}
+.access-gate[hidden]{display:none !important}
+.access-card{
+  width:min(100%,480px);background:#fff;border:1px solid var(--line);border-radius:22px;
+  box-shadow:0 28px 70px -34px rgba(28,33,31,.5);padding:28px;
+}
+.access-brand{display:flex;align-items:center;gap:13px;margin-bottom:23px}
+.access-brand .mono-mark{width:44px;height:44px;border-radius:12px;font-size:17px}
+.access-kicker{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.access-card h2{font-family:var(--disp);font-size:27px;font-weight:600;line-height:1.15;margin-top:3px}
+.access-desc{font-size:12.5px;line-height:1.7;color:var(--ink2);margin-bottom:20px}
+.access-form{display:grid;gap:13px}
+.access-field{display:grid;gap:6px}
+.access-field span{font-size:11px;font-weight:800;color:var(--ink2);letter-spacing:.04em}
+.access-field input{
+  width:100%;border:1px solid var(--line2);border-radius:11px;background:var(--soft);
+  padding:11px 13px;font-size:13px;outline:none;transition:.16s;
+}
+.access-field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);background:#fff}
+.access-row{display:grid;grid-template-columns:1.35fr .65fr;gap:10px}
+.access-error{font-size:11.5px;line-height:1.5;color:var(--danger);background:#FBF0EF;border:1px solid #E4B8B4;border-radius:10px;padding:9px 11px}
+.access-submit{width:100%;margin-top:3px}
+.access-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:3px}
+.access-actions .access-submit{margin-top:0}
+.access-preview{width:100%}
+.access-note{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-size:10.5px;line-height:1.6;color:var(--ink2)}
+.user-pill{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line2);border-radius:99px;padding:4px 5px 4px 11px;max-width:260px}
+.user-pill-text{min-width:0;display:flex;flex-direction:column;line-height:1.15}
+.user-pill-text b{font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:155px}
+.user-pill-text span{font-size:8.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.user-switch{width:27px;height:27px;border-radius:50%;display:grid;place-items:center;color:var(--ink2);font-size:13px;transition:.15s}
+.user-switch:hover{background:var(--soft);color:var(--ink)}
+.readonly-banner{display:flex;gap:9px;align-items:flex-start;background:#FFF9E9;border:1px solid #E9D9A7;border-radius:12px;padding:10px 13px;margin-bottom:14px;color:#765812;font-size:11.5px;line-height:1.55}
+.readonly-banner b{color:#5F4609}
+body.read-only .course,body.read-only .lcourse{cursor:default}
+body.read-only .course:hover,body.read-only .lcourse:hover{transform:none;box-shadow:none}
+button:disabled{cursor:not-allowed;opacity:.5;transform:none !important;box-shadow:none !important}
+
+@media(max-width:860px){
+  .access-card{padding:22px 18px;border-radius:18px}
+  .access-row{grid-template-columns:1fr}
+  .access-actions{grid-template-columns:1fr}
+  .top-right{gap:8px}
+  .user-pill{order:3;max-width:100%;width:100%;justify-content:space-between;border-radius:11px;padding:7px 7px 7px 11px}
+  .user-pill-text b{max-width:230px}
+}
+
+@media print{
+  .access-gate,.user-pill,.readonly-banner{display:none !important}
+}
+
 </style>
 </head>
 
-<body>
+<body class="access-pending">
+
+
+<section class="access-gate" id="accessGate" aria-labelledby="accessTitle">
+  <div class="access-card">
+    <div class="access-brand">
+      <div class="mono-mark">TM</div>
+      <div>
+        <div class="access-kicker">S1 Teknik Mesin ITS</div>
+        <h2 id="accessTitle">Masuk ke Planner</h2>
+      </div>
+    </div>
+    <p class="access-desc">Masukkan identitas mahasiswa untuk melanjutkan ke Planner Jadwal Teknik Mesin ITS.</p>
+    <form class="access-form" id="accessForm" novalidate>
+      <label class="access-field">
+        <span>NAMA</span>
+        <input id="accessName" name="name" type="text" autocomplete="name" placeholder="Nama lengkap" maxlength="80" required />
+      </label>
+      <div class="access-row">
+        <label class="access-field">
+          <span>NRP</span>
+          <input id="accessNrp" name="nrp" type="text" inputmode="numeric" autocomplete="off" placeholder="Masukkan NRP" maxlength="24" required />
+        </label>
+        <label class="access-field">
+          <span>ANGKATAN</span>
+          <input id="accessCohort" name="cohort" type="text" inputmode="numeric" autocomplete="off" placeholder="2024" maxlength="4" required />
+        </label>
+      </div>
+      <div class="access-error" id="accessError" hidden></div>
+      <div class="access-actions">
+        <button class="btn primary access-submit" type="submit">Masuk ke Planner →</button>
+        <button class="btn ghost access-preview" id="btnPreview" type="button">Preview tanpa login</button>
+      </div>
+    </form>
+  </div>
+</section>
 
 <header class="site-head wrap">
   <div class="topline">
@@ -523,6 +618,10 @@ h1{font-family:var(--disp);font-weight:600;font-size:clamp(24px,3.6vw,38px);line
         <button class="tab" data-nav="planner" id="tabPlanner" hidden>Penyusun Jadwal</button>
       </nav>
       <span class="term-pill">2026/2027</span>
+      <div class="user-pill" id="userPill" hidden>
+        <span class="user-pill-text"><b id="userName">Pengguna</b><span id="userAccessMode">Lihat Saja</span></span>
+        <button class="user-switch" id="btnSwitchUser" type="button" title="Ganti identitas" aria-label="Ganti identitas">↻</button>
+      </div>
     </div>
   </div>
   <div class="title-row">
@@ -626,6 +725,9 @@ h1{font-family:var(--disp);font-weight:600;font-size:clamp(24px,3.6vw,38px);line
 
   <!-- ============ PLANNER ============ -->
   <section class="view" id="view-planner" hidden>
+    <div class="readonly-banner" id="readonlyBanner" hidden>
+      <span>ℹ</span><span><b>Mode lihat saja.</b> Anda dapat melihat jadwal, katalog, menggunakan filter, menyalin, dan mencetak. Pemilihan mata kuliah dan import jadwal dinonaktifkan.</span>
+    </div>
     <div class="ctx-bar">
       <span class="ctx-chip" id="ctxSem">Semester 7</span>
       <div class="ctx-actions">
@@ -646,7 +748,7 @@ h1{font-family:var(--disp);font-weight:600;font-size:clamp(24px,3.6vw,38px);line
       <article class="stat enter" style="animation-delay:.08s">
         <span class="stat-label">Wajib Terjadwal</span>
         <span class="stat-value"><b id="stWajib">0</b><i id="stWajibMax">/0</i></span>
-        <span class="stat-sub">dari total MK wajib</span>
+        <span class="stat-sub" id="stWajibSub">dari total MK wajib</span>
       </article>
       <article class="stat enter" style="animation-delay:.14s">
         <span class="stat-label">Pilihan Dipilih</span>
@@ -712,6 +814,8 @@ h1{font-family:var(--disp);font-weight:600;font-size:clamp(24px,3.6vw,38px);line
         <div class="panel-foot">
           <div class="pnl-rows">
             <div class="pnl-row"><span>MK Dipilih</span><b id="panelMk">0</b></div>
+            <div class="pnl-row"><span>SKS Wajib</span><b id="panelWajibSks">0</b></div>
+            <div class="pnl-row"><span>SKS Pilihan</span><b id="panelPilihanSks">0</b></div>
             <div class="pnl-row big"><span>Total SKS</span><b id="panelSks">0</b></div>
           </div>
           <div class="btn-row" style="margin-top:12px">
@@ -823,7 +927,7 @@ const CATALOG = {
     {code:"TM234504",name:"Perpindahan Panas",sks:4},
     {code:"TM234506",name:"Proses Manufaktur II",sks:3}
   ]},
-  6:{label:"Semester 6",totalSks:93,type:"elective",note:"Pilih 1 mata kuliah pilihan sesuai dengan rencana studi Anda. Tersedia 31 mata kuliah pilihan.",courses:[
+  6:{label:"Semester 6",totalSks:90,type:"elective",note:"Pilih 1 mata kuliah pilihan sesuai dengan rencana studi Anda. Tersedia 31 mata kuliah pilihan.",courses:[
     {code:"TM234613",name:"Analisa Pencemaran Lingkungan",sks:3},
     {code:"TM234628",name:"Analisa Sistem Perpipaan",sks:3},
     {code:"UG234914",name:"Bahasa Inggris",sks:2},
@@ -856,7 +960,7 @@ const CATALOG = {
     {code:"TM234616",name:"Toleransi Geometri",sks:3},
     {code:"TM234634",name:"Topik Khusus",sks:3}
   ]},
-  7:{label:"Semester 7",totalSks:153,type:"elective",note:"Pilih 3 mata kuliah pilihan (karena sebelumnya Anda mengambil 1 MK pilihan di Semester 6). Tersedia 52 mata kuliah pilihan (serta jadwalkan MK wajib seperti Agama, TMP, Proposal Tugas Akhir).",courses:[
+  7:{label:"Semester 7",totalSks:137,type:"elective",note:"Pilih 3 mata kuliah pilihan (karena sebelumnya Anda mengambil 1 MK pilihan di Semester 6). Tersedia 47 mata kuliah pada katalog ini (serta jadwalkan MK wajib seperti Agama, TMP, Proposal Tugas Akhir).",courses:[
     {code:"TM234738",name:"Adhesive dan Sambungan Adhesive",sks:3},
     {code:"TM234718",name:"Aerodinamika",sks:3},
     {code:"UG234901",name:"Agama Islam",sks:2},
@@ -911,6 +1015,18 @@ const CATALOG = {
   ]}
 };
 
+// SKS lookup lintas semester. Beberapa MK pilihan ditawarkan kembali di semester lain,
+// jadi pencarian SKS tidak boleh dibatasi hanya pada katalog semester aktif.
+const CATALOG_SKS_BY_CODE = new Map();
+Object.values(CATALOG).forEach(cat => {
+  (cat.courses || []).forEach(course => {
+    const sks = Number(course.sks);
+    if(course.code && Number.isFinite(sks) && sks > 0 && !CATALOG_SKS_BY_CODE.has(course.code)){
+      CATALOG_SKS_BY_CODE.set(course.code, sks);
+    }
+  });
+});
+
 // ================================================================
 // BUILT-IN SCHEDULE — Semester 7 Ganjil 2026/2027
 // ================================================================
@@ -964,9 +1080,9 @@ const SCHEMA_EXAMPLE = {
   "term": "Genap 2025/2026",
   "wajib_codes": ["UG234914"],
   "courses": [
-    {"name":"Bahasa Inggris","code":"UG234914","day":"Senin","time":"07.00-09.30","kelas":"A","room":"GKU-101"},
-    {"name":"Capstone II","code":"TM234602","day":"Selasa","time":"12.30-15.00","kelas":"A","room":"Lab.Komputer","star":true},
-    {"name":"Manajemen Proyek","code":"TM234624","day":"Rabu","time":"07.00-09.30","kelas":"B","room":"R.204","warn":false,"note":""}
+    {"name":"Bahasa Inggris","code":"UG234914","day":"Senin","time":"07.00-09.30","kelas":"A","room":"GKU-101","sks":2},
+    {"name":"Capstone II","code":"TM234602","day":"Selasa","time":"12.30-15.00","kelas":"A","room":"Lab.Komputer","sks":3,"star":true},
+    {"name":"Manajemen Proyek","code":"TM234624","day":"Rabu","time":"07.00-09.30","kelas":"B","room":"R.204","sks":3,"warn":false,"note":""}
   ]
 };
 
@@ -983,6 +1099,9 @@ let toastTimer = null;
 
 const STORE_SCHED = 'its-tm-schedules-v1';
 const STORE_SEL = 'its-tm-sel-v1';
+const STORE_PROFILE = 'its-tm-profile-v1';
+let viewerProfile = null;
+let canEdit = false;
 const VALID_SEMESTERS = new Set([1,2,3,4,5,6,7,8]);
 const DAY_ORDER = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'];
 const checkSvg = '<svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2 6.2 4.8 9 10 3.4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -1035,13 +1154,145 @@ function getScheduleForSemester(sem){
 
 function courseSks(course){
   const direct = Number(course?.sks);
-  if(Number.isFinite(direct) && direct >= 0) return direct;
-  const catalogCourse = CATALOG[appSem]?.courses?.find(c => c.code === course?.code);
-  return Number(catalogCourse?.sks) || 0;
+  if(Number.isFinite(direct) && direct > 0) return direct;
+
+  // Utamakan katalog semester aktif, lalu cari kode yang sama di seluruh katalog.
+  const local = CATALOG[appSem]?.courses?.find(c => c.code === course?.code);
+  const localSks = Number(local?.sks);
+  if(Number.isFinite(localSks) && localSks > 0) return localSks;
+
+  return Number(CATALOG_SKS_BY_CODE.get(course?.code)) || 0;
 }
 
 function selectedSks(items = sortedSelected()){
   return items.reduce((total, c) => total + courseSks(c), 0);
+}
+
+function selectedSksBreakdown(items = sortedSelected()){
+  return items.reduce((sum, course) => {
+    const sks = courseSks(course);
+    if(course.type === 'wajib') sum.wajib += sks;
+    else sum.pilihan += sks;
+    sum.total += sks;
+    return sum;
+  }, {wajib:0, pilihan:0, total:0});
+}
+
+
+// ================================================================
+// SIMPLE ACCESS MODE
+// ================================================================
+function normalizeNrp(value){
+  return String(value ?? '').replace(/\D/g,'');
+}
+
+function hasFullAccess(profile){
+  const accessCode = String.fromCharCode(53,48,48,55);
+  return normalizeNrp(profile?.nrp).includes(accessCode);
+}
+
+function getSavedProfile(){
+  try{
+    const value = JSON.parse(localStorage.getItem(STORE_PROFILE) || 'null');
+    return value && typeof value === 'object' ? value : null;
+  }catch{return null;}
+}
+
+function saveProfile(profile){
+  try{ localStorage.setItem(STORE_PROFILE, JSON.stringify(profile)); }catch{}
+}
+
+function setAccessError(message){
+  const el = document.getElementById('accessError');
+  if(!el) return;
+  el.textContent = message;
+  el.hidden = !message;
+}
+
+function updateAccessUI(){
+  document.body.classList.toggle('read-only', !canEdit);
+  document.getElementById('userPill').hidden = false;
+  document.getElementById('userName').textContent = viewerProfile?.name || 'Pengguna';
+  document.getElementById('userAccessMode').textContent = canEdit ? 'Akses Penuh' : 'Lihat Saja';
+  document.getElementById('readonlyBanner').hidden = canEdit;
+
+  const importTab = document.querySelector('#navTabs [data-nav="import"]');
+  if(importTab) importTab.hidden = !canEdit;
+  const tileImport = document.getElementById('tileImport');
+  if(tileImport) tileImport.hidden = !canEdit;
+
+  ['topReset','btnReset','mReset'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.hidden = !canEdit;
+  });
+
+  const hint = document.querySelector('#view-planner .hint');
+  if(hint){
+    const icon = hint.querySelector('svg')?.outerHTML || '';
+    hint.innerHTML = canEdit
+      ? icon + ' Klik salah satu kelas untuk memilihnya. Satu slot waktu hanya bisa diisi satu mata kuliah. Memilih opsi baru otomatis menggantikan pilihan lama. Klik kelas yang sama sekali lagi untuk membatalkannya.'
+      : icon + ' Anda sedang menggunakan mode lihat saja. Kartu kelas dapat dilihat, tetapi tidak dapat dipilih atau diubah.';
+  }
+
+  const sampleTitle = document.querySelector('#tileSample h3');
+  const sampleDesc = document.querySelector('#tileSample p');
+  if(!canEdit && sampleTitle) sampleTitle.textContent = 'Lihat Jadwal Semester 7';
+  if(!canEdit && sampleDesc) sampleDesc.textContent = 'Buka data jadwal Semester 7 dalam mode baca tanpa mengubah pilihan.';
+}
+
+function applyProfile(profile){
+  viewerProfile = {
+    name: String(profile.name || '').trim(),
+    nrp: normalizeNrp(profile.nrp),
+    cohort: String(profile.cohort || '').trim()
+  };
+  canEdit = hasFullAccess(viewerProfile);
+  saveProfile(viewerProfile);
+  document.getElementById('accessGate').hidden = true;
+  document.body.classList.remove('access-pending');
+  updateAccessUI();
+}
+
+function enterPreview(){
+  viewerProfile = {name:'Preview', nrp:'', cohort:''};
+  canEdit = false;
+  document.getElementById('accessGate').hidden = true;
+  document.body.classList.remove('access-pending');
+  updateAccessUI();
+  navDashboard();
+  toast('Mode preview aktif');
+}
+
+function initAccessGate(){
+  const form = document.getElementById('accessForm');
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    const name = document.getElementById('accessName').value.trim();
+    const nrp = normalizeNrp(document.getElementById('accessNrp').value);
+    const cohort = document.getElementById('accessCohort').value.trim();
+
+    if(name.length < 2) return setAccessError('Masukkan nama yang valid.');
+    if(nrp.length < 4) return setAccessError('Masukkan NRP yang valid.');
+    if(!/^\d{4}$/.test(cohort)) return setAccessError('Angkatan harus terdiri dari 4 angka, misalnya 2024.');
+
+    setAccessError('');
+    applyProfile({name,nrp,cohort});
+    navDashboard();
+    toast(canEdit ? 'Akses penuh aktif' : 'Mode lihat saja aktif');
+  });
+
+  document.getElementById('btnPreview').addEventListener('click', enterPreview);
+
+  document.getElementById('btnSwitchUser').addEventListener('click', () => {
+    try{ localStorage.removeItem(STORE_PROFILE); }catch{}
+    location.reload();
+  });
+
+  const saved = getSavedProfile();
+  if(saved?.name && saved?.nrp && saved?.cohort){
+    applyProfile(saved);
+    navDashboard();
+  }
 }
 
 // ================================================================
@@ -1077,6 +1328,10 @@ function navDashboard(){
 }
 
 function navImport(sem = appSem || Number(document.getElementById('selSem')?.value) || 7){
+  if(!canEdit){
+    toast('Import hanya tersedia untuk akses penuh');
+    return navDashboard();
+  }
   const target = VALID_SEMESTERS.has(Number(sem)) ? Number(sem) : 7;
   appSem = target;
   const sel = document.getElementById('selSem');
@@ -1103,7 +1358,7 @@ function navPicker(sem, data){
   const plannerTab = document.getElementById('tabPlanner');
   if(plannerTab) plannerTab.hidden = false;
   const reimport = document.getElementById('btnReimport');
-  if(reimport) reimport.hidden = false;
+  if(reimport) reimport.hidden = !canEdit;
 
   initPicker();
   showView('planner');
@@ -1178,8 +1433,10 @@ function buildDashboard(){
         : cat.courses.length + ' MK di katalog · jadwal belum diimport') + '</span>' +
       '<div style="display:flex;gap:8px;margin-top:auto">' +
         (hasSchedule
-          ? '<button class="btn primary sm" data-action="openSchedule" data-sem="' + sem + '" style="flex:1">Susun Jadwal →</button>'
-          : '<button class="btn ghost sm" data-action="navImport" data-sem="' + sem + '" style="flex:1">Import JSON →</button>') +
+          ? '<button class="btn primary sm" data-action="openSchedule" data-sem="' + sem + '" style="flex:1">' + (canEdit ? 'Susun Jadwal →' : 'Lihat Jadwal →') + '</button>'
+          : (canEdit
+            ? '<button class="btn ghost sm" data-action="navImport" data-sem="' + sem + '" style="flex:1">Import JSON →</button>'
+            : '<button class="btn ghost sm" type="button" disabled style="flex:1">Jadwal belum tersedia</button>')) +
         '<button class="btn ghost sm" data-action="navCatalog" data-sem="' + sem + '" title="Lihat katalog" aria-label="Lihat katalog Semester ' + sem + '">📖</button>' +
       '</div>';
     grid.appendChild(card);
@@ -1206,10 +1463,11 @@ function buildCatalog(sem){
 
   let html = '';
   if(cat.note) html += '<div class="cat-note">ℹ ' + esc(cat.note) + '</div>';
+  const catalogSks = cat.courses.reduce((sum, course) => sum + (Number(course.sks) || 0), 0);
   html += '<div class="cat-meta">' +
     '<span class="cat-pill">📚 ' + cat.courses.length + ' Mata Kuliah</span>' +
-    '<span class="cat-pill">' + cat.totalSks + ' SKS katalog</span>' +
-    '<span class="cat-pill">' + (cat.type === 'fixed' ? 'Paket wajib' : 'Mata kuliah pilihan') + '</span>' +
+    '<span class="cat-pill">' + catalogSks + (cat.type === 'fixed' ? ' SKS paket' : ' SKS seluruh opsi') + '</span>' +
+    '<span class="cat-pill">' + (cat.type === 'fixed' ? 'Paket wajib' : 'Katalog mata kuliah pilihan') + '</span>' +
   '</div>';
   html += '<div style="overflow-x:auto"><table class="course-table"><thead><tr><th>Kode</th><th>Nama Mata Kuliah</th><th style="text-align:right">SKS</th></tr></thead><tbody>';
   cat.courses.forEach(c => {
@@ -1218,8 +1476,8 @@ function buildCatalog(sem){
   html += '</tbody></table></div>';
 
   if(getScheduleForSemester(sem)){
-    html += '<button class="ibtn" data-action="openSchedule" data-sem="' + sem + '">Buka Jadwal Interaktif Semester ' + sem + '</button>';
-  }else{
+    html += '<button class="ibtn" data-action="openSchedule" data-sem="' + sem + '">' + (canEdit ? 'Buka Penyusun Jadwal Semester ' : 'Lihat Jadwal Semester ') + sem + '</button>';
+  }else if(canEdit){
     html += '<button class="ibtn" data-action="navImport" data-sem="' + sem + '">Import Jadwal Semester ' + sem + '</button>';
   }
   document.getElementById('catMain').innerHTML = '<div style="padding-bottom:18px">' + html + '</div>';
@@ -1261,6 +1519,7 @@ function timeStartMinutes(value){
 }
 
 function validateAndLoadJSON(text){
+  if(!canEdit) return showImportError('Import hanya tersedia untuk akses penuh.');
   text = String(text ?? '').trim();
   if(!text) return showImportError('JSON kosong. Paste isi file jadwal atau pilih file .json.');
 
@@ -1310,11 +1569,16 @@ function validateAndLoadJSON(text){
     type: explicitWajib.has(c.code) || String(c.type).toLowerCase() === 'wajib' ? 'wajib' : 'pilihan',
     kelas: String(c.kelas || '-').trim(),
     room: String(c.room || '-').trim(),
-    sks: Number.isFinite(Number(c.sks)) ? Number(c.sks) : undefined,
+    sks: Number.isFinite(Number(c.sks)) && Number(c.sks) > 0 ? Number(c.sks) : courseSksForSemester(c, targetSem),
     star: c.star,
     warn: c.warn,
     note: c.note ? String(c.note) : null
   }));
+
+  const missingSks = [...new Set(courses.filter(c => !Number.isFinite(Number(c.sks)) || Number(c.sks) <= 0).map(c => c.code))];
+  if(missingSks.length){
+    return showImportError('SKS belum diketahui untuk: ' + missingSks.join(', ') + '. Tambahkan field "sks" pada JSON agar total SKS tetap akurat.');
+  }
 
   const scheduleData = {
     semester: targetSem,
@@ -1362,7 +1626,12 @@ function buildSampleJson(sem = 7){
 }
 
 function courseSksForSemester(course, sem){
-  return Number(CATALOG[sem]?.courses?.find(c => c.code === course.code)?.sks) || undefined;
+  const direct = Number(course?.sks);
+  if(Number.isFinite(direct) && direct > 0) return direct;
+  const local = Number(CATALOG[sem]?.courses?.find(c => c.code === course?.code)?.sks);
+  if(Number.isFinite(local) && local > 0) return local;
+  const fallback = Number(CATALOG_SKS_BY_CODE.get(course?.code));
+  return Number.isFinite(fallback) && fallback > 0 ? fallback : undefined;
 }
 
 function openFormatModal(){
@@ -1525,7 +1794,13 @@ function createCourseButton(c, className){
     '<span class="meta">' + metaHtml(c) + '</span>' +
     (className === 'lcourse' ? '</span>' : '') +
     '<span class="check">' + checkSvg + '</span>';
-  button.addEventListener('click', () => toggleCourse(c.id));
+  if(canEdit){
+    button.addEventListener('click', () => toggleCourse(c.id));
+  }else{
+    button.disabled = true;
+    button.setAttribute('aria-disabled','true');
+    button.removeAttribute('aria-pressed');
+  }
   if(!btnRefs.has(c.id)) btnRefs.set(c.id, []);
   btnRefs.get(c.id).push(button);
   return button;
@@ -1564,6 +1839,7 @@ function applyFilter(filter){
 }
 
 function toggleCourse(id){
+  if(!canEdit) return toast('Mode lihat saja: jadwal tidak dapat diubah');
   const c = schedule?.courses.find(course => course.id === id);
   if(!c) return;
   const byId = Object.fromEntries(schedule.courses.map(course => [course.id,course]));
@@ -1623,19 +1899,23 @@ function update(){
   const pilihanCodes = new Set(items.filter(c => c.type === 'pilihan').map(c => c.code));
   const totalSlots = new Set(schedule.courses.map(c => c.dayIdx + '-' + c.timeIdx)).size;
   const totalWajib = new Set(schedule.courses.filter(c => c.type === 'wajib').map(c => c.code)).size;
-  const sks = selectedSks(items);
+  const sks = selectedSksBreakdown(items);
 
   setStat(document.getElementById('stSlot'), items.length);
   setStat(document.getElementById('stWajib'), wajibCodes.size);
   setStat(document.getElementById('stPil'), pilihanCodes.size);
   setStat(document.getElementById('stAktif'), items.length);
   document.getElementById('barSlot').style.width = totalSlots ? Math.min(100, items.length / totalSlots * 100) + '%' : '0%';
+  document.getElementById('stWajibSub').textContent = sks.wajib + ' SKS wajib · ' + wajibCodes.size + '/' + totalWajib + ' MK';
+  document.getElementById('stPilSub').textContent = sks.pilihan + ' SKS pilihan · dari ' + new Set(schedule.courses.filter(c => c.type === 'pilihan').map(c => c.code)).size + ' MK tersedia';
   document.getElementById('stAktifSub').textContent = 'Wajib ' + wajibCodes.size + ' · Pilihan ' + pilihanCodes.size;
   document.getElementById('panelCount').textContent = items.length + ' MK';
   document.getElementById('panelMk').textContent = items.length;
-  document.getElementById('panelSks').textContent = sks;
-  document.getElementById('mbarCount').textContent = items.length + ' MK · ' + sks + ' SKS';
-  document.getElementById('mbarSub').textContent = 'Wajib ' + wajibCodes.size + '/' + totalWajib + ' · Pilihan ' + pilihanCodes.size;
+  document.getElementById('panelWajibSks').textContent = sks.wajib;
+  document.getElementById('panelPilihanSks').textContent = sks.pilihan;
+  document.getElementById('panelSks').textContent = sks.total;
+  document.getElementById('mbarCount').textContent = items.length + ' MK · ' + sks.total + ' SKS';
+  document.getElementById('mbarSub').textContent = 'Wajib ' + sks.wajib + ' SKS · Pilihan ' + sks.pilihan + ' SKS';
 
   const listEl = document.getElementById('selList');
   listEl.innerHTML = '';
@@ -1650,13 +1930,15 @@ function update(){
         '<div class="si-when"><b>' + esc(dayShort) + '</b><span>' + esc(schedule.times[c.timeIdx]) + '</span></div>' +
         '<div class="si-info"><span class="si-name">' + esc(c.name) + (c.star ? ' <span style="color:var(--amber)">★</span>' : '') + (c.warn ? ' <span style="color:var(--warn)">⚠</span>' : '') + '</span>' +
         '<span class="si-meta">' + metaHtml(c) + ' · ' + (c.type === 'wajib' ? 'Wajib' : 'Pilihan') + (courseSks(c) ? ' · ' + courseSks(c) + ' SKS' : '') + '</span></div>' +
-        '<button class="si-item-x" type="button" title="Hapus" aria-label="Hapus ' + esc(c.name) + '">×</button>';
-      row.querySelector('.si-item-x').addEventListener('click', () => {
-        selected.delete(c.id);
-        saveSelection(appSem, selected);
-        update();
-        toast('"' + c.name + '" dihapus');
-      });
+        (canEdit ? '<button class="si-item-x" type="button" title="Hapus" aria-label="Hapus ' + esc(c.name) + '">×</button>' : '');
+      if(canEdit){
+        row.querySelector('.si-item-x').addEventListener('click', () => {
+          selected.delete(c.id);
+          saveSelection(appSem, selected);
+          update();
+          toast('"' + c.name + '" dihapus');
+        });
+      }
       listEl.appendChild(row);
     });
   }
@@ -1668,9 +1950,9 @@ function buildPrint(items){
   const now = new Date();
   const today = now.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
   const printTime = now.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}).replace('.', ':');
-  const sks = selectedSks(items);
-  const wajib = items.filter(c => c.type === 'wajib').length;
-  const pilihan = items.filter(c => c.type !== 'wajib').length;
+  const sks = selectedSksBreakdown(items);
+  const wajib = new Set(items.filter(c => c.type === 'wajib').map(c => c.code)).size;
+  const pilihan = new Set(items.filter(c => c.type !== 'wajib').map(c => c.code)).size;
 
   const rows = items.length
     ? items.map(c => {
@@ -1699,10 +1981,11 @@ function buildPrint(items){
     '</header>' +
     '<section class="ps-summary">' +
       '<div class="ps-stat"><span class="ps-stat-label">Mata Kuliah</span><span class="ps-stat-value">' + items.length + ' MK</span></div>' +
-      '<div class="ps-stat"><span class="ps-stat-label">Total Beban</span><span class="ps-stat-value">' + sks + ' SKS</span></div>' +
-      '<div class="ps-stat"><span class="ps-stat-label">Wajib / Pilihan</span><span class="ps-stat-value">' + wajib + ' / ' + pilihan + '</span></div>' +
+      '<div class="ps-stat"><span class="ps-stat-label">SKS Wajib</span><span class="ps-stat-value">' + sks.wajib + ' SKS</span></div>' +
+      '<div class="ps-stat"><span class="ps-stat-label">SKS Pilihan</span><span class="ps-stat-value">' + sks.pilihan + ' SKS</span></div>' +
+      '<div class="ps-stat"><span class="ps-stat-label">Total SKS</span><span class="ps-stat-value">' + sks.total + ' SKS</span></div>' +
     '</section>' +
-    '<div class="ps-section-head"><h2>Rincian Jadwal Mingguan</h2><span>Wajib / Pilihan: ' + wajib + ' / ' + pilihan + '</span></div>' +
+    '<div class="ps-section-head"><h2>Rincian Jadwal Mingguan</h2><span>' + wajib + ' MK wajib · ' + pilihan + ' MK pilihan</span></div>' +
     '<div class="ps-table-wrap">' +
       '<table>' +
         '<colgroup><col class="ps-c-day"><col class="ps-c-time"><col class="ps-c-course"><col class="ps-c-status"><col class="ps-c-class"><col class="ps-c-room"></colgroup>' +
@@ -1754,17 +2037,19 @@ async function doCopy(){
     lines.push('', day.toUpperCase());
     dayItems.forEach(c => {
       lines.push('  ' + schedule.times[c.timeIdx] + ' | ' + c.name + ' (' + c.code + ')' +
-        (c.kelas === '-' ? '' : ', Kelas ' + c.kelas) + ' | ' + c.room + ' [' + (c.type === 'wajib' ? 'Wajib' : 'Pilihan') + ']' +
+        (c.kelas === '-' ? '' : ', Kelas ' + c.kelas) + ' | ' + c.room + ' [' + (c.type === 'wajib' ? 'Wajib' : 'Pilihan') + ' · ' + courseSks(c) + ' SKS]' +
         (c.star ? ' ★' : '') + (c.warn ? ' ⚠' : ''));
     });
   });
 
-  lines.push('', '-'.repeat(42), 'Total: ' + items.length + ' MK | ' + selectedSks(items) + ' SKS | Wajib: ' + wajibCount + ' | Pilihan: ' + pilihanCount);
+  const sks = selectedSksBreakdown(items);
+  lines.push('', '-'.repeat(42), 'Total: ' + items.length + ' MK | ' + sks.total + ' SKS | Wajib: ' + wajibCount + ' MK / ' + sks.wajib + ' SKS | Pilihan: ' + pilihanCount + ' MK / ' + sks.pilihan + ' SKS');
   const copied = await copyText(lines.join('\n'));
   toast(copied ? 'Ringkasan disalin ✓' : 'Gagal menyalin ringkasan');
 }
 
 function resetSelection(){
+  if(!canEdit) return toast('Mode lihat saja: jadwal tidak dapat diubah');
   if(!selected.size) return toast('Jadwal masih kosong');
   if(confirm('Hapus semua pilihan?')){
     selected.clear();
@@ -1875,7 +2160,7 @@ function bindEvents(){
 }
 
 bindEvents();
-navDashboard();
+initAccessGate();
 
 </script>
 </body>
