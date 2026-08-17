@@ -1,0 +1,1882 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Planner Jadwal — S1 Teknik Mesin ITS</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/plus-jakarta-sans@5/latin-400.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/plus-jakarta-sans@5/latin-500.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/plus-jakarta-sans@5/latin-600.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/plus-jakarta-sans@5/latin-700.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/plus-jakarta-sans@5/latin-800.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/fraunces@5/latin-600.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/fraunces@5/latin-700.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5/latin-400.css" />
+<style>
+:root{
+  --paper:#F4F3EE; --surface:#FFFFFF; --soft:#FBFAF6;
+  --ink:#1C211F; --ink2:#6C7269; --line:#E5E2D8; --line2:#D9D5C7;
+  --accent:#12695C; --accent-deep:#0C4A41; --accent-soft:#E9F2EE; --accent-line:#CFE0D8;
+  --amber:#9A6700; --amber-soft:#F7EFD6;
+  --warn:#B4530F; --warn-soft:#F9E9D8;
+  --danger:#B3261E;
+  --shadow:0 14px 34px -22px rgba(28,33,31,.35);
+  --disp:'Fraunces',Georgia,serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none !important}
+body{
+  font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;
+  background:linear-gradient(180deg,#F8F7F2,var(--paper) 380px);
+  color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;touch-action:manipulation}
+input,select,textarea{font:inherit;color:inherit}
+.wrap{max-width:1240px;margin:0 auto;padding:0 22px}
+
+/* ---------- Header ---------- */
+.site-head{padding-top:26px}
+.topline{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  padding-bottom:14px;border-bottom:1px solid var(--line);
+}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink2)}
+.top-right{display:flex;align-items:center;gap:10px}
+.term-pill{
+  font-size:11px;font-weight:700;letter-spacing:.1em;
+  border:1px solid var(--line2);border-radius:99px;padding:6px 14px;color:var(--ink2);background:#fff;white-space:nowrap;
+}
+.tabs{display:flex;gap:4px;background:#ECEAE1;padding:4px;border-radius:12px}
+.tab{padding:7px 14px;border-radius:9px;font-size:12px;font-weight:700;color:var(--ink2);transition:.18s;white-space:nowrap}
+.tab:hover{color:var(--ink)}
+.tab.active{background:#fff;color:var(--ink);box-shadow:0 2px 8px -4px rgba(28,33,31,.35)}
+.title-row{display:flex;align-items:center;gap:16px;padding:24px 0 4px}
+.mono-mark{
+  width:48px;height:48px;border-radius:13px;flex:none;
+  background:linear-gradient(150deg,#156055,#0B423A);color:#F3F1E7;
+  font-family:var(--disp);font-weight:700;font-size:19px;letter-spacing:.02em;
+  display:grid;place-items:center;box-shadow:var(--shadow);
+}
+h1{font-family:var(--disp);font-weight:600;font-size:clamp(24px,3.6vw,38px);line-height:1.08;letter-spacing:-.01em}
+.subtitle{margin-top:5px;font-size:13.5px;color:var(--ink2);font-weight:500}
+
+/* ---------- Generic ---------- */
+.view{padding-top:24px;padding-bottom:40px}
+@keyframes rise{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+.view-enter{animation:rise .4s both}
+.enter{animation:rise .5s both}
+.sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:0 0 14px}
+.sec-head h2{font-family:var(--disp);font-weight:600;font-size:22px}
+.sec-head span{font-size:11.5px;color:var(--ink2);font-weight:600;text-align:right}
+
+.btn{
+  padding:11px 16px;border-radius:11px;font-size:12.5px;font-weight:800;text-align:center;
+  transition:.18s;border:1px solid transparent;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;gap:6px;
+}
+.btn.primary{background:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent-deep);transform:translateY(-1px);box-shadow:0 8px 18px -10px rgba(18,105,92,.7)}
+.btn.ghost{background:#fff;border-color:var(--line2)}
+.btn.ghost:hover{border-color:#A9A593;transform:translateY(-1px)}
+.btn.danger{background:#fff;border-color:var(--line2);color:var(--danger)}
+.btn.danger:hover{background:#FBF0EF;border-color:#E4B8B4;transform:translateY(-1px)}
+.btn.sm{padding:8px 13px;font-size:12px;border-radius:10px}
+.btn:focus-visible,.chip:focus-visible,.tab:focus-visible,.sem-card:focus-visible,.tile:focus-visible,.vt:focus-visible,.si-x:focus-visible,.mbtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ---------- Dashboard ---------- */
+.quick-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
+.tile{
+  display:flex;gap:14px;align-items:flex-start;text-align:left;
+  background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 17px;
+  transition:transform .2s ease, box-shadow .2s ease, border-color .2s;
+}
+.tile:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:#C9C5B6}
+.tile-ic{width:40px;height:40px;border-radius:11px;background:var(--accent-soft);color:var(--accent-deep);display:grid;place-items:center;flex:none}
+.tile h3{font-size:14px;font-weight:800}
+.tile p{font-size:11.5px;color:var(--ink2);margin-top:3px;line-height:1.55;font-weight:500}
+.tile.dark{background:linear-gradient(155deg,#14584E,#0B3F37);border-color:#0B3F37;color:#F3F7F4}
+.tile.dark:hover{box-shadow:0 16px 34px -20px rgba(11,63,55,.8)}
+.tile.dark p{color:rgba(243,247,244,.72)}
+.tile.dark .tile-ic{background:rgba(255,255,255,.13);color:#fff}
+
+.sem-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.sem-card{
+  position:relative;background:var(--surface);border:1px solid var(--line);border-radius:14px;
+  padding:18px 16px 15px;display:flex;flex-direction:column;gap:7px;text-align:left;
+  transition:transform .2s ease, box-shadow .2s ease, border-color .2s;
+}
+.sem-card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:#C9C5B6}
+.sem-badge{position:absolute;top:13px;right:13px;font-size:8.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;padding:3.5px 9px;border-radius:99px}
+.sem-badge.on{background:var(--accent-soft);color:var(--accent-deep)}
+.sem-badge.off{background:#EFEDE4;color:#8A8574}
+.sem-num{font-family:var(--disp);font-size:31px;font-weight:700;line-height:1;color:#B9B4A2}
+.sem-card.has-data .sem-num{color:var(--accent-deep)}
+.sem-name{font-size:12.5px;font-weight:800}
+.sem-status{font-size:11px;color:var(--ink2);font-weight:500;line-height:1.45}
+.sem-cta{margin-top:auto;padding-top:8px;font-size:11.5px;font-weight:800;color:var(--accent);display:flex;align-items:center;gap:5px}
+.sem-card.has-data .sem-cta{color:var(--accent)}
+.sem-card:not(.has-data) .sem-cta{color:var(--ink2)}
+
+/* ---------- Import ---------- */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:15px 16px;display:flex;flex-direction:column;gap:8px}
+.step-num{width:27px;height:27px;border-radius:50%;background:var(--accent);color:#fff;font-size:12.5px;font-weight:800;display:grid;place-items:center;flex:none}
+.step h3{font-size:13px;font-weight:800}
+.step p{font-size:11.5px;color:var(--ink2);line-height:1.6;font-weight:500}
+.import-board{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:14px;box-shadow:var(--shadow)}
+.import-target{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:700;color:var(--ink2)}
+.import-target select{font-size:12.5px;font-weight:700;padding:8px 12px;border:1px solid var(--line2);border-radius:10px;background:#fff;cursor:pointer}
+.dropzone{
+  border:1.8px dashed var(--line2);border-radius:14px;padding:30px 16px;text-align:center;
+  cursor:pointer;transition:.2s;background:var(--soft);
+}
+.dropzone:hover,.dropzone.drag{border-color:var(--accent);background:var(--accent-soft)}
+.dropzone svg{color:var(--accent);margin-bottom:9px}
+.dz-title{font-size:13.5px;font-weight:800}
+.dz-sub{font-size:11.5px;color:var(--ink2);margin-top:3px;font-weight:500}
+.or-line{display:flex;align-items:center;gap:12px;font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2)}
+.or-line::before,.or-line::after{content:'';flex:1;height:1px;background:var(--line)}
+#jsonInput{
+  width:100%;min-height:150px;resize:vertical;border:1px solid var(--line2);border-radius:12px;
+  padding:12px 14px;font-family:var(--mono);font-size:11.5px;line-height:1.65;background:var(--soft);
+}
+#jsonInput:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:transparent}
+.import-error{background:#FBF0EF;border:1px solid #E4B8B4;color:var(--danger);border-radius:11px;padding:10px 14px;font-size:12px;font-weight:600;line-height:1.55}
+.import-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ---------- Modal ---------- */
+.modal{position:fixed;inset:0;z-index:70;background:rgba(23,28,26,.5);display:grid;place-items:center;padding:20px;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+.modal-card{background:#fff;border-radius:16px;max-width:560px;width:100%;max-height:84vh;display:flex;flex-direction:column;box-shadow:0 30px 60px -30px rgba(0,0,0,.55);animation:rise .25s both}
+.modal-head{display:flex;justify-content:space-between;align-items:center;padding:15px 18px;border-bottom:1px solid var(--line)}
+.modal-head h3{font-family:var(--disp);font-size:18px;font-weight:600}
+.modal-card pre{
+  margin:16px 18px;overflow:auto;background:#14201D;color:#DCE7E2;border-radius:12px;
+  padding:14px 16px;font-family:var(--mono);font-size:11px;line-height:1.7;flex:1;min-height:0;
+}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px;padding:0 18px 18px}
+.si-x{
+  width:28px;height:28px;border-radius:50%;flex:none;display:grid;place-items:center;
+  color:var(--ink2);font-size:17px;line-height:1;transition:.15s;
+}
+.si-x:hover{background:#F3F0E6;color:var(--ink)}
+
+/* ---------- Planner: stats ---------- */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:0 0 16px}
+.stat{
+  background:var(--surface);border:1px solid var(--line);border-radius:14px;
+  padding:14px 16px 15px;display:flex;flex-direction:column;gap:6px;
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.stat:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.stat-label{font-size:10.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--ink2)}
+.stat-value{font-size:27px;font-weight:800;line-height:1;display:flex;align-items:baseline;gap:2px}
+.stat-value i{font-style:normal;font-size:14px;font-weight:600;color:var(--ink2)}
+.stat-sub{font-size:11px;color:var(--ink2);font-weight:500}
+.bar{height:5px;border-radius:99px;background:#ECE9DF;overflow:hidden;margin-top:2px}
+.bar-fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,var(--accent),#2E9384);transition:width .45s cubic-bezier(.3,.9,.3,1)}
+.stat.dark{background:linear-gradient(155deg,#14584E,#0B3F37);border-color:#0B3F37;color:#F3F7F4}
+.stat.dark .stat-label,.stat.dark .stat-sub{color:rgba(243,247,244,.72)}
+.stat-value b{display:inline-block}
+@keyframes pop{40%{transform:scale(1.22)}}
+.pop{animation:pop .35s ease}
+
+.ctx-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.ctx-chip{font-size:11.5px;font-weight:800;background:var(--accent-soft);color:var(--accent-deep);padding:8px 15px;border-radius:99px;border:1px solid var(--accent-line)}
+.ctx-actions{display:flex;gap:8px}
+
+/* ---------- Toolbar ---------- */
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin:0 0 12px}
+.chips{display:flex;gap:8px}
+.chip{
+  padding:7px 16px;border-radius:99px;border:1px solid var(--line2);background:#fff;
+  font-size:12.5px;font-weight:700;color:var(--ink2);transition:.18s;white-space:nowrap;
+}
+.chip:hover{border-color:#A9A593;color:var(--ink)}
+.chip.active{background:var(--ink);border-color:var(--ink);color:#fff}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:var(--ink2);font-weight:500}
+.lg{display:inline-flex;align-items:center;gap:6px}
+.dot{width:9px;height:9px;border-radius:3px;display:inline-block;flex:none}
+.dot.w{background:var(--accent)}
+.dot.p{background:#fff;border:1.5px solid var(--line2)}
+.lg .st{color:var(--amber)}
+.lg .wn{color:var(--warn)}
+.hint{
+  display:flex;gap:9px;align-items:flex-start;font-size:12px;color:var(--ink2);
+  background:#fff;border:1px dashed var(--line2);border-radius:12px;
+  padding:10px 14px;margin-bottom:16px;line-height:1.55;
+}
+.hint svg{flex:none;margin-top:2px;color:var(--accent)}
+
+/* ---------- Board ---------- */
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:18px;align-items:start}
+.board{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+.board-top{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:13px 18px;border-bottom:1px solid var(--line)}
+.board-top h2{font-family:var(--disp);font-weight:600;font-size:19px}
+.board-tools{display:flex;align-items:center;gap:12px}
+.board-tools > span{font-size:11.5px;color:var(--ink2);font-weight:600;white-space:nowrap}
+.vt-group{display:flex;border:1px solid var(--line2);border-radius:9px;overflow:hidden}
+.vt{width:32px;height:30px;display:grid;place-items:center;color:var(--ink2);background:#fff;transition:.15s}
+.vt + .vt{border-left:1px solid var(--line2)}
+.vt.active{background:var(--ink);color:#fff}
+.vt svg{display:block}
+
+.board-viewport{position:relative}
+.board-viewport::after{
+  content:'';position:absolute;top:0;right:0;bottom:9px;width:30px;pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.92));
+  opacity:0;transition:opacity .3s;
+}
+.board-viewport.can-scroll::after{opacity:1}
+.board-viewport.can-scroll.at-end::after{opacity:0}
+.board-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.board-scroll::-webkit-scrollbar{height:9px}
+.board-scroll::-webkit-scrollbar-thumb{background:var(--line2);border-radius:99px}
+.grid{display:grid}
+.g-head{
+  padding:11px 12px;font-size:12.5px;font-weight:800;letter-spacing:.05em;
+  border-bottom:1px solid var(--line);background:var(--soft);text-transform:uppercase;
+}
+.g-head:not(.g-corner){border-left:1px solid var(--line)}
+.g-corner{font-size:10px;font-weight:700;letter-spacing:.14em;color:var(--ink2);display:flex;align-items:center}
+.g-time{
+  padding:10px 12px;border-bottom:1px solid var(--line);background:var(--soft);
+  display:flex;flex-direction:column;gap:1px;justify-content:center;
+  position:sticky;left:0;z-index:2;
+}
+.g-time b{font-size:11.5px;font-weight:800;font-variant-numeric:tabular-nums}
+.g-time span{font-size:10px;color:var(--ink2);font-variant-numeric:tabular-nums}
+.g-cell{border-left:1px solid var(--line);border-bottom:1px solid var(--line);padding:8px;display:flex;flex-direction:column;gap:7px;min-height:98px}
+
+/* course cards */
+.course,.lcourse{user-select:none}
+.course{
+  position:relative;display:flex;flex-direction:column;gap:3px;width:100%;text-align:left;
+  background:#fff;border:1px solid var(--line);border-radius:11px;padding:8px 10px 9px;
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s, background .18s, opacity .25s;
+}
+.course:hover{transform:translateY(-2px);box-shadow:0 10px 22px -14px rgba(28,33,31,.4);border-color:#C9C5B6}
+.course.wajib,.lcourse.wajib{background:#F2F7F4;border-color:var(--accent-line)}
+.course.sel{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),0 12px 24px -16px rgba(18,105,92,.55)}
+.course.sel.wajib,.lcourse.sel.wajib{background:#E5F0EA}
+.badges{display:flex;gap:4px;align-items:center;margin-bottom:1px;flex-wrap:wrap}
+.b{font-size:8.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;padding:2.5px 7px;border-radius:99px;line-height:1.2}
+.b.w{background:var(--accent);color:#fff}
+.b.p{background:#EFEDE4;color:#6F6A58}
+.b.star{background:var(--amber-soft);color:var(--amber)}
+.b.warnb{background:var(--warn-soft);color:var(--warn)}
+.b.note{background:#EEF1F0;color:var(--ink2);text-transform:none;letter-spacing:0;font-weight:700}
+.course .meta,.lcourse .meta{overflow-wrap:anywhere}
+.course .name,.lcourse .name{font-size:12.5px;font-weight:700;line-height:1.3;padding-right:20px}
+.course .meta,.lcourse .meta{font-size:10.5px;color:var(--ink2);font-weight:500;letter-spacing:.01em}
+.check{
+  position:absolute;top:7px;right:7px;width:18px;height:18px;border-radius:50%;flex:none;
+  background:var(--accent);color:#fff;display:grid;place-items:center;
+  transform:scale(0);transition:transform .22s cubic-bezier(.5,1.7,.4,1);
+}
+.course.sel .check,.lcourse.sel .check{transform:scale(1)}
+
+.grid.f-wajib .course:not(.wajib),.lv.f-wajib .lcourse:not(.wajib),
+.grid.f-pilihan .course:not(.pilihan),.lv.f-pilihan .lcourse:not(.pilihan){opacity:.18;pointer-events:none;filter:grayscale(.5)}
+
+/* ---------- List view ---------- */
+.lv{padding:16px 18px 20px;display:flex;flex-direction:column;gap:18px}
+.lv-dayhead{
+  font-size:12px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--ink2);
+  display:flex;align-items:center;gap:10px;
+}
+.lv-dayhead::after{content:'';flex:1;height:1px;background:var(--line)}
+.lv-day{display:flex;flex-direction:column;gap:10px}
+.lv-slot{display:grid;grid-template-columns:82px minmax(0,1fr);gap:12px}
+.lv-time{display:flex;flex-direction:column;gap:1px;padding-top:4px}
+.lv-time b{font-size:12px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--accent-deep)}
+.lv-time span{font-size:10.5px;color:var(--ink2);font-variant-numeric:tabular-nums}
+.lv-opts{display:flex;flex-direction:column;gap:8px}
+.lcourse{
+  display:flex;align-items:center;gap:12px;width:100%;text-align:left;
+  background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px 13px;min-height:54px;
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s, background .18s, opacity .25s;
+}
+.lcourse:hover{transform:translateY(-1px);box-shadow:0 10px 22px -14px rgba(28,33,31,.4);border-color:#C9C5B6}
+.lcourse.sel{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.lc-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.lcourse .name{padding-right:0}
+.lcourse .check{position:static;width:22px;height:22px}
+
+/* ---------- Panel ---------- */
+.panel{
+  background:var(--surface);border:1px solid var(--line);border-radius:16px;
+  padding:18px;position:sticky;top:16px;display:flex;flex-direction:column;gap:13px;box-shadow:var(--shadow);
+}
+.panel-head{display:flex;justify-content:space-between;align-items:baseline}
+.panel-head h2{font-family:var(--disp);font-weight:600;font-size:20px}
+.count{font-size:11px;font-weight:800;background:var(--accent-soft);color:var(--accent-deep);border-radius:99px;padding:4px 11px}
+.sel-list{display:flex;flex-direction:column;gap:8px;max-height:400px;overflow:auto;padding-right:2px}
+.sel-list::-webkit-scrollbar{width:6px}
+.sel-list::-webkit-scrollbar-thumb{background:var(--line2);border-radius:99px}
+.sel-item{
+  display:flex;gap:11px;align-items:flex-start;background:#fff;
+  border:1px solid var(--line);border-radius:12px;padding:9px 10px;animation:rise .3s both;
+}
+.sel-item.wb{background:#F4F8F6;border-color:var(--accent-line)}
+.si-when{min-width:78px;flex:none;padding-top:1px}
+.si-when b{display:block;font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--accent)}
+.si-when span{font-size:10px;color:var(--ink2);font-variant-numeric:tabular-nums}
+.si-info{flex:1;min-width:0}
+.si-name{display:block;font-size:12.5px;font-weight:700;line-height:1.3}
+.si-meta{display:block;font-size:10.5px;color:var(--ink2);margin-top:2px;font-weight:500}
+.si-item-x{width:26px;height:26px;border-radius:50%;flex:none;display:grid;place-items:center;color:var(--ink2);font-size:16px;line-height:1;transition:.15s}
+.si-item-x:hover{background:#F6E9E7;color:var(--danger)}
+.empty{
+  border:1.5px dashed var(--line2);border-radius:12px;padding:26px 16px;text-align:center;
+  font-size:12px;color:var(--ink2);line-height:1.6;
+}
+.empty svg{display:block;margin:0 auto 10px;color:#B9B4A2}
+.pnl-rows{border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:9px}
+.pnl-row{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:var(--ink2);font-weight:600}
+.pnl-row b{font-size:14px;font-weight:800;color:var(--ink)}
+.pnl-row.big span{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.pnl-row.big b{font-family:var(--disp);font-size:24px;font-weight:700;color:var(--accent-deep)}
+.btn-row{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:8px}
+
+/* ---------- Mobile action bar ---------- */
+.mbar{
+  position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;
+  align-items:center;justify-content:space-between;gap:10px;
+  padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+  background:rgba(255,255,255,.93);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  border-top:1px solid var(--line);box-shadow:0 -10px 30px -22px rgba(28,33,31,.5);
+}
+.mbar-info{display:flex;flex-direction:column;line-height:1.25;min-width:0}
+.mbar-info b{font-size:13.5px;font-weight:800}
+.mbar-info span{font-size:11px;color:var(--ink2);font-weight:600;white-space:nowrap}
+.mbar-actions{display:flex;gap:7px;flex:none}
+.mbtn{padding:10px 14px;border-radius:10px;font-size:12.5px;font-weight:800;border:1px solid var(--line2);background:#fff;transition:.15s}
+.mbtn:active{transform:scale(.96)}
+.mbtn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.mbtn.danger{color:var(--danger)}
+
+/* ---------- Footer / toast ---------- */
+.foot{border-top:1px solid var(--line);padding:18px 22px 30px;font-size:11.5px;color:var(--ink2);line-height:1.6}
+.toast{
+  position:fixed;left:50%;bottom:22px;transform:translate(-50%,16px);z-index:80;
+  background:#14201D;color:#F2F5F3;padding:10px 18px;border-radius:99px;font-size:12.5px;font-weight:600;
+  opacity:0;pointer-events:none;transition:.28s ease;box-shadow:0 16px 34px -14px rgba(0,0,0,.5);
+  max-width:92vw;text-align:center;
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- Print ---------- */
+#printSheet{display:none}
+@page{size:A4 portrait;margin:14mm 13mm 13mm}
+@media print{
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+  html,body{background:#fff !important}
+  body > *:not(#printSheet){display:none !important}
+  body{padding:0 !important;margin:0 !important;min-height:auto !important}
+  #printSheet{
+    display:block;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#17201D;
+    width:100%;padding:0;background:#fff;font-size:10.5px;line-height:1.45;
+  }
+  .ps-header{
+    display:grid;grid-template-columns:auto 1fr auto;gap:13px;align-items:center;
+    padding-bottom:15px;border-bottom:1px solid #D9E1DD;
+  }
+  .ps-brand{
+    width:46px;height:46px;border-radius:12px;background:#12695C;color:#fff;
+    display:grid;place-items:center;font-family:var(--disp);font-size:18px;font-weight:700;
+  }
+  .ps-eyebrow{font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:#66716C;font-weight:800;margin:0 0 3px}
+  #printSheet h1{font-family:var(--disp);font-size:22px;line-height:1.12;font-weight:650;letter-spacing:-.01em;margin:0;color:#14201D}
+  .ps-sub{font-size:9.5px;color:#66716C;margin:4px 0 0;font-weight:500}
+  .ps-term{
+    align-self:start;border:1px solid #CFE0D8;background:#EFF6F2;color:#0C4A41;
+    border-radius:999px;padding:6px 10px;font-size:8.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+  }
+  .ps-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0 16px;break-inside:avoid;page-break-inside:avoid}
+  .ps-stat{border:1px solid #E0E6E2;border-radius:10px;padding:9px 11px;background:#FBFCFB}
+  .ps-stat-label{display:block;font-size:7.5px;letter-spacing:.12em;text-transform:uppercase;color:#79827E;font-weight:800;margin-bottom:3px}
+  .ps-stat-value{display:block;font-size:17px;line-height:1.05;font-weight:800;color:#153F37}
+  .ps-section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:0 0 7px}
+  .ps-section-head h2{font-family:var(--disp);font-size:14.5px;margin:0;font-weight:650;color:#17201D}
+  .ps-section-head span{font-size:8.5px;color:#7A837F;font-weight:600}
+  .ps-table-wrap{border:1px solid #DDE4E0;border-radius:11px;overflow:hidden}
+  #printSheet table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:9.2px}
+  #printSheet col.ps-c-day{width:11%}
+  #printSheet col.ps-c-time{width:15%}
+  #printSheet col.ps-c-course{width:34%}
+  #printSheet col.ps-c-status{width:12%}
+  #printSheet col.ps-c-class{width:10%}
+  #printSheet col.ps-c-room{width:18%}
+  #printSheet thead{display:table-header-group}
+  #printSheet th{
+    text-align:left;font-size:7.6px;letter-spacing:.11em;text-transform:uppercase;color:#5E6964;
+    background:#F3F6F4;border-bottom:1px solid #D9E1DD;padding:7px 8px;font-weight:800;
+  }
+  #printSheet td{border-bottom:1px solid #E7ECE9;padding:7px 8px;vertical-align:middle;color:#2A332F}
+  #printSheet tbody tr:last-child td{border-bottom:none}
+  #printSheet tbody tr:nth-child(even){background:#FCFDFC}
+  #printSheet tbody tr{break-inside:avoid;page-break-inside:avoid}
+  .ps-day{font-weight:800;color:#174F45}
+  .ps-time{font-variant-numeric:tabular-nums;font-weight:700;color:#46514C;white-space:nowrap}
+  .ps-course-name{display:block;font-size:9.7px;font-weight:750;color:#17201D;line-height:1.35}
+  .ps-course-code{display:block;margin-top:1px;font-family:var(--mono);font-size:7.8px;color:#7A837F}
+  .ps-tag{display:inline-block;font-size:7.3px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;border-radius:999px;padding:3px 6px;white-space:nowrap}
+  .ps-tag.wajib{background:#E9F2EE;color:#0C4A41;border:1px solid #CFE0D8}
+  .ps-tag.pilihan{background:#F3F1E9;color:#6F6A58;border:1px solid #E2DED0}
+  .ps-empty{text-align:center;padding:24px 12px !important;color:#7A837F !important}
+  .ps-footer{display:flex;justify-content:space-between;gap:12px;align-items:flex-end;margin-top:12px;padding-top:9px;border-top:1px solid #E2E7E4;color:#7A837F;font-size:7.8px}
+  .ps-footer strong{color:#46514C;font-weight:700}
+  .ps-footer-right{text-align:right}
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){
+  .layout{grid-template-columns:1fr}
+  .panel{position:static}
+}
+@media (max-width:860px){
+  .wrap{padding:0 16px}
+  body.planner-open{padding-bottom:calc(86px + env(safe-area-inset-bottom))}
+  .site-head{padding-top:18px}
+  .topline{flex-direction:column;align-items:flex-start;gap:10px;padding-bottom:12px}
+  .top-right{width:100%;justify-content:space-between;flex-wrap:wrap}
+  .eyebrow{font-size:10px;letter-spacing:.13em}
+  .term-pill{padding:5px 12px;font-size:10px}
+  .title-row{padding:18px 0 2px;gap:12px}
+  .mono-mark{width:40px;height:40px;font-size:16px;border-radius:11px}
+  .subtitle{font-size:12px}
+  .view{padding-top:18px}
+  .sec-head h2{font-size:19px}
+  .quick-row{grid-template-columns:1fr;margin-bottom:20px}
+  .sem-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .sem-card{padding:15px 14px 13px}
+  .sem-num{font-size:26px}
+  .steps{grid-template-columns:1fr;gap:10px}
+  .import-board{padding:15px;border-radius:14px}
+  .import-actions{display:grid;grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,1fr);gap:9px}
+  .stat{padding:12px 13px 13px;border-radius:12px;gap:5px}
+  .stat-label{font-size:9.5px}
+  .stat-value{font-size:22px}
+  .stat-sub{font-size:10px}
+  .toolbar{flex-direction:column;align-items:stretch;gap:10px;margin:0 0 10px}
+  .chips{width:100%;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{flex:none}
+  .legend{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;font-size:10.5px}
+  .hint{font-size:11px;padding:9px 12px;margin-bottom:13px;border-radius:10px}
+  .layout{gap:14px}
+  .board{border-radius:14px}
+  .board-top{padding:11px 13px}
+  .board-top h2{font-size:15.5px}
+  .board-tools > span{display:none}
+  .lv{padding:14px 13px 18px;gap:15px}
+  .lv-slot{grid-template-columns:66px minmax(0,1fr);gap:10px}
+  .lv-time b{font-size:11px}
+  .lv-time span{font-size:9.5px}
+  .lcourse{padding:10px 12px;min-height:52px;border-radius:11px}
+  .panel{padding:15px;border-radius:14px}
+  .panel-head h2{font-size:18px}
+  .sel-list{max-height:none}
+  .btn-row{grid-template-columns:1fr 1fr}
+  .btn-row .btn.primary{grid-column:1 / -1}
+  .mbar{display:flex}
+  .toast{bottom:calc(84px + env(safe-area-inset-bottom))}
+  .foot{padding:16px 16px 24px;font-size:11px}
+  .modal{padding:14px}
+}
+@media (min-width:861px){
+  .mbar{display:none}
+}
+@media (max-width:380px){
+  .stat-value{font-size:20px}
+  .mbtn{padding:9px 11px;font-size:12px}
+  .mbar-info span{font-size:10px}
+}
+
+/* ---------- Catalog Restored CSS ---------- */
+.cat-note{font-size:12px; background:#fff; border:1px dashed var(--line2); padding:10px 14px; border-radius:10px; margin-bottom:14px; line-height:1.5; color:var(--ink2)}
+.cat-meta{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px}
+.cat-pill{font-size:11px; font-weight:700; background:var(--surface); border:1px solid var(--line); padding:6px 12px; border-radius:99px; color:var(--ink2)}
+.course-table{width:100%; border-collapse:collapse; font-size:12px; text-align:left; background:#fff; border-radius:12px; overflow:hidden; border:1px solid var(--line)}
+.course-table th{padding:12px 14px; background:var(--soft); font-weight:800; border-bottom:1px solid var(--line); color:var(--ink)}
+.course-table td{padding:10px 14px; border-bottom:1px solid var(--line2); color:var(--ink2)}
+.course-table tr:last-child td{border-bottom:none}
+.ct-code{font-family:var(--mono); font-size:11px; font-weight:600; color:var(--accent)}
+.ct-sks{text-align:right; font-weight:700; color:var(--ink)}
+.ct-total{font-weight:800!important; background:var(--soft); color:var(--ink)!important}
+.ibtn{display:inline-block; margin-top:16px; padding:10px 16px; font-size:12px; font-weight:700; border-radius:10px; border:none; cursor:pointer; background:var(--accent); color:#fff; text-align:center; transition:.2s}
+.ibtn:hover{background:var(--accent-deep)}
+
+</style>
+</head>
+
+<body>
+
+<header class="site-head wrap">
+  <div class="topline">
+    <span class="eyebrow">Planner Jadwal · S1 Teknik Mesin ITS</span>
+    <div class="top-right">
+      <nav class="tabs" id="navTabs" aria-label="Navigasi utama">
+        <button class="tab active" data-nav="dashboard">Dashboard</button>
+        <button class="tab" data-nav="import">Import Jadwal</button>
+        <button class="tab" data-nav="planner" id="tabPlanner" hidden>Penyusun Jadwal</button>
+      </nav>
+      <span class="term-pill">2026/2027</span>
+    </div>
+  </div>
+  <div class="title-row">
+    <div class="mono-mark">TM</div>
+    <div>
+      <h1>Planner Jadwal Kuliah</h1>
+      <p class="subtitle">Pilih semester untuk melihat katalog mata kuliah atau menyusun jadwal</p>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ DASHBOARD ============ -->
+  <section class="view view-enter" id="view-dashboard">
+    <div class="quick-row">
+      <button class="tile" id="tileImport">
+        <span class="tile-ic">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 12.5V3.5M10 12.5 6.5 9M10 12.5 13.5 9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 13.5v1.7A1.8 1.8 0 0 0 4.8 17h10.4a1.8 1.8 0 0 0 1.8-1.8v-1.7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        </span>
+        <span>
+          <h3>Import Jadwal</h3>
+          <p>Upload file JSON jadwal untuk semester ini — dari export SiakNG atau file teman.</p>
+        </span>
+      </button>
+      <button class="tile dark" id="tileSample">
+        <span class="tile-ic">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 2.5 11.8 7.2 16.5 9l-4.7 1.8L10 15.5 8.2 10.8 3.5 9l4.7-1.8L10 2.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M15.8 13.5 16.5 15.3 18.3 16l-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7.7-1.8Z" fill="currentColor"/></svg>
+        </span>
+        <span>
+          <h3>Muat Contoh (Semester 7)</h3>
+          <p>Coba planner langsung dengan data contoh 14 kelas Semester 7 siap pakai.</p>
+        </span>
+      </button>
+    </div>
+
+    
+    <div class="sec-head">
+      <h2>Dashboard</h2>
+      <span id="dashInfo">Pilih semester</span>
+    </div>
+    <div class="stats" id="dashSummary" style="margin-bottom:24px; grid-template-columns: repeat(3, 1fr);"></div>
+
+    <div class="sem-grid" id="semGrid"></div>
+  </section>
+
+  <!-- ============ IMPORT ============ -->
+  <section class="view" id="view-import" hidden>
+    <div class="sec-head">
+      <h2 id="importTitle">Import Jadwal</h2>
+      <span id="importSub">Upload file JSON jadwal untuk semester ini</span>
+    </div>
+
+    <div class="steps">
+      <div class="step enter" style="animation-delay:.02s">
+        <span class="step-num">1</span>
+        <h3>Siapkan file JSON jadwal</h3>
+        <p>Export jadwal dari SiakNG atau minta file dari teman, sesuaikan dengan format di bawah ini. Setiap kelas yang tersedia ditulis sebagai satu entri terpisah.</p>
+      </div>
+      <div class="step enter" style="animation-delay:.08s">
+        <span class="step-num">2</span>
+        <h3>Upload atau paste JSON</h3>
+        <p>Drag &amp; drop file .json ke area di bawah, klik untuk pilih file, atau paste isi JSON langsung ke textarea.</p>
+      </div>
+      <div class="step enter" style="animation-delay:.14s">
+        <span class="step-num">3</span>
+        <h3>Susun jadwal Anda</h3>
+        <p>Setelah diimport, Anda bisa langsung memilih kelas yang diinginkan. Pilihan tersimpan otomatis.</p>
+      </div>
+    </div>
+
+    <div class="import-board enter" style="animation-delay:.18s">
+      <label class="import-target">
+        Semester tujuan
+        <select id="selSem">
+          <option>1</option><option>2</option><option>3</option><option>4</option>
+          <option>5</option><option>6</option><option selected>7</option><option>8</option>
+        </select>
+      </label>
+
+      <div class="dropzone" id="dropzone" role="button" tabindex="0" aria-label="Upload file JSON">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M12 15V4M12 15 8 11M12 15l4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 16.5v1.7A2.8 2.8 0 0 0 6.8 21h10.4a2.8 2.8 0 0 0 2.8-2.8v-1.7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        <div class="dz-title">Drag &amp; drop file .json ke sini</div>
+        <div class="dz-sub">atau klik untuk memilih file</div>
+        <input type="file" id="fileInput" accept=".json,application/json" hidden />
+      </div>
+
+      <div class="or-line">atau paste JSON di bawah</div>
+
+      <textarea id="jsonInput" spellcheck="false" placeholder='{ "semester": 7, "wajib_codes": ["TM234701"], "courses": [ { "name": "...", "code": "TM234701", "day": "Senin", "time": "07.00-08.40", "kelas": "A", "room": "C.101", "sks": 3 } ] }'></textarea>
+
+      <div class="import-error" id="importError" hidden></div>
+
+      <div class="import-actions">
+        <button class="btn primary" id="btnLoadJson">Muat Jadwal</button>
+        <button class="btn ghost" id="btnSample">Muat Contoh (Semester 7)</button>
+        <button class="btn ghost" id="btnFormat">Lihat Format JSON</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PLANNER ============ -->
+  <section class="view" id="view-planner" hidden>
+    <div class="ctx-bar">
+      <span class="ctx-chip" id="ctxSem">Semester 7</span>
+      <div class="ctx-actions">
+        <button class="btn ghost sm" id="btnBack">← Dashboard</button>
+        <button class="btn ghost sm" id="btnReimport" hidden>Import Ulang</button>
+        <button class="btn ghost sm" id="topCopy" title="Salin ringkasan">&#128203;</button>
+        <button class="btn ghost sm" id="topPrint" title="Print/PDF">&#128438;</button>
+        <button class="btn ghost sm" id="topReset" style="color:var(--danger)" title="Reset pilihan">&#10227;</button>
+      </div>
+    </div>
+
+    <div class="stats">
+      <article class="stat enter" style="animation-delay:.02s">
+        <span class="stat-label">Slot Terisi</span>
+        <span class="stat-value"><b id="stSlot">0</b><i id="stSlotMax">/0</i></span>
+        <span class="bar"><span class="bar-fill" id="barSlot"></span></span>
+      </article>
+      <article class="stat enter" style="animation-delay:.08s">
+        <span class="stat-label">Wajib Terjadwal</span>
+        <span class="stat-value"><b id="stWajib">0</b><i id="stWajibMax">/0</i></span>
+        <span class="stat-sub">dari total MK wajib</span>
+      </article>
+      <article class="stat enter" style="animation-delay:.14s">
+        <span class="stat-label">Pilihan Dipilih</span>
+        <span class="stat-value"><b id="stPil">0</b></span>
+        <span class="stat-sub" id="stPilSub">MK pilihan</span>
+      </article>
+      <article class="stat dark enter" style="animation-delay:.2s">
+        <span class="stat-label">MK Aktif</span>
+        <span class="stat-value"><b id="stAktif">0</b></span>
+        <span class="stat-sub" id="stAktifSub">Wajib 0 · Pilihan 0</span>
+      </article>
+    </div>
+
+    <div class="toolbar">
+      <div class="chips" id="chips">
+        <button class="chip active" data-f="all">Semua</button>
+        <button class="chip" data-f="wajib">Wajib</button>
+        <button class="chip" data-f="pilihan">Pilihan</button>
+      </div>
+      <div class="legend">
+        <span class="lg"><i class="dot w"></i>Wajib</span>
+        <span class="lg"><i class="dot p"></i>Pilihan</span>
+        <span class="lg"><span class="st">★</span>Relevan</span>
+        <span class="lg"><span class="wn">⚠</span>Cek Prodi</span>
+      </div>
+    </div>
+
+    <p class="hint">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M8 7v4M8 4.8v.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      Klik salah satu kelas untuk memilihnya. Satu slot waktu hanya bisa diisi satu mata kuliah — memilih opsi baru otomatis menggantikan pilihan lama. Klik kelas yang sama sekali lagi untuk membatalkannya.
+    </p>
+
+    <div class="layout">
+      <section class="board enter" style="animation-delay:.22s">
+        <div class="board-top">
+          <h2 id="boardTitle">Peta Slot Mingguan</h2>
+          <div class="board-tools">
+            <span id="boardInfo"></span>
+            <div class="vt-group" role="group" aria-label="Pilih tampilan">
+              <button class="vt active" data-view="grid" title="Tampilan grid mingguan" aria-label="Tampilan grid">
+                <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="1.5" y="1.5" width="5.4" height="5.4" rx="1.4" stroke="currentColor" stroke-width="1.5"/><rect x="9.1" y="1.5" width="5.4" height="5.4" rx="1.4" stroke="currentColor" stroke-width="1.5"/><rect x="1.5" y="9.1" width="5.4" height="5.4" rx="1.4" stroke="currentColor" stroke-width="1.5"/><rect x="9.1" y="9.1" width="5.4" height="5.4" rx="1.4" stroke="currentColor" stroke-width="1.5"/></svg>
+              </button>
+              <button class="vt" data-view="list" title="Tampilan daftar per hari" aria-label="Tampilan daftar">
+                <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M5.5 3.5h9M5.5 8h9M5.5 12.5h9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="1.9" cy="3.5" r="1.4" fill="currentColor"/><circle cx="1.9" cy="8" r="1.4" fill="currentColor"/><circle cx="1.9" cy="12.5" r="1.4" fill="currentColor"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="board-viewport" id="gridViewport">
+          <div class="board-scroll" id="boardScroll">
+            <div class="grid" id="gridView"></div>
+          </div>
+        </div>
+        <div class="lv" id="listView" hidden></div>
+      </section>
+
+      <aside class="panel enter" style="animation-delay:.28s">
+        <div class="panel-head">
+          <h2>Jadwal Saya</h2>
+          <span class="count" id="panelCount">0 MK</span>
+        </div>
+        <div class="sel-list" id="selList"></div>
+        <div class="panel-foot">
+          <div class="pnl-rows">
+            <div class="pnl-row"><span>MK Dipilih</span><b id="panelMk">0</b></div>
+            <div class="pnl-row big"><span>Total SKS</span><b id="panelSks">0</b></div>
+          </div>
+          <div class="btn-row" style="margin-top:12px">
+            <button class="btn primary" id="btnCopy">Salin Ringkasan</button>
+            <button class="btn ghost" id="btnPrint">Cetak</button>
+            <button class="btn danger" id="btnReset">Reset</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  Planner Jadwal S1 Teknik Mesin ITS · Data tersimpan otomatis di perangkat ini. Gunakan “Salin Ringkasan” untuk menyimpan atau membagikan hasil.
+</footer>
+
+<nav class="mbar" id="mbar" aria-label="Aksi cepat" hidden>
+  <div class="mbar-info">
+    <b id="mbarCount">0 MK</b>
+    <span id="mbarSub">0 dipilih</span>
+  </div>
+  <div class="mbar-actions">
+    <button class="mbtn primary" id="mCopy">Salin</button>
+    <button class="mbtn" id="mPrint">Cetak</button>
+    <button class="mbtn danger" id="mReset">Reset</button>
+  </div>
+</nav>
+
+<!-- Modal format JSON -->
+<div class="modal" id="modal" hidden>
+  <div class="modal-card">
+    <div class="modal-head">
+      <h3>Format JSON</h3>
+      <button class="si-x" id="modalClose" aria-label="Tutup">×</button>
+    </div>
+    <pre id="formatPre"></pre>
+    <div class="modal-actions">
+      <button class="btn ghost" id="btnCopyFormat">Salin Format</button>
+      <button class="btn primary" id="btnModalOk">Mengerti</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal Catalog -->
+<div class="modal" id="catalogModal" hidden style="z-index:90;">
+  <div class="modal-card" style="max-width: 860px; max-height: 90vh;">
+    <div class="modal-head" style="align-items:flex-start;">
+      <div>
+        <h3 id="catTitle" style="font-family:var(--disp); font-size:22px;">Katalog Semester</h3>
+        <p id="catSubtitle" style="font-size:12.5px; color:var(--ink2); margin-top:4px; font-weight:500;"></p>
+      </div>
+      <button class="si-x" id="catBack" aria-label="Tutup">×</button>
+    </div>
+    <div style="padding:18px; overflow-y:auto; flex:1; min-height:0; background:var(--soft);" id="catMain">
+      <div class="grid" id="catGrid" style="background:#fff; border:1px solid var(--line); border-radius:12px; overflow:hidden;"></div>
+    </div>
+  </div>
+</div>
+
+<div id="printSheet"></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script>
+// ================================================================
+// CATALOG DATA — S1 Teknik Mesin ITS
+// ================================================================
+const CATALOG = {
+  1:{label:"Semester 1",totalSks:17,type:"fixed",courses:[
+    {code:"SF234102",name:"Fisika Mekanika",sks:4},
+    {code:"TM234102",name:"Fisika Statika",sks:2},
+    {code:"SM234101",name:"Kalkulus 1",sks:3},
+    {code:"SK234102",name:"Kimia",sks:3},
+    {code:"TM234103",name:"Menggambar Mesin",sks:3},
+    {code:"TM234101",name:"Pengantar Teknik Mesin",sks:2}
+  ]},
+  2:{label:"Semester 2",totalSks:19,type:"fixed",courses:[
+    {code:"TM234201",name:"Algoritma Dasar",sks:2},
+    {code:"SF234202",name:"Fisika Listrik dan Magnet",sks:4},
+    {code:"SM234201",name:"Kalkulus 2",sks:3},
+    {code:"TM234202",name:"Kinematika dan Dinamika Teknik",sks:3},
+    {code:"TM234203",name:"Mekanika Kekuatan Material",sks:4},
+    {code:"TM234204",name:"Metalurgi I",sks:3}
+  ]},
+  3:{label:"Semester 3",totalSks:20,type:"fixed",courses:[
+    {code:"TM234302",name:"Dinamika Permesinan",sks:3},
+    {code:"TM234307",name:"Elemen Mesin I",sks:3},
+    {code:"TM234304",name:"Instrumentasi, Pengukuran dan Metrologi",sks:4},
+    {code:"TM234301",name:"Matematika Rekayasa",sks:3},
+    {code:"TM234303",name:"Mekanika Fluida Dasar I",sks:2},
+    {code:"TM234305",name:"Metalurgi II",sks:3},
+    {code:"TM234306",name:"Termodinamika I",sks:2}
+  ]},
+  4:{label:"Semester 4",totalSks:20,type:"fixed",courses:[
+    {code:"TM234403",name:"Elemen Mesin II",sks:3},
+    {code:"TM234402",name:"Mekanika Fluida Dasar II",sks:3},
+    {code:"TM234401",name:"Proses Manufaktur I",sks:3},
+    {code:"TM234406",name:"Sistem Dinamik dan Pengendalian",sks:4},
+    {code:"TM234404",name:"Statistik dan Perencanaan Eksperimen",sks:4},
+    {code:"TM234405",name:"Termodinamika II",sks:3}
+  ]},
+  5:{label:"Semester 5",totalSks:21,type:"fixed",courses:[
+    {code:"TM234501",name:"Analisa Numerik",sks:3},
+    {code:"TM234503",name:"Capstone I",sks:2},
+    {code:"TM234507",name:"Mekanika Getaran",sks:3},
+    {code:"TM234502",name:"Mekatronika",sks:3},
+    {code:"TM234505",name:"Mesin Konversi Energi",sks:3},
+    {code:"TM234504",name:"Perpindahan Panas",sks:4},
+    {code:"TM234506",name:"Proses Manufaktur II",sks:3}
+  ]},
+  6:{label:"Semester 6",totalSks:93,type:"elective",note:"Pilih 1 mata kuliah pilihan sesuai dengan rencana studi Anda. Tersedia 31 mata kuliah pilihan.",courses:[
+    {code:"TM234613",name:"Analisa Pencemaran Lingkungan",sks:3},
+    {code:"TM234628",name:"Analisa Sistem Perpipaan",sks:3},
+    {code:"UG234914",name:"Bahasa Inggris",sks:2},
+    {code:"TM234602",name:"Capstone II",sks:3},
+    {code:"TM234625",name:"Computer Aided Design & Manufacturing (CAD/CAM)",sks:3},
+    {code:"TM234609",name:"Energi Surya",sks:3},
+    {code:"TM234615",name:"Getaran Mesin Perkakas",sks:3},
+    {code:"UG234915",name:"Kewirausahaan Berbasis Teknologi",sks:2},
+    {code:"TM234610",name:"Manajemen dan Ekonomi Energi",sks:3},
+    {code:"TM234620",name:"Mekanisme Robot",sks:3},
+    {code:"TM234601",name:"Manajemen Operasional",sks:3},
+    {code:"TM234624",name:"Manajemen Proyek",sks:3},
+    {code:"TM234622",name:"Mesin Fluida Inkompresibel",sks:3},
+    {code:"TM234606",name:"Mesin Fluida Kompresibel",sks:3},
+    {code:"TM234621",name:"Mesin Perkakas CNC",sks:3},
+    {code:"TM234611",name:"Metode Komputasi Fluida",sks:3},
+    {code:"TM234607",name:"Motor Pembakaran Dalam",sks:3},
+    {code:"TM234619",name:"Otomasi Industri",sks:3},
+    {code:"UG234911",name:"Pancasila",sks:2},
+    {code:"TM234618",name:"Pengukuran Presisi",sks:3},
+    {code:"TM234614",name:"Perancangan dan Pengembangan Produk",sks:3},
+    {code:"TM234623",name:"Perancangan Pesawat Penukar Kalor",sks:3},
+    {code:"TM234617",name:"Proses Pemesinan",sks:3},
+    {code:"TM234629",name:"Sistem Dinamis",sks:3},
+    {code:"TM234630",name:"Sistem Injeksi Bahan Bakar",sks:3},
+    {code:"TM234626",name:"Sistem Kontrol Otomotif",sks:3},
+    {code:"TM234627",name:"Sistem Pengendalian Linear",sks:3},
+    {code:"TM234612",name:"Sistem Tenaga Pneumatik dan Hidrolik",sks:3},
+    {code:"TM234608",name:"Teknik Pendingin & Pengkondisian Udara",sks:3},
+    {code:"TM234616",name:"Toleransi Geometri",sks:3},
+    {code:"TM234634",name:"Topik Khusus",sks:3}
+  ]},
+  7:{label:"Semester 7",totalSks:153,type:"elective",note:"Pilih 3 mata kuliah pilihan (karena sebelumnya Anda mengambil 1 MK pilihan di Semester 6). Tersedia 52 mata kuliah pilihan (serta jadwalkan MK wajib seperti Agama, TMP, Proposal Tugas Akhir).",courses:[
+    {code:"TM234738",name:"Adhesive dan Sambungan Adhesive",sks:3},
+    {code:"TM234718",name:"Aerodinamika",sks:3},
+    {code:"UG234901",name:"Agama Islam",sks:2},
+    {code:"TM234744",name:"AI dan Optimasi Metaheuristik",sks:3},
+    {code:"TM234745",name:"Aliran Multi-Fase untuk Proses Aerasi",sks:3},
+    {code:"TM234716",name:"Analisa Kegagalan Berbasis Vibrasi",sks:3},
+    {code:"TM234734",name:"Analisa Kegagalan Material",sks:3},
+    {code:"UG234916",name:"Aplikasi Teknologi & Transformasi Digital",sks:3},
+    {code:"UG234912",name:"Bahasa Indonesia",sks:2},
+    {code:"TM234720",name:"Bio Energi",sks:3},
+    {code:"TM234746",name:"Dasar-Dasar Kendaraan Listrik",sks:3},
+    {code:"TM234722",name:"Energi Terbarukan",sks:3},
+    {code:"TM234710",name:"Getaran Sistem Mekanikal",sks:3},
+    {code:"TM234739",name:"Kecerdasan Buatan",sks:3},
+    {code:"TM234709",name:"Kekuatan Material Lanjut",sks:3},
+    {code:"TM234740",name:"Kendaraan Listrik",sks:3},
+    {code:"UG234913",name:"Kewarganegaraan",sks:2},
+    {code:"TM234713",name:"Konstruksi Plat dan Cangkang",sks:3},
+    {code:"TM234735",name:"Korosi",sks:3},
+    {code:"TM234732",name:"Logam Paduan Industri",sks:3},
+    {code:"TM234704",name:"Mekanika Fluida",sks:3},
+    {code:"TM234736",name:"Mekanika Patahan",sks:3},
+    {code:"TM234708",name:"Metode Matrik untuk Analisa Struktur",sks:3},
+    {code:"TM234723",name:"Mould Design",sks:3},
+    {code:"TM234607",name:"Motor Pembakaran Dalam",sks:3},
+    {code:"TM234747",name:"Pengujian Tidak Merusak",sks:3},
+    {code:"TM234726",name:"Perancangan Perkakas",sks:3},
+    {code:"TM234730",name:"Perlakuan Panas",sks:3},
+    {code:"TM234711",name:"Pesawat Pemindah Bahan",sks:3},
+    {code:"TM234733",name:"Polimer dan Komposit",sks:3},
+    {code:"TM234717",name:"Power dan Drive Train Kendaraan",sks:3},
+    {code:"TM234702",name:"Proposal Tugas Akhir",sks:2},
+    {code:"TM234727",name:"Rekayasa Kualitas",sks:3},
+    {code:"TM234737",name:"Riset Operasional",sks:3},
+    {code:"TM234725",name:"Simulasi Sistem Dinamis",sks:3},
+    {code:"TM234724",name:"Sistem Manufaktur Industri",sks:3},
+    {code:"TM234721",name:"Sistem Pembangkit Tenaga",sks:3},
+    {code:"TM234729",name:"Teknik Cor",sks:3},
+    {code:"TM234701",name:"Teknik dan Manajemen Perawatan",sks:3},
+    {code:"TM234728",name:"Teknik Las",sks:3},
+    {code:"TM234719",name:"Teknik Pembakaran dan Bahan Bakar",sks:3},
+    {code:"TM234712",name:"Teknologi dan Konstruksi Otomotif",sks:3},
+    {code:"TM234715",name:"Teknologi Pemulihan Energi",sks:3},
+    {code:"TM234741",name:"Teknologi Penyimpan Energi",sks:3},
+    {code:"TM234714",name:"Tribologi dan Teori Gesek pada Pemesinan",sks:3},
+    {code:"TM234621",name:"Mesin Perkakas CNC",sks:3},
+    {code:"TM234628",name:"Analisa Sistem Perpipaan",sks:3}
+  ]},
+  8:{label:"Semester 8",totalSks:6,type:"fixed",courses:[
+    {code:"TM234801",name:"Kerja Praktek",sks:2},
+    {code:"TM234802",name:"Tugas Akhir",sks:4}
+  ]}
+};
+
+// ================================================================
+// BUILT-IN SCHEDULE — Semester 7 Ganjil 2026/2027
+// ================================================================
+const BUILTIN_SCHEDULES = {
+  7:{
+    semester:7,
+    term:"Ganjil 2026/2027",
+    days:["Senin","Selasa","Rabu","Kamis","Jumat"],
+    times:["07.00\u201309.30","09.40\u201311.20","12.30\u201315.00","Bebas"],
+    wajib_codes:["UG234901","TM234701","TM234702"],
+    courses:[
+      {id:"s0t0-es",  code:"TM234609",name:"Energi Surya",               dayIdx:0,timeIdx:0,type:"pilihan",kelas:"A",room:"C.117"},
+      {id:"s0t0-lpi", code:"TM234733",name:"Logam Paduan Industri",       dayIdx:0,timeIdx:0,type:"pilihan",kelas:"A",room:"Lab.Kom.1"},
+      {id:"s0t1-ag20",code:"UG234901",name:"Agama Islam",                 dayIdx:0,timeIdx:1,type:"wajib",  kelas:"20",room:"TW1-605",note:"Khusus TM & Biologi"},
+      {id:"s0t1-ag21",code:"UG234901",name:"Agama Islam",                 dayIdx:0,timeIdx:1,type:"wajib",  kelas:"21",room:"TW1-606",note:"Khusus TM & Biologi"},
+      {id:"s0t2-mkfa",code:"TM234611",name:"Metode Komputasi Fluida",     dayIdx:0,timeIdx:2,type:"pilihan",kelas:"A",room:"C.121"},
+      {id:"s0t2-mkfy",code:"TM234611",name:"Metode Komputasi Fluida",     dayIdx:0,timeIdx:2,type:"pilihan",kelas:"Y",room:"A.212.A"},
+      {id:"s0t2-meky",code:"TM234736",name:"Mekanika Patahan",            dayIdx:0,timeIdx:2,type:"pilihan",kelas:"Y",room:"Lab.Kom.1"},
+      {id:"s0t2-manp",code:"TM234624",name:"Manajemen Proyek",            dayIdx:0,timeIdx:2,type:"pilihan",kelas:"A",room:"Lab.Kom.2"},
+      {id:"s1t0-ag13",code:"UG234901",name:"Agama Islam",                 dayIdx:1,timeIdx:0,type:"wajib",  kelas:"13",room:"TW2-402",note:"Terbuka semua dept."},
+      {id:"s1t0-ag14",code:"UG234901",name:"Agama Islam",                 dayIdx:1,timeIdx:0,type:"wajib",  kelas:"14",room:"TW2-403",note:"Terbuka semua dept."},
+      {id:"s1t0-mmas",code:"TM234708",name:"Metode Matrik Analisa Struktur",dayIdx:1,timeIdx:0,type:"pilihan",kelas:"A",room:"C.118"},
+      {id:"s1t0-moud",code:"TM234723",name:"Mould Design",                dayIdx:1,timeIdx:0,type:"pilihan",kelas:"A",room:"C.119"},
+      {id:"s1t0-gtr", code:"TM234710",name:"Getaran Sistem Mekanikal",    dayIdx:1,timeIdx:0,type:"pilihan",kelas:"A",room:"C.120"},
+      {id:"s1t2-tmpa",code:"TM234701",name:"Tek. & Manajemen Perawatan",  dayIdx:1,timeIdx:2,type:"wajib",  kelas:"A",room:"C.113"},
+      {id:"s1t2-tmpb",code:"TM234701",name:"Tek. & Manajemen Perawatan",  dayIdx:1,timeIdx:2,type:"wajib",  kelas:"B",room:"D.303"},
+      {id:"s1t2-tmpc",code:"TM234701",name:"Tek. & Manajemen Perawatan",  dayIdx:1,timeIdx:2,type:"wajib",  kelas:"C",room:"C.119"},
+      {id:"s1t2-tmpd",code:"TM234701",name:"Tek. & Manajemen Perawatan",  dayIdx:1,timeIdx:2,type:"wajib",  kelas:"D",room:"C.120"},
+      {id:"s1t2-ppb", code:"TM234711",name:"Pesawat Pemindah Bahan",      dayIdx:1,timeIdx:2,type:"pilihan",kelas:"A",room:"Lab.Kom.1"},
+      {id:"s1t2-mfi", code:"TM234622",name:"Mesin Fluida Inkompresibel",  dayIdx:1,timeIdx:2,type:"pilihan",kelas:"A",room:"C.121"},
+      {id:"s1t2-spt", code:"TM234721",name:"Sistem Pembangkit Tenaga",    dayIdx:1,timeIdx:2,type:"pilihan",kelas:"A",room:"Lab.Kom.2",star:true},
+      {id:"s2t0-bio", code:"TM234720",name:"Bio Energi",                  dayIdx:2,timeIdx:0,type:"pilihan",kelas:"A",room:"Lab.Kom.2"},
+      {id:"s2t0-mekf",code:"TM234704",name:"Mekanika Fluida",             dayIdx:2,timeIdx:0,type:"pilihan",kelas:"A",room:"C.113"},
+      {id:"s2t2-ptn", code:"TM234747",name:"Pengujian Tidak Merusak",     dayIdx:2,timeIdx:2,type:"pilihan",kelas:"Y",room:"C.121"},
+      {id:"s2t2-mpd", code:"TM234607",name:"Motor Pembakaran Dalam",      dayIdx:2,timeIdx:2,type:"pilihan",kelas:"A",room:"C.120"},
+      {id:"s3t0-tmpp",code:"TM234701",name:"Tek. & Manajemen Perawatan",  dayIdx:3,timeIdx:0,type:"wajib",  kelas:"P",room:"D.303"},
+      {id:"s3t0-ph",  code:"TM234730",name:"Perlakuan Panas",             dayIdx:3,timeIdx:0,type:"pilihan",kelas:"A",room:"C.118"},
+      {id:"s3t0-ai",  code:"TM234744",name:"AI & Optimasi Metaheuristik", dayIdx:3,timeIdx:0,type:"pilihan",kelas:"A",room:"C.119",star:true},
+      {id:"s3t0-cnc", code:"TM234621",name:"Mesin Perkakas CNC",          dayIdx:3,timeIdx:0,type:"pilihan",kelas:"A",room:"C.120"},
+      {id:"s3t2-asp", code:"TM234628",name:"Analisa Sistem Perpipaan",    dayIdx:3,timeIdx:2,type:"pilihan",kelas:"A",room:"C.118"},
+      {id:"s3t2-akm", code:"TM234734",name:"Analisa Kegagalan Material",  dayIdx:3,timeIdx:2,type:"pilihan",kelas:"Y",room:"C.119",warn:true},
+      {id:"s3t2-tko", code:"TM234712",name:"Teknologi & Konstruksi Otomotif",dayIdx:3,timeIdx:2,type:"pilihan",kelas:"A",room:"C.120"},
+      {id:"s4t3-pta", code:"TM234702",name:"Proposal Tugas Akhir",        dayIdx:4,timeIdx:3,type:"wajib",  kelas:"-",room:"Bimbingan mandiri",note:"Sesuai jadwal dospem"}
+    ]
+  }
+};
+
+// JSON schema template for import
+const SCHEMA_EXAMPLE = {
+  "semester": 6,
+  "term": "Genap 2025/2026",
+  "wajib_codes": ["UG234914"],
+  "courses": [
+    {"name":"Bahasa Inggris","code":"UG234914","day":"Senin","time":"07.00-09.30","kelas":"A","room":"GKU-101"},
+    {"name":"Capstone II","code":"TM234602","day":"Selasa","time":"12.30-15.00","kelas":"A","room":"Lab.Komputer","star":true},
+    {"name":"Manajemen Proyek","code":"TM234624","day":"Rabu","time":"07.00-09.30","kelas":"B","room":"R.204","warn":false,"note":""}
+  ]
+};
+
+// ================================================================
+// STATE & STORAGE
+// ================================================================
+let appSem = null;
+let schedule = null;
+let selected = new Set();
+let currentFilter = 'all';
+let btnRefs = new Map();
+let fadeCheckCurrent = null;
+let toastTimer = null;
+
+const STORE_SCHED = 'its-tm-schedules-v1';
+const STORE_SEL = 'its-tm-sel-v1';
+const VALID_SEMESTERS = new Set([1,2,3,4,5,6,7,8]);
+const DAY_ORDER = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'];
+const checkSvg = '<svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2 6.2 4.8 9 10 3.4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+function getSavedSchedules(){
+  try{
+    const parsed = JSON.parse(localStorage.getItem(STORE_SCHED) || '{}');
+    return parsed && typeof parsed === 'object' ? parsed : {};
+  }catch{
+    return {};
+  }
+}
+
+function saveSchedule(sem, data){
+  const saved = getSavedSchedules();
+  saved[sem] = data;
+  try{ localStorage.setItem(STORE_SCHED, JSON.stringify(saved)); }catch{}
+}
+
+function getSelection(sem){
+  try{
+    const parsed = JSON.parse(localStorage.getItem(STORE_SEL) || '{}');
+    return new Set(Array.isArray(parsed?.[sem]) ? parsed[sem] : []);
+  }catch{
+    return new Set();
+  }
+}
+
+function saveSelection(sem, sel){
+  try{
+    const parsed = JSON.parse(localStorage.getItem(STORE_SEL) || '{}');
+    parsed[sem] = [...sel];
+    localStorage.setItem(STORE_SEL, JSON.stringify(parsed));
+  }catch{}
+}
+
+function esc(value){
+  return String(value ?? '')
+    .replaceAll('&','&amp;')
+    .replaceAll('<','&lt;')
+    .replaceAll('>','&gt;')
+    .replaceAll('"','&quot;')
+    .replaceAll("'",'&#39;');
+}
+
+function getScheduleForSemester(sem){
+  const saved = getSavedSchedules();
+  return saved[sem] || BUILTIN_SCHEDULES[sem] || null;
+}
+
+function courseSks(course){
+  const direct = Number(course?.sks);
+  if(Number.isFinite(direct) && direct >= 0) return direct;
+  const catalogCourse = CATALOG[appSem]?.courses?.find(c => c.code === course?.code);
+  return Number(catalogCourse?.sks) || 0;
+}
+
+function selectedSks(items = sortedSelected()){
+  return items.reduce((total, c) => total + courseSks(c), 0);
+}
+
+// ================================================================
+// NAVIGATION
+// ================================================================
+const VIEWS = ['dashboard','import','planner'];
+
+function showView(name){
+  VIEWS.forEach(v => {
+    const el = document.getElementById('view-' + v);
+    if(!el) return;
+    const active = v === name;
+    el.hidden = !active;
+    el.classList.toggle('view-enter', active);
+  });
+
+  document.body.classList.toggle('planner-open', name === 'planner');
+  const mbar = document.getElementById('mbar');
+  if(mbar) mbar.hidden = name !== 'planner';
+
+  document.querySelectorAll('#navTabs .tab').forEach(tab => {
+    const active = tab.dataset.nav === name;
+    tab.classList.toggle('active', active);
+    tab.setAttribute('aria-current', active ? 'page' : 'false');
+  });
+
+  window.scrollTo({top:0, left:0, behavior:'auto'});
+}
+
+function navDashboard(){
+  buildDashboard();
+  showView('dashboard');
+}
+
+function navImport(sem = appSem || Number(document.getElementById('selSem')?.value) || 7){
+  const target = VALID_SEMESTERS.has(Number(sem)) ? Number(sem) : 7;
+  appSem = target;
+  const sel = document.getElementById('selSem');
+  if(sel) sel.value = String(target);
+  const title = document.getElementById('importTitle');
+  const sub = document.getElementById('importSub');
+  if(title) title.textContent = 'Import Jadwal Semester ' + target;
+  if(sub) sub.textContent = 'Upload atau paste JSON jadwal untuk Semester ' + target;
+  const err = document.getElementById('importError');
+  if(err) err.hidden = true;
+  showView('import');
+}
+
+function navPicker(sem, data){
+  if(!data || !Array.isArray(data.courses)) return;
+  appSem = Number(sem);
+  schedule = data;
+  const validIds = new Set(schedule.courses.map(c => c.id));
+  selected = new Set([...getSelection(appSem)].filter(id => validIds.has(id)));
+  saveSelection(appSem, selected);
+
+  const ctx = document.getElementById('ctxSem');
+  if(ctx) ctx.textContent = 'Semester ' + appSem + (data.term ? ' · ' + data.term : '');
+  const plannerTab = document.getElementById('tabPlanner');
+  if(plannerTab) plannerTab.hidden = false;
+  const reimport = document.getElementById('btnReimport');
+  if(reimport) reimport.hidden = false;
+
+  initPicker();
+  showView('planner');
+}
+
+function openSchedule(sem){
+  const data = getScheduleForSemester(Number(sem));
+  if(data) navPicker(Number(sem), data);
+  else navImport(Number(sem));
+}
+
+// ================================================================
+// DASHBOARD
+// ================================================================
+function buildDashboard(){
+  const saved = getSavedSchedules();
+  let s6Pilihan = 0;
+  let s7Pilihan = 0;
+
+  [6,7].forEach(sem => {
+    const data = saved[sem] || BUILTIN_SCHEDULES[sem];
+    if(!data) return;
+    const byId = Object.fromEntries(data.courses.map(c => [c.id,c]));
+    const pilihanCodes = new Set(
+      [...getSelection(sem)]
+        .map(id => byId[id])
+        .filter(c => c?.type === 'pilihan')
+        .map(c => c.code)
+    );
+    if(sem === 6) s6Pilihan = pilihanCodes.size;
+    if(sem === 7) s7Pilihan = pilihanCodes.size;
+  });
+
+  const hasProgress = s6Pilihan > 0 || s7Pilihan > 0;
+  const v6 = hasProgress ? s6Pilihan : 1;
+  const v7 = hasProgress ? s7Pilihan : 3;
+  const progressTotal = hasProgress ? v6 + v7 : 4;
+  const targetLabel = hasProgress ? 'Terpilih' : 'Target';
+  const sumEl = document.getElementById('dashSummary');
+
+  if(sumEl){
+    sumEl.innerHTML =
+      '<article class="stat enter"><span class="stat-label">Target Kurikulum</span><span class="stat-value"><b>144</b><i> SKS</i></span><span class="stat-sub">Acuan total beban studi</span></article>' +
+      '<article class="stat enter"><span class="stat-label">Progress Pilihan</span><span class="stat-value"><b>' + progressTotal + '</b><i>/4 MK</i></span><span class="stat-sub">' + targetLabel + ' distribusi Semester 6 dan 7</span></article>' +
+      '<article class="stat dark enter"><span class="stat-label">Distribusi Pilihan</span><span class="stat-value"><b>' + v6 + ' : ' + v7 + '</b></span><span class="stat-sub">Sem 6 · Sem 7</span></article>';
+  }
+
+  const info = document.getElementById('dashInfo');
+  if(info) info.textContent = Object.keys(saved).length ? 'Data lokal tersedia' : 'Pilih semester';
+
+  const grid = document.getElementById('semGrid');
+  if(!grid) return;
+  grid.innerHTML = '';
+
+  for(let sem = 1; sem <= 8; sem++){
+    const cat = CATALOG[sem];
+    const data = saved[sem] || BUILTIN_SCHEDULES[sem];
+    const hasSchedule = !!data;
+    const slots = hasSchedule
+      ? new Set(data.courses.map(c => c.dayIdx + '|' + c.timeIdx)).size
+      : 0;
+
+    const card = document.createElement('article');
+    card.className = 'sem-card enter' + (hasSchedule ? ' has-data' : '');
+    card.style.animationDelay = (0.04 + (sem - 1) * 0.04) + 's';
+    card.innerHTML =
+      '<span class="sem-badge ' + (hasSchedule ? 'on' : 'off') + '">' + (hasSchedule ? 'Tersedia' : 'Kosong') + '</span>' +
+      '<span class="sem-num">' + String(sem).padStart(2,'0') + '</span>' +
+      '<span class="sem-name">Semester ' + sem + '</span>' +
+      '<span class="sem-status">' + (hasSchedule
+        ? data.courses.length + ' opsi kelas · ' + slots + ' slot waktu'
+        : cat.courses.length + ' MK di katalog · jadwal belum diimport') + '</span>' +
+      '<div style="display:flex;gap:8px;margin-top:auto">' +
+        (hasSchedule
+          ? '<button class="btn primary sm" data-action="openSchedule" data-sem="' + sem + '" style="flex:1">Susun Jadwal →</button>'
+          : '<button class="btn ghost sm" data-action="navImport" data-sem="' + sem + '" style="flex:1">Import JSON →</button>') +
+        '<button class="btn ghost sm" data-action="navCatalog" data-sem="' + sem + '" title="Lihat katalog" aria-label="Lihat katalog Semester ' + sem + '">📖</button>' +
+      '</div>';
+    grid.appendChild(card);
+  }
+}
+
+function handleDashboardAction(event){
+  const btn = event.target.closest('[data-action]');
+  if(!btn) return;
+  const sem = Number(btn.dataset.sem);
+  if(btn.dataset.action === 'openSchedule') openSchedule(sem);
+  if(btn.dataset.action === 'navImport') navImport(sem);
+  if(btn.dataset.action === 'navCatalog') openCatalog(sem);
+}
+
+// ================================================================
+// CATALOG MODAL
+// ================================================================
+function buildCatalog(sem){
+  const cat = CATALOG[sem];
+  if(!cat) return;
+  document.getElementById('catTitle').textContent = cat.label;
+  document.getElementById('catSubtitle').textContent = 'S1 Teknik Mesin · ITS';
+
+  let html = '';
+  if(cat.note) html += '<div class="cat-note">ℹ ' + esc(cat.note) + '</div>';
+  html += '<div class="cat-meta">' +
+    '<span class="cat-pill">📚 ' + cat.courses.length + ' Mata Kuliah</span>' +
+    '<span class="cat-pill">' + cat.totalSks + ' SKS katalog</span>' +
+    '<span class="cat-pill">' + (cat.type === 'fixed' ? 'Paket wajib' : 'Mata kuliah pilihan') + '</span>' +
+  '</div>';
+  html += '<div style="overflow-x:auto"><table class="course-table"><thead><tr><th>Kode</th><th>Nama Mata Kuliah</th><th style="text-align:right">SKS</th></tr></thead><tbody>';
+  cat.courses.forEach(c => {
+    html += '<tr><td class="ct-code">' + esc(c.code) + '</td><td>' + esc(c.name) + '</td><td class="ct-sks">' + esc(c.sks) + '</td></tr>';
+  });
+  html += '</tbody></table></div>';
+
+  if(getScheduleForSemester(sem)){
+    html += '<button class="ibtn" data-action="openSchedule" data-sem="' + sem + '">Buka Jadwal Interaktif Semester ' + sem + '</button>';
+  }else{
+    html += '<button class="ibtn" data-action="navImport" data-sem="' + sem + '">Import Jadwal Semester ' + sem + '</button>';
+  }
+  document.getElementById('catMain').innerHTML = '<div style="padding-bottom:18px">' + html + '</div>';
+}
+
+function openCatalog(sem){
+  appSem = Number(sem);
+  buildCatalog(appSem);
+  document.getElementById('catalogModal').hidden = false;
+}
+
+function closeCatalog(){
+  document.getElementById('catalogModal').hidden = true;
+}
+
+// ================================================================
+// IMPORT
+// ================================================================
+function normalizeImportedCourse(raw){
+  return {
+    name: raw.name ?? raw.nama,
+    code: raw.code ?? raw.kode,
+    day: raw.day ?? raw.hari,
+    time: raw.time ?? raw.jam,
+    kelas: raw.kelas ?? raw.class ?? '-',
+    room: raw.room ?? raw.ruang ?? '-',
+    sks: raw.sks,
+    type: raw.type ?? raw.jenis,
+    star: !!raw.star,
+    warn: !!raw.warn,
+    note: raw.note ?? raw.catatan ?? ''
+  };
+}
+
+function timeStartMinutes(value){
+  const match = String(value).match(/(\d{1,2})[.:](\d{2})/);
+  if(!match) return Number.MAX_SAFE_INTEGER;
+  return Number(match[1]) * 60 + Number(match[2]);
+}
+
+function validateAndLoadJSON(text){
+  text = String(text ?? '').trim();
+  if(!text) return showImportError('JSON kosong. Paste isi file jadwal atau pilih file .json.');
+
+  let data;
+  try{ data = JSON.parse(text); }
+  catch(error){ return showImportError('Format JSON tidak valid: ' + error.message); }
+
+  const sourceCourses = Array.isArray(data.courses)
+    ? data.courses
+    : (Array.isArray(data.mataKuliah) ? data.mataKuliah : null);
+  if(!sourceCourses?.length){
+    return showImportError('JSON harus memiliki array "courses" atau "mataKuliah" yang tidak kosong.');
+  }
+
+  const normalized = sourceCourses.map(normalizeImportedCourse);
+  const invalidIndex = normalized.findIndex(c => !c.name || !c.code || !c.day || !c.time);
+  if(invalidIndex !== -1){
+    return showImportError('Entri ke-' + (invalidIndex + 1) + ' belum memiliki nama/name, kode/code, hari/day, dan jam/time.');
+  }
+
+  const targetSem = Number(document.getElementById('selSem')?.value || data.semester || appSem || 7);
+  if(!VALID_SEMESTERS.has(targetSem)) return showImportError('Semester tujuan harus antara 1 sampai 8.');
+
+  const days = [...new Set(normalized.map(c => String(c.day).trim()))]
+    .sort((a,b) => {
+      const ai = DAY_ORDER.indexOf(a);
+      const bi = DAY_ORDER.indexOf(b);
+      if(ai === -1 && bi === -1) return a.localeCompare(b, 'id');
+      if(ai === -1) return 1;
+      if(bi === -1) return -1;
+      return ai - bi;
+    });
+  const times = [...new Set(normalized.map(c => String(c.time).trim()))]
+    .sort((a,b) => timeStartMinutes(a) - timeStartMinutes(b) || a.localeCompare(b, 'id'));
+
+  const explicitWajib = new Set(data.wajib_codes || data.wajibCodes || []);
+  normalized.forEach(c => {
+    if(String(c.type).toLowerCase() === 'wajib') explicitWajib.add(c.code);
+  });
+
+  const courses = normalized.map((c,i) => ({
+    id: [c.code,c.kelas,c.day,c.time,i].join('_').replace(/\s+/g,'-'),
+    code: String(c.code).trim(),
+    name: String(c.name).trim(),
+    dayIdx: days.indexOf(String(c.day).trim()),
+    timeIdx: times.indexOf(String(c.time).trim()),
+    type: explicitWajib.has(c.code) || String(c.type).toLowerCase() === 'wajib' ? 'wajib' : 'pilihan',
+    kelas: String(c.kelas || '-').trim(),
+    room: String(c.room || '-').trim(),
+    sks: Number.isFinite(Number(c.sks)) ? Number(c.sks) : undefined,
+    star: c.star,
+    warn: c.warn,
+    note: c.note ? String(c.note) : null
+  }));
+
+  const scheduleData = {
+    semester: targetSem,
+    term: String(data.term || data.periode || ('Semester ' + targetSem)),
+    days,
+    times,
+    wajib_codes: [...explicitWajib],
+    courses
+  };
+
+  saveSchedule(targetSem, scheduleData);
+  saveSelection(targetSem, new Set());
+  appSem = targetSem;
+  document.getElementById('importError').hidden = true;
+  navPicker(targetSem, scheduleData);
+  toast('Jadwal Semester ' + targetSem + ' berhasil diimport');
+}
+
+function showImportError(message){
+  const el = document.getElementById('importError');
+  el.textContent = message;
+  el.hidden = false;
+}
+
+function buildSampleJson(sem = 7){
+  const data = BUILTIN_SCHEDULES[sem];
+  if(!data) return null;
+  return {
+    semester: sem,
+    term: data.term,
+    wajib_codes: data.wajib_codes,
+    courses: data.courses.map(c => ({
+      name: c.name,
+      code: c.code,
+      day: data.days[c.dayIdx],
+      time: data.times[c.timeIdx],
+      kelas: c.kelas,
+      room: c.room,
+      sks: courseSksForSemester(c, sem),
+      star: !!c.star,
+      warn: !!c.warn,
+      note: c.note || ''
+    }))
+  };
+}
+
+function courseSksForSemester(course, sem){
+  return Number(CATALOG[sem]?.courses?.find(c => c.code === course.code)?.sks) || undefined;
+}
+
+function openFormatModal(){
+  document.getElementById('formatPre').textContent = JSON.stringify(SCHEMA_EXAMPLE, null, 2);
+  document.getElementById('modal').hidden = false;
+}
+
+function closeFormatModal(){
+  document.getElementById('modal').hidden = true;
+}
+
+// ================================================================
+// PICKER ENGINE
+// ================================================================
+function badgesHtml(c){
+  let html = c.type === 'wajib' ? '<span class="b w">Wajib</span>' : '<span class="b p">Pilihan</span>';
+  if(c.star) html += '<span class="b star">★ Relevan</span>';
+  if(c.warn) html += '<span class="b warnb">⚠ Cek</span>';
+  if(c.note) html += '<span class="b note">' + esc(c.note) + '</span>';
+  return html;
+}
+
+function metaHtml(c){
+  return esc(c.code) + (c.kelas === '-' ? '' : ' · Kelas ' + esc(c.kelas)) + ' · ' + esc(c.room);
+}
+
+function initPicker(){
+  if(!schedule) return;
+  const {days,times,courses} = schedule;
+  btnRefs = new Map();
+
+  const gridEl = document.getElementById('gridView');
+  const listEl = document.getElementById('listView');
+  gridEl.innerHTML = '';
+  listEl.innerHTML = '';
+  gridEl.className = 'grid';
+  listEl.className = 'lv';
+  gridEl.style.gridTemplateColumns = '100px repeat(' + days.length + ',minmax(164px,1fr))';
+
+  const slotMap = new Map();
+  courses.forEach(c => {
+    const key = c.dayIdx + '-' + c.timeIdx;
+    if(!slotMap.has(key)) slotMap.set(key, []);
+    slotMap.get(key).push(c);
+  });
+
+  const corner = document.createElement('div');
+  corner.className = 'g-head g-corner';
+  corner.textContent = 'JAM';
+  gridEl.appendChild(corner);
+  days.forEach(day => {
+    const head = document.createElement('div');
+    head.className = 'g-head';
+    head.textContent = day;
+    gridEl.appendChild(head);
+  });
+
+  let animationIndex = 0;
+  times.forEach((timeText,timeIdx) => {
+    const timeCell = document.createElement('div');
+    timeCell.className = 'g-time';
+    const parts = splitTime(timeText);
+    timeCell.innerHTML = parts[1]
+      ? '<b>' + esc(parts[0]) + '</b><span>–' + esc(parts[1]) + '</span>'
+      : '<b>' + esc(parts[0]) + '</b>';
+    gridEl.appendChild(timeCell);
+
+    days.forEach((_,dayIdx) => {
+      const cell = document.createElement('div');
+      cell.className = 'g-cell';
+      (slotMap.get(dayIdx + '-' + timeIdx) || []).forEach(c => {
+        const button = createCourseButton(c, 'course');
+        button.classList.add('enter');
+        button.style.animationDelay = (0.08 + animationIndex * 0.018) + 's';
+        animationIndex++;
+        cell.appendChild(button);
+      });
+      gridEl.appendChild(cell);
+    });
+  });
+
+  const gridRows = gridEl.querySelectorAll('.g-cell,.g-time');
+  const perDataRow = days.length + 1;
+  for(let i = Math.max(0, gridRows.length - perDataRow); i < gridRows.length; i++){
+    gridRows[i].style.borderBottomColor = 'transparent';
+  }
+
+  days.forEach((day,dayIdx) => {
+    const dayCourses = courses.filter(c => c.dayIdx === dayIdx);
+    if(!dayCourses.length) return;
+    const dayEl = document.createElement('div');
+    dayEl.className = 'lv-day';
+    const heading = document.createElement('div');
+    heading.className = 'lv-dayhead';
+    heading.textContent = day;
+    dayEl.appendChild(heading);
+
+    const timeIndexes = [...new Set(dayCourses.map(c => c.timeIdx))].sort((a,b) => a - b);
+    timeIndexes.forEach(timeIdx => {
+      const slot = document.createElement('div');
+      slot.className = 'lv-slot';
+      const time = document.createElement('div');
+      time.className = 'lv-time';
+      const parts = splitTime(times[timeIdx]);
+      time.innerHTML = parts[1]
+        ? '<b>' + esc(parts[0]) + '</b><span>–' + esc(parts[1]) + '</span>'
+        : '<b>' + esc(parts[0]) + '</b>';
+      slot.appendChild(time);
+
+      const opts = document.createElement('div');
+      opts.className = 'lv-opts';
+      dayCourses.filter(c => c.timeIdx === timeIdx).forEach(c => opts.appendChild(createCourseButton(c, 'lcourse')));
+      slot.appendChild(opts);
+      dayEl.appendChild(slot);
+    });
+    listEl.appendChild(dayEl);
+  });
+
+  const totalSlots = new Set(courses.map(c => c.dayIdx + '-' + c.timeIdx)).size;
+  const wajibCount = new Set(courses.filter(c => c.type === 'wajib').map(c => c.code)).size;
+  const pilihanCount = new Set(courses.filter(c => c.type === 'pilihan').map(c => c.code)).size;
+  document.getElementById('stSlotMax').textContent = '/' + totalSlots;
+  document.getElementById('stWajibMax').textContent = '/' + wajibCount;
+  document.getElementById('stPilSub').textContent = 'dari ' + pilihanCount + ' MK pilihan';
+  document.getElementById('boardInfo').textContent = totalSlots + ' slot · ' + courses.length + ' opsi';
+
+  const viewport = document.getElementById('gridViewport');
+  const scroller = document.getElementById('boardScroll');
+  fadeCheckCurrent = () => {
+    const canScroll = scroller.scrollWidth > scroller.clientWidth + 4;
+    viewport.classList.toggle('can-scroll', canScroll);
+    viewport.classList.toggle('at-end', scroller.scrollLeft + scroller.clientWidth >= scroller.scrollWidth - 8);
+  };
+  scroller.onscroll = fadeCheckCurrent;
+  requestAnimationFrame(fadeCheckCurrent);
+
+  currentFilter = 'all';
+  applyFilter('all');
+  setView(window.innerWidth <= 860 ? 'list' : 'grid');
+  update();
+}
+
+function splitTime(value){
+  const text = String(value ?? '');
+  if(text.includes('–')) return text.split('–', 2);
+  const match = text.match(/^\s*([^\s-]+)\s*-\s*(.+)$/);
+  return match ? [match[1],match[2]] : [text,''];
+}
+
+function createCourseButton(c, className){
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = className + ' ' + c.type;
+  button.dataset.cid = c.id;
+  button.setAttribute('aria-pressed','false');
+  button.setAttribute('aria-label', c.name + ', ' + c.code + (c.kelas === '-' ? '' : ', kelas ' + c.kelas));
+  button.innerHTML = (className === 'lcourse' ? '<span class="lc-body">' : '') +
+    '<span class="badges">' + badgesHtml(c) + '</span>' +
+    '<span class="name">' + esc(c.name) + '</span>' +
+    '<span class="meta">' + metaHtml(c) + '</span>' +
+    (className === 'lcourse' ? '</span>' : '') +
+    '<span class="check">' + checkSvg + '</span>';
+  button.addEventListener('click', () => toggleCourse(c.id));
+  if(!btnRefs.has(c.id)) btnRefs.set(c.id, []);
+  btnRefs.get(c.id).push(button);
+  return button;
+}
+
+function setView(view){
+  const isGrid = view === 'grid';
+  document.getElementById('gridViewport').hidden = !isGrid;
+  document.getElementById('listView').hidden = isGrid;
+  document.querySelectorAll('.vt').forEach(button => {
+    const active = button.dataset.view === view;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', String(active));
+  });
+  document.getElementById('boardTitle').textContent = isGrid ? 'Peta Slot Mingguan' : 'Daftar Kelas per Hari';
+  if(isGrid && fadeCheckCurrent) requestAnimationFrame(fadeCheckCurrent);
+}
+
+function applyFilter(filter){
+  currentFilter = filter;
+  document.querySelectorAll('#chips .chip').forEach(button => {
+    const active = button.dataset.f === filter;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', String(active));
+  });
+  const grid = document.getElementById('gridView');
+  const list = document.getElementById('listView');
+  ['f-wajib','f-pilihan'].forEach(cls => {
+    grid.classList.remove(cls);
+    list.classList.remove(cls);
+  });
+  if(filter !== 'all'){
+    grid.classList.add('f-' + filter);
+    list.classList.add('f-' + filter);
+  }
+}
+
+function toggleCourse(id){
+  const c = schedule?.courses.find(course => course.id === id);
+  if(!c) return;
+  const byId = Object.fromEntries(schedule.courses.map(course => [course.id,course]));
+
+  if(selected.has(id)){
+    selected.delete(id);
+    toast('"' + c.name + '" dibatalkan');
+  }else{
+    const sameCourse = [...selected].find(selectedId => byId[selectedId]?.code === c.code);
+    const sameSlot = [...selected].find(selectedId => {
+      const other = byId[selectedId];
+      return other && other.dayIdx === c.dayIdx && other.timeIdx === c.timeIdx;
+    });
+
+    if(sameCourse) selected.delete(sameCourse);
+    if(sameSlot && sameSlot !== sameCourse) selected.delete(sameSlot);
+    selected.add(id);
+
+    if(sameCourse) toast('Kelas ' + byId[sameCourse].kelas + ' diganti ke kelas ' + c.kelas);
+    else if(sameSlot) toast('Slot diganti: ' + byId[sameSlot].name + ' → ' + c.name);
+    else toast('+ ' + c.name);
+  }
+
+  saveSelection(appSem, selected);
+  update();
+}
+
+function setStat(el, value){
+  if(!el || el.textContent === String(value)) return;
+  el.textContent = value;
+  el.classList.remove('pop');
+  void el.offsetWidth;
+  el.classList.add('pop');
+}
+
+function sortedSelected(){
+  if(!schedule) return [];
+  const byId = Object.fromEntries(schedule.courses.map(c => [c.id,c]));
+  return [...selected]
+    .map(id => byId[id])
+    .filter(Boolean)
+    .sort((a,b) => a.dayIdx - b.dayIdx || a.timeIdx - b.timeIdx || a.name.localeCompare(b.name, 'id'));
+}
+
+function update(){
+  if(!schedule) return;
+  btnRefs.forEach((buttons,id) => {
+    const active = selected.has(id);
+    buttons.forEach(button => {
+      button.classList.toggle('sel', active);
+      button.setAttribute('aria-pressed', String(active));
+    });
+  });
+
+  const items = sortedSelected();
+  const wajibCodes = new Set(items.filter(c => c.type === 'wajib').map(c => c.code));
+  const pilihanCodes = new Set(items.filter(c => c.type === 'pilihan').map(c => c.code));
+  const totalSlots = new Set(schedule.courses.map(c => c.dayIdx + '-' + c.timeIdx)).size;
+  const totalWajib = new Set(schedule.courses.filter(c => c.type === 'wajib').map(c => c.code)).size;
+  const sks = selectedSks(items);
+
+  setStat(document.getElementById('stSlot'), items.length);
+  setStat(document.getElementById('stWajib'), wajibCodes.size);
+  setStat(document.getElementById('stPil'), pilihanCodes.size);
+  setStat(document.getElementById('stAktif'), items.length);
+  document.getElementById('barSlot').style.width = totalSlots ? Math.min(100, items.length / totalSlots * 100) + '%' : '0%';
+  document.getElementById('stAktifSub').textContent = 'Wajib ' + wajibCodes.size + ' · Pilihan ' + pilihanCodes.size;
+  document.getElementById('panelCount').textContent = items.length + ' MK';
+  document.getElementById('panelMk').textContent = items.length;
+  document.getElementById('panelSks').textContent = sks;
+  document.getElementById('mbarCount').textContent = items.length + ' MK · ' + sks + ' SKS';
+  document.getElementById('mbarSub').textContent = 'Wajib ' + wajibCodes.size + '/' + totalWajib + ' · Pilihan ' + pilihanCodes.size;
+
+  const listEl = document.getElementById('selList');
+  listEl.innerHTML = '';
+  if(!items.length){
+    listEl.innerHTML = '<div class="empty"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3" stroke="currentColor" stroke-width="1.6"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Belum ada mata kuliah dipilih.<br>Klik kelas pada peta slot untuk mulai menyusun jadwal.</div>';
+  }else{
+    items.forEach(c => {
+      const row = document.createElement('div');
+      row.className = 'sel-item' + (c.type === 'wajib' ? ' wb' : '');
+      const dayShort = ['Sen','Sel','Rab','Kam','Jum','Sab','Min'][c.dayIdx] || schedule.days[c.dayIdx];
+      row.innerHTML =
+        '<div class="si-when"><b>' + esc(dayShort) + '</b><span>' + esc(schedule.times[c.timeIdx]) + '</span></div>' +
+        '<div class="si-info"><span class="si-name">' + esc(c.name) + (c.star ? ' <span style="color:var(--amber)">★</span>' : '') + (c.warn ? ' <span style="color:var(--warn)">⚠</span>' : '') + '</span>' +
+        '<span class="si-meta">' + metaHtml(c) + ' · ' + (c.type === 'wajib' ? 'Wajib' : 'Pilihan') + (courseSks(c) ? ' · ' + courseSks(c) + ' SKS' : '') + '</span></div>' +
+        '<button class="si-item-x" type="button" title="Hapus" aria-label="Hapus ' + esc(c.name) + '">×</button>';
+      row.querySelector('.si-item-x').addEventListener('click', () => {
+        selected.delete(c.id);
+        saveSelection(appSem, selected);
+        update();
+        toast('"' + c.name + '" dihapus');
+      });
+      listEl.appendChild(row);
+    });
+  }
+  buildPrint(items);
+}
+
+function buildPrint(items){
+  const ps = document.getElementById('printSheet');
+  const now = new Date();
+  const today = now.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
+  const printTime = now.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}).replace('.', ':');
+  const sks = selectedSks(items);
+  const wajib = items.filter(c => c.type === 'wajib').length;
+  const pilihan = items.filter(c => c.type !== 'wajib').length;
+
+  const rows = items.length
+    ? items.map(c => {
+        const type = c.type === 'wajib' ? 'Wajib' : 'Pilihan';
+        const tagClass = c.type === 'wajib' ? 'wajib' : 'pilihan';
+        return '<tr>' +
+          '<td><span class="ps-day">' + esc(schedule.days[c.dayIdx]) + '</span></td>' +
+          '<td><span class="ps-time">' + esc(schedule.times[c.timeIdx]) + '</span></td>' +
+          '<td><span class="ps-course-name">' + esc(c.name) + '</span><span class="ps-course-code">' + esc(c.code) + (courseSks(c) ? ' · ' + courseSks(c) + ' SKS' : '') + '</span></td>' +
+          '<td><span class="ps-tag ' + tagClass + '">' + type + '</span></td>' +
+          '<td>' + esc(c.kelas || '—') + '</td>' +
+          '<td>' + esc(c.room || '—') + '</td>' +
+        '</tr>';
+      }).join('')
+    : '<tr><td colspan="6" class="ps-empty">Belum ada mata kuliah yang dipilih.</td></tr>';
+
+  ps.innerHTML =
+    '<header class="ps-header">' +
+      '<div class="ps-brand">TM</div>' +
+      '<div>' +
+        '<p class="ps-eyebrow">Institut Teknologi Sepuluh Nopember · Departemen Teknik Mesin</p>' +
+        '<h1>Jadwal Kuliah Semester ' + appSem + '</h1>' +
+        '<p class="ps-sub">S1 Teknik Mesin · ' + esc(schedule.term || 'Periode akademik') + '</p>' +
+      '</div>' +
+      '<div class="ps-term">Semester ' + appSem + '</div>' +
+    '</header>' +
+    '<section class="ps-summary">' +
+      '<div class="ps-stat"><span class="ps-stat-label">Mata Kuliah</span><span class="ps-stat-value">' + items.length + ' MK</span></div>' +
+      '<div class="ps-stat"><span class="ps-stat-label">Total Beban</span><span class="ps-stat-value">' + sks + ' SKS</span></div>' +
+      '<div class="ps-stat"><span class="ps-stat-label">Wajib / Pilihan</span><span class="ps-stat-value">' + wajib + ' / ' + pilihan + '</span></div>' +
+    '</section>' +
+    '<div class="ps-section-head"><h2>Rincian Jadwal Mingguan</h2><span>Wajib / Pilihan: ' + wajib + ' / ' + pilihan + '</span></div>' +
+    '<div class="ps-table-wrap">' +
+      '<table>' +
+        '<colgroup><col class="ps-c-day"><col class="ps-c-time"><col class="ps-c-course"><col class="ps-c-status"><col class="ps-c-class"><col class="ps-c-room"></colgroup>' +
+        '<thead><tr><th>Hari</th><th>Waktu</th><th>Mata Kuliah</th><th>Status</th><th>Kelas</th><th>Ruang</th></tr></thead>' +
+        '<tbody>' + rows + '</tbody>' +
+      '</table>' +
+    '</div>' +
+    '<footer class="ps-footer">' +
+      '<div><strong>Planner Jadwal S1 Teknik Mesin ITS</strong><br>Dokumen ini dibuat dari jadwal yang dipilih pada planner.</div>' +
+      '<div class="ps-footer-right">Dicetak ' + esc(today) + ' · ' + esc(printTime) + '<br>' + esc(schedule.term || '') + '</div>' +
+    '</footer>';
+}
+
+function toast(message){
+  const el = document.getElementById('toast');
+  el.textContent = message;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+}
+
+async function copyText(text){
+  try{
+    await navigator.clipboard.writeText(text);
+    return true;
+  }catch{
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand('copy');
+    ta.remove();
+    return ok;
+  }
+}
+
+async function doCopy(){
+  if(!schedule || !selected.size) return toast('Belum ada pilihan untuk disalin');
+  const items = sortedSelected();
+  const wajibCount = new Set(items.filter(c => c.type === 'wajib').map(c => c.code)).size;
+  const pilihanCount = new Set(items.filter(c => c.type === 'pilihan').map(c => c.code)).size;
+  const lines = ['JADWAL SEMESTER ' + appSem + ' · S1 TEKNIK MESIN ITS', schedule.term || '', '='.repeat(42)];
+
+  schedule.days.forEach((day,dayIdx) => {
+    const dayItems = items.filter(c => c.dayIdx === dayIdx);
+    if(!dayItems.length) return;
+    lines.push('', day.toUpperCase());
+    dayItems.forEach(c => {
+      lines.push('  ' + schedule.times[c.timeIdx] + ' | ' + c.name + ' (' + c.code + ')' +
+        (c.kelas === '-' ? '' : ', Kelas ' + c.kelas) + ' | ' + c.room + ' [' + (c.type === 'wajib' ? 'Wajib' : 'Pilihan') + ']' +
+        (c.star ? ' ★' : '') + (c.warn ? ' ⚠' : ''));
+    });
+  });
+
+  lines.push('', '-'.repeat(42), 'Total: ' + items.length + ' MK | ' + selectedSks(items) + ' SKS | Wajib: ' + wajibCount + ' | Pilihan: ' + pilihanCount);
+  const copied = await copyText(lines.join('\n'));
+  toast(copied ? 'Ringkasan disalin ✓' : 'Gagal menyalin ringkasan');
+}
+
+function resetSelection(){
+  if(!selected.size) return toast('Jadwal masih kosong');
+  if(confirm('Hapus semua pilihan?')){
+    selected.clear();
+    saveSelection(appSem, selected);
+    update();
+    toast('Jadwal direset');
+  }
+}
+
+// ================================================================
+// EVENTS & INIT
+// ================================================================
+function bindEvents(){
+  document.getElementById('semGrid').addEventListener('click', handleDashboardAction);
+
+  document.getElementById('navTabs').addEventListener('click', event => {
+    const tab = event.target.closest('.tab');
+    if(!tab) return;
+    if(tab.dataset.nav === 'dashboard') navDashboard();
+    if(tab.dataset.nav === 'import') navImport();
+    if(tab.dataset.nav === 'planner'){
+      if(schedule) showView('planner');
+      else if(appSem && getScheduleForSemester(appSem)) openSchedule(appSem);
+      else navDashboard();
+    }
+  });
+
+  document.getElementById('tileImport').addEventListener('click', () => navImport(7));
+  document.getElementById('tileSample').addEventListener('click', () => navPicker(7, BUILTIN_SCHEDULES[7]));
+
+  const dropzone = document.getElementById('dropzone');
+  const fileInput = document.getElementById('fileInput');
+  const readFile = file => {
+    if(!file) return;
+    if(!file.name.toLowerCase().endsWith('.json') && file.type !== 'application/json') return showImportError('Pilih file dengan format .json.');
+    const reader = new FileReader();
+    reader.onerror = () => showImportError('File tidak dapat dibaca.');
+    reader.onload = event => {
+      document.getElementById('jsonInput').value = String(event.target.result || '');
+      validateAndLoadJSON(event.target.result);
+    };
+    reader.readAsText(file);
+  };
+  dropzone.addEventListener('click', () => fileInput.click());
+  dropzone.addEventListener('keydown', event => {
+    if(event.key === 'Enter' || event.key === ' '){
+      event.preventDefault();
+      fileInput.click();
+    }
+  });
+  dropzone.addEventListener('dragover', event => { event.preventDefault(); dropzone.classList.add('drag'); });
+  dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag'));
+  dropzone.addEventListener('drop', event => {
+    event.preventDefault();
+    dropzone.classList.remove('drag');
+    readFile(event.dataTransfer.files?.[0]);
+  });
+  fileInput.addEventListener('change', event => readFile(event.target.files?.[0]));
+
+  document.getElementById('btnLoadJson').addEventListener('click', () => validateAndLoadJSON(document.getElementById('jsonInput').value));
+  document.getElementById('btnSample').addEventListener('click', () => {
+    const raw = buildSampleJson(7);
+    document.getElementById('selSem').value = '7';
+    document.getElementById('jsonInput').value = JSON.stringify(raw, null, 2);
+    document.getElementById('importError').hidden = true;
+    toast('Contoh Semester 7 dimuat ke editor');
+  });
+  document.getElementById('btnFormat').addEventListener('click', openFormatModal);
+  document.getElementById('modalClose').addEventListener('click', closeFormatModal);
+  document.getElementById('btnModalOk').addEventListener('click', closeFormatModal);
+  document.getElementById('btnCopyFormat').addEventListener('click', async () => {
+    const ok = await copyText(JSON.stringify(SCHEMA_EXAMPLE, null, 2));
+    toast(ok ? 'Format JSON disalin ✓' : 'Gagal menyalin format');
+  });
+  document.getElementById('modal').addEventListener('click', event => { if(event.target.id === 'modal') closeFormatModal(); });
+
+  document.getElementById('catBack').addEventListener('click', closeCatalog);
+  document.getElementById('catalogModal').addEventListener('click', event => { if(event.target.id === 'catalogModal') closeCatalog(); });
+  document.getElementById('catMain').addEventListener('click', event => {
+    const btn = event.target.closest('[data-action]');
+    if(!btn) return;
+    const sem = Number(btn.dataset.sem);
+    closeCatalog();
+    if(btn.dataset.action === 'openSchedule') openSchedule(sem);
+    if(btn.dataset.action === 'navImport') navImport(sem);
+  });
+
+  document.querySelectorAll('.vt').forEach(button => button.addEventListener('click', () => setView(button.dataset.view)));
+  document.getElementById('chips').addEventListener('click', event => {
+    const chip = event.target.closest('.chip');
+    if(chip) applyFilter(chip.dataset.f);
+  });
+
+  document.getElementById('btnBack').addEventListener('click', navDashboard);
+  document.getElementById('btnReimport').addEventListener('click', () => navImport(appSem || 7));
+
+  ['topCopy','btnCopy','mCopy'].forEach(id => document.getElementById(id)?.addEventListener('click', doCopy));
+  ['topPrint','btnPrint','mPrint'].forEach(id => document.getElementById(id)?.addEventListener('click', () => window.print()));
+  ['topReset','btnReset','mReset'].forEach(id => document.getElementById(id)?.addEventListener('click', resetSelection));
+
+  document.addEventListener('keydown', event => {
+    if(event.key !== 'Escape') return;
+    if(!document.getElementById('catalogModal').hidden) closeCatalog();
+    else if(!document.getElementById('modal').hidden) closeFormatModal();
+  });
+
+  window.addEventListener('resize', () => { if(fadeCheckCurrent) fadeCheckCurrent(); }, {passive:true});
+}
+
+bindEvents();
+navDashboard();
+
+</script>
+</body>
+</html>
