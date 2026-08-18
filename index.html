@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Planner Jadwal — S1 Teknik Mesin ITS</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<title>Planner & Tracker — S1 Teknik Mesin ITS</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/plus-jakarta-sans@5/latin-400.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/plus-jakarta-sans@5/latin-500.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/plus-jakarta-sans@5/latin-600.css" />
@@ -84,7 +85,7 @@ h1{font-family:var(--disp);font-weight:600;font-size:clamp(24px,3.6vw,38px);line
 .btn:focus-visible,.chip:focus-visible,.tab:focus-visible,.sem-card:focus-visible,.tile:focus-visible,.vt:focus-visible,.si-x:focus-visible,.mbtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
 /* ---------- Dashboard ---------- */
-.quick-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
+.quick-row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:24px}
 .tile{
   display:flex;gap:14px;align-items:flex-start;text-align:left;
   background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 17px;
@@ -420,6 +421,7 @@ h1{font-family:var(--disp);font-weight:600;font-size:clamp(24px,3.6vw,38px);line
   .ps-time{font-variant-numeric:tabular-nums;font-weight:700;color:#46514C;white-space:nowrap}
   .ps-course-name{display:block;font-size:9.7px;font-weight:750;color:#17201D;line-height:1.35}
   .ps-course-code{display:block;margin-top:1px;font-family:var(--mono);font-size:7.8px;color:#7A837F}
+.ps-course-lecturer{display:block;margin-top:2px;font-size:7.1px;line-height:1.3;color:#66716C}
   .ps-tag{display:inline-block;font-size:7.3px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;border-radius:999px;padding:3px 6px;white-space:nowrap}
   .ps-tag.wajib{background:#E9F2EE;color:#0C4A41;border:1px solid #CFE0D8}
   .ps-tag.pilihan{background:#F3F1E9;color:#6F6A58;border:1px solid #E2DED0}
@@ -427,6 +429,20 @@ h1{font-family:var(--disp);font-weight:600;font-size:clamp(24px,3.6vw,38px);line
   .ps-footer{display:flex;justify-content:space-between;gap:12px;align-items:flex-end;margin-top:12px;padding-top:9px;border-top:1px solid #E2E7E4;color:#7A837F;font-size:7.8px}
   .ps-footer strong{color:#46514C;font-weight:700}
   .ps-footer-right{text-align:right}
+  .ps-status{display:inline-block;border-radius:999px;padding:3px 6px;font-size:7.2px;font-weight:800;white-space:nowrap}
+  .ps-status.taken{background:#E9F2EE;color:#0C4A41;border:1px solid #CFE0D8}
+  .ps-status.pending{background:#F5F3EC;color:#6F6A58;border:1px solid #E2DED0}
+  .ps-status.planning{background:#FFF6DF;color:#8A6100;border:1px solid #E9D9A7}
+  #printSheet col.pt-c-sem{width:8%}
+  #printSheet col.pt-c-code{width:14%}
+  #printSheet col.pt-c-course{width:37%}
+  #printSheet col.pt-c-req{width:15%}
+  #printSheet col.pt-c-sks{width:8%}
+  #printSheet col.pt-c-status{width:18%}
+  .pt-sem{font-weight:800;color:#174F45;text-align:center}
+  .pt-code{font-family:var(--mono);font-size:8px;color:#5E6964}
+  .pt-sks{text-align:center;font-weight:800}
+  .pt-filter-note{margin:8px 0 12px;padding:7px 9px;border:1px solid #E0E6E2;border-radius:8px;background:#FBFCFB;color:#66716C;font-size:8.4px}
 }
 
 /* ---------- Responsive ---------- */
@@ -508,105 +524,231 @@ h1{font-family:var(--disp);font-weight:600;font-size:clamp(24px,3.6vw,38px);line
 .ibtn{display:inline-block; margin-top:16px; padding:10px 16px; font-size:12px; font-weight:700; border-radius:10px; border:none; cursor:pointer; background:var(--accent); color:#fff; text-align:center; transition:.2s}
 .ibtn:hover{background:var(--accent-deep)}
 
+.ct-lecturer{min-width:250px;max-width:430px;font-size:11px;line-height:1.55;color:var(--ink2)}
+.ct-lecturer.missing{font-style:italic;color:#918C7D}
+.course .lecturer,.lcourse .lecturer{
+  font-size:9.5px;line-height:1.4;color:var(--accent-deep);font-weight:600;margin-top:2px;
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;
+}
+.si-lecturer{
+  display:block;font-size:9.8px;line-height:1.45;color:var(--accent-deep);font-weight:600;margin-top:3px;
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;
+}
 
-/* ---------- Simple access gate ---------- */
-.access-pending > .site-head,
-.access-pending > main,
-.access-pending > .foot,
-.access-pending > .mbar{display:none !important}
-.access-gate{
-  position:fixed;inset:0;z-index:200;display:grid;place-items:center;padding:22px;
-  background:linear-gradient(160deg,#F8F7F2 0%,#F1F0E9 52%,#E8EFEA 100%);
+/* ---------- Academic tracker ---------- */
+.dash-summary{grid-template-columns:repeat(4,1fr)}
+.tracker-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:18px}
+.tracker-head h2{font-family:var(--disp);font-size:28px;font-weight:600;margin-top:5px}
+.tracker-head p{font-size:12.5px;color:var(--ink2);line-height:1.65;margin-top:6px;max-width:700px}
+.tracker-head-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.tracker-summary{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:12px;margin-bottom:18px}
+.tracker-summary-card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:16px;box-shadow:0 10px 26px -24px rgba(28,33,31,.45)}
+.tracker-summary-card.primary{background:linear-gradient(155deg,#14584E,#0B3F37);border-color:#0B3F37;color:#F3F7F4}
+.tracker-summary-card .ts-label{display:block;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2)}
+.tracker-summary-card.primary .ts-label,.tracker-summary-card.primary .ts-sub{color:rgba(243,247,244,.7)}
+.tracker-summary-card .ts-value{display:block;font-size:27px;font-weight:800;line-height:1.1;margin-top:7px}
+.tracker-summary-card .ts-sub{display:block;font-size:10.5px;color:var(--ink2);margin-top:5px;line-height:1.5}
+.tracker-progress{height:7px;background:#E7ECE9;border-radius:99px;overflow:hidden;margin-top:12px}
+.tracker-progress > span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#2E9384);border-radius:inherit;transition:width .3s ease}
+.tracker-toolbar{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin:4px 0 12px}
+.tracker-semesters,.tracker-status{display:flex;gap:7px;flex-wrap:wrap}
+.tracker-context{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:0 0 12px;padding:11px 13px;border:1px solid var(--line);border-radius:12px;background:var(--soft);font-size:11.5px;color:var(--ink2)}
+.tracker-context b{color:var(--ink)}
+.tracker-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+
+
+
+/* ---------- Tracker action bar & stronger controls ---------- */
+.tracker-actionbar{
+  display:flex;justify-content:space-between;gap:14px;align-items:center;
+  background:linear-gradient(155deg,#F5F8F6,#FFFFFF);border:1px solid var(--accent-line);
+  border-radius:15px;padding:13px 14px;margin:0 0 16px;box-shadow:0 12px 28px -25px rgba(18,105,92,.55);
 }
-.access-gate[hidden]{display:none !important}
-.access-card{
-  width:min(100%,480px);background:#fff;border:1px solid var(--line);border-radius:22px;
-  box-shadow:0 28px 70px -34px rgba(28,33,31,.5);padding:28px;
+.tracker-action-copy{min-width:0}
+.tracker-action-copy b{display:block;font-size:12px;font-weight:800;color:var(--ink)}
+.tracker-action-copy span{display:block;font-size:10.5px;color:var(--ink2);line-height:1.5;margin-top:3px}
+.tracker-action-buttons{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.tracker-print-btn{padding:10px 15px!important;box-shadow:0 8px 18px -12px rgba(18,105,92,.75)}
+.tracker-filter-group{display:flex;flex-direction:column;gap:7px;min-width:0}
+.tracker-filter-label{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2)}
+.tracker-status .chip{display:inline-flex;align-items:center;gap:6px}
+.chip-count{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 6px;border-radius:99px;background:#F0EEE6;color:var(--ink2);font-size:9px;font-weight:800}
+.chip.active .chip-count{background:rgba(255,255,255,.16);color:#fff}
+.track-toggle.pending-action{border-color:var(--accent-line);background:var(--accent-soft);color:var(--accent-deep)}
+.track-toggle.pending-action:hover{background:#DDECE5;border-color:var(--accent)}
+.sem-card-actions{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-top:auto;padding-top:6px}
+.sem-demo-action{
+  grid-column:1/-1;width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;
+  border:1px dashed #C7B56F;background:#FFFBEC;color:#725C13;border-radius:10px;padding:9px 10px;
+  font-size:10.5px;font-weight:800;text-align:left;transition:.16s;
 }
-.access-brand{display:flex;align-items:center;gap:13px;margin-bottom:23px}
-.access-brand .mono-mark{width:44px;height:44px;border-radius:12px;font-size:17px}
-.access-kicker{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
-.access-card h2{font-family:var(--disp);font-size:27px;font-weight:600;line-height:1.15;margin-top:3px}
-.access-desc{font-size:12.5px;line-height:1.7;color:var(--ink2);margin-bottom:20px}
-.access-form{display:grid;gap:13px}
-.access-field{display:grid;gap:6px}
-.access-field span{font-size:11px;font-weight:800;color:var(--ink2);letter-spacing:.04em}
-.access-field input{
-  width:100%;border:1px solid var(--line2);border-radius:11px;background:var(--soft);
-  padding:11px 13px;font-size:13px;outline:none;transition:.16s;
+.sem-demo-action:hover{border-style:solid;background:#FFF6D9;transform:translateY(-1px)}
+.sem-demo-action span{display:flex;align-items:center;gap:7px}
+.sem-demo-action small{font-size:8.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#8A6B14;background:#F6E9B5;border-radius:99px;padding:3px 6px}
+.demo-banner{display:flex;align-items:flex-start;gap:10px;background:#FFF8E2;border:1px solid #E8D49A;border-radius:12px;padding:10px 13px;margin-bottom:13px;color:#6F5815;font-size:11.5px;line-height:1.55}
+.demo-banner b{color:#5B470E}
+@media(max-width:720px){
+  .tracker-actionbar{align-items:stretch;flex-direction:column}
+  .tracker-action-buttons{display:grid;grid-template-columns:1fr 1fr}
+  .tracker-action-buttons .tracker-print-btn{grid-column:1/-1}
+  .tracker-action-buttons .btn{width:100%}
 }
-.access-field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);background:#fff}
-.access-row{display:grid;grid-template-columns:1.35fr .65fr;gap:10px}
-.access-error{font-size:11.5px;line-height:1.5;color:var(--danger);background:#FBF0EF;border:1px solid #E4B8B4;border-radius:10px;padding:9px 11px}
-.access-submit{width:100%;margin-top:3px}
-.access-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:3px}
-.access-actions .access-submit{margin-top:0}
-.access-preview{width:100%}
-.access-note{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-size:10.5px;line-height:1.6;color:var(--ink2)}
-.user-pill{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line2);border-radius:99px;padding:4px 5px 4px 11px;max-width:260px}
+@media(max-width:460px){
+  .tracker-action-buttons{grid-template-columns:1fr}
+  .tracker-action-buttons .tracker-print-btn{grid-column:auto}
+  .sem-card-actions{grid-template-columns:1fr}
+  .sem-demo-action{grid-column:auto}
+}
+
+/* ---------- Local data backup ---------- */
+.data-vault{
+  display:block;
+  background:#fff;border:1px solid var(--line);border-radius:15px;padding:15px 16px;margin:0 0 18px;
+  box-shadow:0 10px 26px -24px rgba(28,33,31,.45);
+}
+.data-vault-main{display:flex;gap:12px;align-items:flex-start;min-width:0}
+.data-vault-ic{
+  width:38px;height:38px;border-radius:11px;background:var(--accent-soft);color:var(--accent-deep);
+  display:grid;place-items:center;flex:none;
+}
+.data-vault h3{font-size:13px;font-weight:800;line-height:1.35}
+.data-vault p{font-size:10.8px;color:var(--ink2);line-height:1.55;margin-top:4px}
+.data-vault-status{display:inline-flex;align-items:center;gap:6px;margin-top:7px;font-size:9.5px;font-weight:800;color:var(--accent-deep)}
+.data-vault-status::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.data-vault-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.data-vault-actions .btn{min-width:120px}
+.data-restore-note{font-size:9.5px;color:var(--ink2);margin-top:5px}
+@media(max-width:720px){
+  .data-vault{grid-template-columns:1fr}
+  .data-vault-actions{display:grid;grid-template-columns:1fr 1fr;justify-content:stretch}
+  .data-vault-actions .btn{min-width:0;width:100%}
+}
+@media(max-width:420px){
+  .data-vault-actions{grid-template-columns:1fr}
+}
+
+
+/* ---------- Semester 6-8 curriculum plan ---------- */
+.curr-note{background:#EFF6F2;border:1px solid var(--accent-line);border-radius:13px;padding:12px 14px;font-size:11.5px;line-height:1.65;color:#315B52;margin-bottom:14px}
+.curr-note b{color:var(--accent-deep)}
+.curr-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:14px}
+.curr-stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px 12px}
+.curr-stat span{display:block;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2)}
+.curr-stat b{display:block;font-size:20px;margin-top:4px;color:var(--ink)}
+.curr-stat small{display:block;font-size:9.5px;color:var(--ink2);margin-top:3px;line-height:1.4}
+.curr-section{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:12px}
+.curr-section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line);background:var(--soft)}
+.curr-section-head h3{font-size:13px;font-weight:800}
+.curr-section-head span{font-size:10px;color:var(--ink2);font-weight:700}
+.curr-list{display:flex;flex-direction:column}
+.curr-row{display:grid;grid-template-columns:minmax(0,1fr) 120px;gap:12px;align-items:center;padding:11px 14px;border-bottom:1px solid var(--line)}
+.curr-row:last-child{border-bottom:none}
+.curr-main{min-width:0}
+.curr-top{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:4px}
+.curr-kind{font-size:8px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;border-radius:99px;padding:3px 7px;background:var(--accent-soft);color:var(--accent-deep)}
+.curr-kind.choice{background:#F3F1E9;color:#6F6A58}
+.curr-kind.religion{background:#EEF0F7;color:#4A5477}
+.curr-code{font-family:var(--mono);font-size:9px;color:var(--ink2)}
+.curr-main h4{font-size:12.5px;font-weight:750;line-height:1.35}
+.curr-main p{font-size:10px;color:var(--ink2);line-height:1.45;margin-top:3px}
+.curr-select{width:100%;border:1px solid var(--line2);border-radius:10px;background:#fff;padding:8px 10px;font-size:11px;font-weight:700;outline:none}
+.curr-select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.curr-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.curr-actions .btn{flex:1}
+.curr-details{border:1px solid var(--line);border-radius:12px;background:#fff;margin-top:12px;overflow:hidden}
+.curr-details summary{cursor:pointer;padding:11px 13px;font-size:11.5px;font-weight:800;background:var(--soft);list-style:none}
+.curr-details summary::-webkit-details-marker{display:none}
+.curr-details summary::after{content:'+';float:right;color:var(--accent);font-size:16px;line-height:1}
+.curr-details[open] summary::after{content:'−'}
+.curr-choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;border-top:1px solid var(--line)}
+.curr-choice{padding:10px 12px;border-bottom:1px solid var(--line);font-size:10.5px;line-height:1.45}
+.curr-choice:nth-child(odd){border-right:1px solid var(--line)}
+.curr-choice b{display:block;font-size:11px;color:var(--ink)}
+.curr-choice span{color:var(--ink2);font-family:var(--mono);font-size:9px}
+.curr-warning{display:inline-flex;align-items:center;gap:5px;background:#FFF7E6;color:#7A5A16;border:1px solid #E9D8A4;border-radius:99px;padding:5px 9px;font-size:9.5px;font-weight:800}
+.track-course.placeholder{border-style:dashed;background:var(--soft)}
+.track-course.placeholder .track-toggle{opacity:.65;cursor:default}
+
+@media(max-width:620px){
+  .curr-summary{grid-template-columns:1fr}
+  .curr-row{grid-template-columns:1fr;gap:8px}
+  .curr-choice-grid{grid-template-columns:1fr}
+  .curr-choice:nth-child(odd){border-right:none}
+}
+.track-course{background:#fff;border:1px solid var(--line);border-radius:15px;padding:15px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:13px;align-items:center;transition:.18s}
+.track-course:hover{border-color:#C9C5B6;box-shadow:var(--shadow);transform:translateY(-1px)}
+.track-course.taken{background:#F3F8F5;border-color:var(--accent-line)}
+.track-course-main{min-width:0}
+.track-course-top{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:6px}
+.track-sem{font-size:8.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-deep);background:var(--accent-soft);border-radius:99px;padding:3px 7px}
+.track-code{font-family:var(--mono);font-size:9.5px;font-weight:700;color:var(--ink2)}
+.track-sks{font-size:9px;font-weight:800;color:var(--ink2);border:1px solid var(--line);border-radius:99px;padding:2px 7px}
+.track-course h3{font-size:13px;line-height:1.4;font-weight:800;margin-bottom:5px}
+.track-lecturer{font-size:10.3px;line-height:1.5;color:var(--ink2);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.track-lecturer b{font-weight:700;color:var(--accent-deep)}
+.track-toggle{min-width:112px;border:1px solid var(--line2);background:#fff;border-radius:11px;padding:9px 11px;font-size:10.5px;font-weight:800;transition:.16s;white-space:nowrap}
+.track-toggle:hover{border-color:var(--accent);color:var(--accent-deep)}
+.track-toggle.taken{background:var(--accent);border-color:var(--accent);color:#fff}
+.track-empty{grid-column:1/-1;border:1.5px dashed var(--line2);border-radius:14px;background:#fff;text-align:center;padding:28px 16px;font-size:12px;color:var(--ink2)}
+.sem-progress{height:5px;border-radius:99px;background:#ECE9DF;overflow:hidden;margin-top:3px}
+.sem-progress span{display:block;height:100%;background:var(--accent);border-radius:inherit}
+.sem-card.track-complete{background:#F5F9F7;border-color:var(--accent-line)}
+
+@media(max-width:860px){
+  .dash-summary{grid-template-columns:repeat(2,1fr)}
+  .tracker-head{flex-direction:column}
+  .tracker-head-actions{width:100%;justify-content:stretch}
+  .tracker-head-actions .btn{flex:1}
+  .tracker-summary{grid-template-columns:1fr}
+  .tracker-toolbar{align-items:stretch}
+  .tracker-semesters,.tracker-status{overflow-x:auto;flex-wrap:nowrap;padding-bottom:2px;scrollbar-width:none}
+  .tracker-semesters::-webkit-scrollbar,.tracker-status::-webkit-scrollbar{display:none}
+  .tracker-list{grid-template-columns:1fr}
+  .track-course{padding:13px}
+}
+@media(max-width:460px){
+  .track-course{grid-template-columns:1fr}
+  .track-toggle{width:100%}
+}
+
+/* ---------- Print preview ---------- */
+.print-preview-modal{z-index:120;padding:18px;background:rgba(18,24,22,.68);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.print-preview-card{width:min(1180px,100%);height:min(94vh,920px);background:#F1F2EF;border:1px solid rgba(255,255,255,.25);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 34px 80px -34px rgba(0,0,0,.7)}
+.print-preview-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 14px;background:#fff;border-bottom:1px solid var(--line)}
+.print-preview-title{min-width:0}.print-preview-title b{display:block;font-size:13px}.print-preview-title span{display:block;font-size:10.5px;color:var(--ink2);margin-top:2px}
+.print-preview-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.print-preview-frame-wrap{flex:1;min-height:0;overflow:auto;padding:16px;background:#E9EBE8}
+#printPreviewFrame{display:block;width:100%;height:100%;min-height:620px;border:0;border-radius:10px;background:#fff;box-shadow:0 12px 35px -24px rgba(0,0,0,.5)}
+@media(max-width:860px){
+  .print-preview-modal{padding:0}
+  .print-preview-card{width:100%;height:100vh;border-radius:0;border:0}
+  .print-preview-head{align-items:flex-start;flex-direction:column}
+  .print-preview-actions{width:100%;display:grid;grid-template-columns:1fr 1fr}
+  .print-preview-actions .btn.primary{grid-column:1/-1}
+  .print-preview-frame-wrap{padding:8px}
+  #printPreviewFrame{min-height:72vh;border-radius:7px}
+}
+
+/* ---------- Local device state ---------- */
+.user-pill{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line2);border-radius:99px;padding:5px 11px;max-width:260px}
 .user-pill-text{min-width:0;display:flex;flex-direction:column;line-height:1.15}
 .user-pill-text b{font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:155px}
 .user-pill-text span{font-size:8.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
-.user-switch{width:27px;height:27px;border-radius:50%;display:grid;place-items:center;color:var(--ink2);font-size:13px;transition:.15s}
-.user-switch:hover{background:var(--soft);color:var(--ink)}
 .readonly-banner{display:flex;gap:9px;align-items:flex-start;background:#FFF9E9;border:1px solid #E9D9A7;border-radius:12px;padding:10px 13px;margin-bottom:14px;color:#765812;font-size:11.5px;line-height:1.55}
 .readonly-banner b{color:#5F4609}
-body.read-only .course,body.read-only .lcourse{cursor:default}
-body.read-only .course:hover,body.read-only .lcourse:hover{transform:none;box-shadow:none}
 button:disabled{cursor:not-allowed;opacity:.5;transform:none !important;box-shadow:none !important}
-
 @media(max-width:860px){
-  .access-card{padding:22px 18px;border-radius:18px}
-  .access-row{grid-template-columns:1fr}
-  .access-actions{grid-template-columns:1fr}
   .top-right{gap:8px}
-  .user-pill{order:3;max-width:100%;width:100%;justify-content:space-between;border-radius:11px;padding:7px 7px 7px 11px}
+  .user-pill{order:3;max-width:100%;width:100%;justify-content:space-between;border-radius:11px;padding:7px 11px}
   .user-pill-text b{max-width:230px}
 }
-
-@media print{
-  .access-gate,.user-pill,.readonly-banner{display:none !important}
-}
+@media print{.user-pill,.readonly-banner{display:none !important}}
 
 </style>
 </head>
 
-<body class="access-pending">
+<body>
 
-
-<section class="access-gate" id="accessGate" aria-labelledby="accessTitle">
-  <div class="access-card">
-    <div class="access-brand">
-      <div class="mono-mark">TM</div>
-      <div>
-        <div class="access-kicker">S1 Teknik Mesin ITS</div>
-        <h2 id="accessTitle">Masuk ke Planner</h2>
-      </div>
-    </div>
-    <p class="access-desc">Masukkan identitas mahasiswa untuk melanjutkan ke Planner Jadwal Teknik Mesin ITS.</p>
-    <form class="access-form" id="accessForm" novalidate>
-      <label class="access-field">
-        <span>NAMA</span>
-        <input id="accessName" name="name" type="text" autocomplete="name" placeholder="Nama lengkap" maxlength="80" required />
-      </label>
-      <div class="access-row">
-        <label class="access-field">
-          <span>NRP</span>
-          <input id="accessNrp" name="nrp" type="text" inputmode="numeric" autocomplete="off" placeholder="Masukkan NRP" maxlength="24" required />
-        </label>
-        <label class="access-field">
-          <span>ANGKATAN</span>
-          <input id="accessCohort" name="cohort" type="text" inputmode="numeric" autocomplete="off" placeholder="2024" maxlength="4" required />
-        </label>
-      </div>
-      <div class="access-error" id="accessError" hidden></div>
-      <div class="access-actions">
-        <button class="btn primary access-submit" type="submit">Masuk ke Planner →</button>
-        <button class="btn ghost access-preview" id="btnPreview" type="button">Preview tanpa login</button>
-      </div>
-    </form>
-  </div>
-</section>
 
 <header class="site-head wrap">
   <div class="topline">
@@ -614,21 +756,22 @@ button:disabled{cursor:not-allowed;opacity:.5;transform:none !important;box-shad
     <div class="top-right">
       <nav class="tabs" id="navTabs" aria-label="Navigasi utama">
         <button class="tab active" data-nav="dashboard">Dashboard</button>
+        <button class="tab" data-nav="tracker">Tracker MK</button>
         <button class="tab" data-nav="import">Import Jadwal</button>
         <button class="tab" data-nav="planner" id="tabPlanner" hidden>Penyusun Jadwal</button>
       </nav>
       <span class="term-pill">2026/2027</span>
       <div class="user-pill" id="userPill" hidden>
-        <span class="user-pill-text"><b id="userName">Pengguna</b><span id="userAccessMode">Lihat Saja</span></span>
-        <button class="user-switch" id="btnSwitchUser" type="button" title="Ganti identitas" aria-label="Ganti identitas">↻</button>
+        <span class="user-pill-text"><b id="userName">Perangkat ini</b><span id="userAccessMode">Akses Instan</span></span>
+        <button class="user-switch" id="btnSwitchUser" type="button" title="Data tersimpan lokal" aria-label="Data tersimpan lokal" hidden>✓</button>
       </div>
     </div>
   </div>
   <div class="title-row">
     <div class="mono-mark">TM</div>
     <div>
-      <h1>Planner Jadwal Kuliah</h1>
-      <p class="subtitle">Pilih semester untuk melihat katalog mata kuliah atau menyusun jadwal</p>
+      <h1>Planner &amp; Tracker Kuliah</h1>
+      <p class="subtitle">Pantau progres 141 SKS terpilih dari kurikulum 144 SKS dan susun jadwal semester lanjutan</p>
     </div>
   </div>
 </header>
@@ -638,22 +781,22 @@ button:disabled{cursor:not-allowed;opacity:.5;transform:none !important;box-shad
   <!-- ============ DASHBOARD ============ -->
   <section class="view view-enter" id="view-dashboard">
     <div class="quick-row">
+      <button class="tile" id="tileTracker">
+        <span class="tile-ic">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 4.5h12M4 10h12M4 15.5h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="m2.2 4.5.7.7 1.3-1.5M2.2 10l.7.7 1.3-1.5M2.2 15.5l.7.7 1.3-1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span>
+          <h3>Tracker Mata Kuliah</h3>
+          <p>Tandai mata kuliah yang sudah diambil dari Semester 1–8 dan lihat progres studi Anda.</p>
+        </span>
+      </button>
       <button class="tile" id="tileImport">
         <span class="tile-ic">
           <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 12.5V3.5M10 12.5 6.5 9M10 12.5 13.5 9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 13.5v1.7A1.8 1.8 0 0 0 4.8 17h10.4a1.8 1.8 0 0 0 1.8-1.8v-1.7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
         </span>
         <span>
-          <h3>Import Jadwal</h3>
-          <p>Upload file JSON jadwal untuk semester ini — dari export SiakNG atau file teman.</p>
-        </span>
-      </button>
-      <button class="tile dark" id="tileSample">
-        <span class="tile-ic">
-          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 2.5 11.8 7.2 16.5 9l-4.7 1.8L10 15.5 8.2 10.8 3.5 9l4.7-1.8L10 2.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M15.8 13.5 16.5 15.3 18.3 16l-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7.7-1.8Z" fill="currentColor"/></svg>
-        </span>
-        <span>
-          <h3>Muat Contoh (Semester 7)</h3>
-          <p>Coba planner langsung dengan data contoh 14 kelas Semester 7 siap pakai.</p>
+          <h3>Import Jadwal Semester 6–8</h3>
+          <p>Import JSON hanya saat jadwal mulai kompleks. Semester 1–5 cukup menggunakan tracker.</p>
         </span>
       </button>
     </div>
@@ -663,9 +806,80 @@ button:disabled{cursor:not-allowed;opacity:.5;transform:none !important;box-shad
       <h2>Dashboard</h2>
       <span id="dashInfo">Pilih semester</span>
     </div>
-    <div class="stats" id="dashSummary" style="margin-bottom:24px; grid-template-columns: repeat(3, 1fr);"></div>
+    <div class="stats dash-summary" id="dashSummary" style="margin-bottom:24px;"></div>
 
     <div class="sem-grid" id="semGrid"></div>
+  </section>
+
+  <!-- ============ TRACKER ============ -->
+  <section class="view" id="view-tracker" hidden>
+    <div class="tracker-head">
+      <div>
+        <span class="eyebrow">PROGRESS STUDI</span>
+        <h2>Tracker Mata Kuliah</h2>
+        <p>Tandai mata kuliah Semester 1–8 yang sudah Anda ambil. Untuk Semester 6–7, tentukan agama dan mata kuliah pilihan terlebih dahulu pada Rencana Semester.</p>
+      </div>
+      <div class="tracker-head-actions">
+        <button class="btn ghost sm" id="trackerBack">← Dashboard</button>
+      </div>
+    </div>
+
+    <div class="tracker-summary" id="trackerSummary"></div>
+
+    <section class="tracker-actionbar" aria-label="Aksi Tracker">
+      <div class="tracker-action-copy">
+        <b>Kelola dan cetak progres Anda</b>
+        <span>Cetak mengikuti semester dan status yang sedang dipilih. Data tetap tersimpan otomatis di perangkat ini.</span>
+      </div>
+      <div class="tracker-action-buttons">
+        <button class="btn primary sm tracker-print-btn" id="btnTrackerPrint" type="button" title="Cetak atau simpan Tracker sebagai PDF">🖨 Cetak / Simpan PDF</button>
+        <button class="btn ghost sm" id="btnBackupData" type="button">Backup</button>
+        <button class="btn ghost sm" id="btnRestoreData" type="button">Pulihkan</button>
+      </div>
+    </section>
+
+    <section class="data-vault" aria-labelledby="dataVaultTitle">
+      <div class="data-vault-main">
+        <span class="data-vault-ic" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 3.5h9.4L16 6.1v10.4H4V3.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7 3.5v4h6v-4M7 13h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </span>
+        <div>
+          <h3 id="dataVaultTitle">Data Saya</h3>
+          <p>Progres tersimpan otomatis di browser ini. Buat backup agar data dapat dipindahkan atau dipulihkan jika berganti perangkat.</p>
+          <span class="data-vault-status" id="dataVaultStatus">Tersimpan otomatis di perangkat ini</span>
+          <div class="data-restore-note" id="dataVaultNote">Backup mencakup tracker, rencana Semester 6–7, jadwal import, dan pilihan kelas.</div>
+        </div>
+      </div>
+      <input type="file" id="restoreDataInput" accept=".json,application/json" hidden />
+    </section>
+
+    <div class="tracker-toolbar">
+      <div class="tracker-filter-group">
+        <span class="tracker-filter-label">Semester</span>
+        <div class="tracker-semesters" id="trackerSemesters">
+          <button type="button" class="chip active" data-tracker-sem="all">Semua</button>
+          <button type="button" class="chip" data-tracker-sem="1">Sem 1</button>
+          <button type="button" class="chip" data-tracker-sem="2">Sem 2</button>
+          <button type="button" class="chip" data-tracker-sem="3">Sem 3</button>
+          <button type="button" class="chip" data-tracker-sem="4">Sem 4</button>
+          <button type="button" class="chip" data-tracker-sem="5">Sem 5</button>
+          <button type="button" class="chip" data-tracker-sem="6">Sem 6</button>
+          <button type="button" class="chip" data-tracker-sem="7">Sem 7</button>
+          <button type="button" class="chip" data-tracker-sem="8">Sem 8</button>
+        </div>
+      </div>
+      <div class="tracker-filter-group">
+        <span class="tracker-filter-label">Status Mata Kuliah</span>
+        <div class="tracker-status" id="trackerStatus">
+          <button type="button" class="chip active" data-tracker-status="all">Semua <span class="chip-count" data-status-count="all">0</span></button>
+          <button type="button" class="chip" data-tracker-status="pending">Belum diambil <span class="chip-count" data-status-count="pending">0</span></button>
+          <button type="button" class="chip" data-tracker-status="taken">Sudah diambil <span class="chip-count" data-status-count="taken">0</span></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="tracker-context" id="trackerContext"></div>
+    <div class="tracker-list" id="trackerCourseList"></div>
   </section>
 
   <!-- ============ IMPORT ============ -->
@@ -678,8 +892,8 @@ button:disabled{cursor:not-allowed;opacity:.5;transform:none !important;box-shad
     <div class="steps">
       <div class="step enter" style="animation-delay:.02s">
         <span class="step-num">1</span>
-        <h3>Siapkan file JSON jadwal</h3>
-        <p>Export jadwal dari SiakNG atau minta file dari teman, sesuaikan dengan format di bawah ini. Setiap kelas yang tersedia ditulis sebagai satu entri terpisah.</p>
+        <h3>Siapkan JSON Semester 6–8</h3>
+        <p>Import hanya diperlukan untuk semester lanjutan saat opsi kelas dan mata kuliah lebih banyak. Semester 1–5 dikelola melalui Tracker MK.</p>
       </div>
       <div class="step enter" style="animation-delay:.08s">
         <span class="step-num">2</span>
@@ -697,8 +911,7 @@ button:disabled{cursor:not-allowed;opacity:.5;transform:none !important;box-shad
       <label class="import-target">
         Semester tujuan
         <select id="selSem">
-          <option>1</option><option>2</option><option>3</option><option>4</option>
-          <option>5</option><option>6</option><option selected>7</option><option>8</option>
+          <option>6</option><option selected>7</option><option>8</option>
         </select>
       </label>
 
@@ -711,7 +924,7 @@ button:disabled{cursor:not-allowed;opacity:.5;transform:none !important;box-shad
 
       <div class="or-line">atau paste JSON di bawah</div>
 
-      <textarea id="jsonInput" spellcheck="false" placeholder='{ "semester": 7, "wajib_codes": ["TM234701"], "courses": [ { "name": "...", "code": "TM234701", "day": "Senin", "time": "07.00-08.40", "kelas": "A", "room": "C.101", "sks": 3 } ] }'></textarea>
+      <textarea id="jsonInput" spellcheck="false" placeholder='{ "semester": 7, "wajib_codes": ["TM234701"], "courses": [ { "name": "...", "code": "TM234701", "day": "Senin", "time": "07.00-08.40", "kelas": "A", "room": "C.101", "sks": 3, "dosen": "Nama Dosen" } ] }'></textarea>
 
       <div class="import-error" id="importError" hidden></div>
 
@@ -728,13 +941,16 @@ button:disabled{cursor:not-allowed;opacity:.5;transform:none !important;box-shad
     <div class="readonly-banner" id="readonlyBanner" hidden>
       <span>ℹ</span><span><b>Mode lihat saja.</b> Anda dapat melihat jadwal, katalog, menggunakan filter, menyalin, dan mencetak. Pemilihan mata kuliah dan import jadwal dinonaktifkan.</span>
     </div>
+    <div class="demo-banner" id="demoBanner" hidden>
+      <span>★</span><span><b>Mode contoh Semester 7.</b> <span id="demoBannerDetail">Contoh ini hanya menampilkan sebagian jadwal dan tidak mewakili total SKS Semester 7.</span> Perubahan di sini tidak disimpan dan tidak mengubah progres atau jadwal Anda.</span>
+    </div>
     <div class="ctx-bar">
       <span class="ctx-chip" id="ctxSem">Semester 7</span>
       <div class="ctx-actions">
         <button class="btn ghost sm" id="btnBack">← Dashboard</button>
         <button class="btn ghost sm" id="btnReimport" hidden>Import Ulang</button>
         <button class="btn ghost sm" id="topCopy" title="Salin ringkasan">&#128203;</button>
-        <button class="btn ghost sm" id="topPrint" title="Print/PDF">&#128438;</button>
+        <button class="btn primary sm" id="topPrint" title="Cetak atau simpan jadwal sebagai PDF">🖨 Cetak / PDF</button>
         <button class="btn ghost sm" id="topReset" style="color:var(--danger)" title="Reset pilihan">&#10227;</button>
       </div>
     </div>
@@ -814,13 +1030,15 @@ button:disabled{cursor:not-allowed;opacity:.5;transform:none !important;box-shad
         <div class="panel-foot">
           <div class="pnl-rows">
             <div class="pnl-row"><span>MK Dipilih</span><b id="panelMk">0</b></div>
-            <div class="pnl-row"><span>SKS Wajib</span><b id="panelWajibSks">0</b></div>
-            <div class="pnl-row"><span>SKS Pilihan</span><b id="panelPilihanSks">0</b></div>
-            <div class="pnl-row big"><span>Total SKS</span><b id="panelSks">0</b></div>
+            <div class="pnl-row"><span>SKS Wajib Terpilih</span><b id="panelWajibSks">0</b></div>
+            <div class="pnl-row"><span>SKS Pilihan Terpilih</span><b id="panelPilihanSks">0</b></div>
+            <div class="pnl-row"><span>Target Semester</span><b id="panelTargetSks">0</b></div>
+            <div class="pnl-row"><span>Sisa ke Target</span><b id="panelRemainingSks">0</b></div>
+            <div class="pnl-row big"><span>SKS Terpilih</span><b id="panelSks">0</b></div>
           </div>
           <div class="btn-row" style="margin-top:12px">
             <button class="btn primary" id="btnCopy">Salin Ringkasan</button>
-            <button class="btn ghost" id="btnPrint">Cetak</button>
+            <button class="btn primary" id="btnPrint">🖨 Cetak / PDF</button>
             <button class="btn danger" id="btnReset">Reset</button>
           </div>
         </div>
@@ -830,7 +1048,7 @@ button:disabled{cursor:not-allowed;opacity:.5;transform:none !important;box-shad
 </main>
 
 <footer class="foot">
-  Planner Jadwal S1 Teknik Mesin ITS · Data tersimpan otomatis di perangkat ini. Gunakan “Salin Ringkasan” untuk menyimpan atau membagikan hasil.
+  Planner & Tracker S1 Teknik Mesin ITS · Status mata kuliah dan jadwal tersimpan otomatis di perangkat ini.
 </footer>
 
 <nav class="mbar" id="mbar" aria-label="Aksi cepat" hidden>
@@ -840,7 +1058,7 @@ button:disabled{cursor:not-allowed;opacity:.5;transform:none !important;box-shad
   </div>
   <div class="mbar-actions">
     <button class="mbtn primary" id="mCopy">Salin</button>
-    <button class="mbtn" id="mPrint">Cetak</button>
+    <button class="mbtn primary" id="mPrint">Cetak / PDF</button>
     <button class="mbtn danger" id="mReset">Reset</button>
   </div>
 </nav>
@@ -875,6 +1093,25 @@ button:disabled{cursor:not-allowed;opacity:.5;transform:none !important;box-shad
       <div class="grid" id="catGrid" style="background:#fff; border:1px solid var(--line); border-radius:12px; overflow:hidden;"></div>
     </div>
   </div>
+</div>
+
+<div class="modal print-preview-modal" id="printPreviewModal" hidden aria-labelledby="printPreviewTitle">
+  <section class="print-preview-card">
+    <header class="print-preview-head">
+      <div class="print-preview-title">
+        <b id="printPreviewTitle">Pratinjau Cetak</b>
+        <span id="printPreviewMeta">Periksa tampilan sebelum mencetak atau menyimpan sebagai PDF.</span>
+      </div>
+      <div class="print-preview-actions">
+        <button class="btn ghost sm" id="printPreviewClose" type="button">Tutup</button>
+        <button class="btn ghost sm" id="printPreviewReload" type="button">↻ Muat ulang</button>
+        <button class="btn primary sm" id="printPreviewDo" type="button">🖨 Cetak / Simpan PDF</button>
+      </div>
+    </header>
+    <div class="print-preview-frame-wrap">
+      <iframe id="printPreviewFrame" title="Pratinjau dokumen cetak"></iframe>
+    </div>
+  </section>
 </div>
 
 <div id="printSheet"></div>
@@ -964,6 +1201,11 @@ const CATALOG = {
     {code:"TM234738",name:"Adhesive dan Sambungan Adhesive",sks:3},
     {code:"TM234718",name:"Aerodinamika",sks:3},
     {code:"UG234901",name:"Agama Islam",sks:2},
+    {code:"UG234902",name:"Agama Kristen",sks:2},
+    {code:"UG234903",name:"Agama Katolik",sks:2},
+    {code:"UG234904",name:"Agama Hindu",sks:2},
+    {code:"UG234905",name:"Agama Buddha",sks:2},
+    {code:"UG234906",name:"Agama Khonghucu",sks:2},
     {code:"TM234744",name:"AI dan Optimasi Metaheuristik",sks:3},
     {code:"TM234745",name:"Aliran Multi-Fase untuk Proses Aerasi",sks:3},
     {code:"TM234716",name:"Analisa Kegagalan Berbasis Vibrasi",sks:3},
@@ -1014,6 +1256,221 @@ const CATALOG = {
     {code:"TM234802",name:"Tugas Akhir",sks:4}
   ]}
 };
+
+// ================================================================
+// CURRICULUM RULES — SEMESTER 6-8
+// Import jadwal hanya mengatur kelas/hari/jam. Daftar MK berasal dari aturan ini.
+// Pilihan Pengayaan Semester 7 sengaja tidak dimasukkan.
+// ================================================================
+const SEMESTER_RULES = {
+  6:{
+    targetSks:18,
+    officialTargetSks:18,
+    fixed:["UG234911","UG234914","UG234915","TM234601","TM234602"],
+    choiceSlots:[{key:"choice1",label:"Pilihan I"},{key:"choice2",label:"Pilihan II"}],
+    note:"Semester 6 terdiri dari 5 mata kuliah tetap dan 2 mata kuliah pilihan. Total 18 SKS."
+  },
+  7:{
+    targetSks:20,
+    officialTargetSks:23,
+    excludedSks:3,
+    fixed:["UG234916","UG234912","UG234913","TM234701","TM234702"],
+    religion:{key:"religion",label:"Mata Kuliah Agama",options:["UG234901","UG234902","UG234903","UG234904","UG234905","UG234906"]},
+    choiceSlots:[{key:"choice3",label:"Pilihan III"},{key:"choice4",label:"Pilihan IV"}],
+    note:"Semester 7 resmi 23 SKS. Tracker memantau 20 SKS karena Pilihan Pengayaan 3 SKS sengaja dikecualikan."
+  },
+  8:{
+    targetSks:6,
+    officialTargetSks:6,
+    fixed:["TM234801","TM234802"],
+    choiceSlots:[],
+    note:"Semester 8 terdiri dari Kerja Praktek dan Tugas Akhir. Total 6 SKS."
+  }
+};
+
+function semesterTrackedTargetSks(sem){
+  sem = Number(sem);
+  if(sem <= 5) return (CATALOG[sem]?.courses || []).reduce((sum,c) => sum + Number(c.sks || 0), 0);
+  return Number(SEMESTER_RULES[sem]?.targetSks || 0);
+}
+
+function semesterOfficialTargetSks(sem){
+  sem = Number(sem);
+  if(sem <= 5) return semesterTrackedTargetSks(sem);
+  return Number(SEMESTER_RULES[sem]?.officialTargetSks ?? SEMESTER_RULES[sem]?.targetSks ?? 0);
+}
+
+const TRACKER_TARGET_SKS = [1,2,3,4,5,6,7,8].reduce((sum,sem) => sum + semesterTrackedTargetSks(sem), 0);
+const OFFICIAL_CURRICULUM_SKS = [1,2,3,4,5,6,7,8].reduce((sum,sem) => sum + semesterOfficialTargetSks(sem), 0);
+const EXCLUDED_TRACKER_SKS = OFFICIAL_CURRICULUM_SKS - TRACKER_TARGET_SKS;
+
+const RELIGION_CODES = new Set(["UG234901","UG234902","UG234903","UG234904","UG234905","UG234906"]);
+
+function catalogCourseByCode(code){
+  for(const sem of Object.keys(CATALOG)){
+    const found = CATALOG[sem].courses.find(c => c.code === code);
+    if(found) return found;
+  }
+  return null;
+}
+
+function choiceCandidates(sem){
+  const rule = SEMESTER_RULES[sem];
+  if(!rule) return [];
+  const excluded = new Set([...(rule.fixed || []), ...(rule.religion?.options || [])]);
+  return CATALOG[sem].courses.filter(c => !excluded.has(c.code));
+}
+
+
+// ================================================================
+// LECTURER DATA — derived from the supplied curriculum table
+// ================================================================
+const LECTURERS_BY_CODE = {
+  "SF234102": [],
+  "SF234202": [],
+  "SK234102": [],
+  "SM234101": [],
+  "SM234201": [],
+  "TM234101": ["Achmad Syaifudin", "Fahmi Mubarok", "Prabowo", "Sutardi", "Suhardjono", "Unggul Wasiwitono", "Bambang Pramujati"],
+  "TM234102": ["Agus Sigit Pramono", "Yusuf Kaelani", "Achmad Syaifudin", "Yohanes", "Alief Wikarta", "Kafi Hannan Alhadi", "Julendra B. Ariatedja", "Nur Ikhwan"],
+  "TM234103": ["Putu Suwarta", "Fahmi Mubarok", "Helena Carolina Kis Agustin", "Indra Sidharta", "Wahyu Wijanarko", "Sutikno", "Ika Dewi Wijayanti"],
+  "TM234201": ["Julendra B. Ariatedja", "Yohanes", "Alief Wikarta", "Tri Vicca Kusumadewi", "Mohammad Khoirul Effendi", "Is Bunyamin Suryo", "Kafi Hannan Alhadi", "Putu Suwarta"],
+  "TM234202": ["Wiwiek Hendrowati", "Harus Laksana Guntur", "I Nyoman Sutantra", "Muhammad Nur Yuniarto", "Kafi Hannan Alhadi", "Moch. Solichin", "Achmad Syaifudin", "Latifah Nurahmi"],
+  "TM234203": ["Agus Sigit Pramono", "Yusuf Kaelani", "Julendra B. Ariatedja", "Achmad Syaifudin", "Kafi Hannan Alhadi", "Alief Wikarta", "Yohanes"],
+  "TM234204": ["Helena Carolina Kis Agustin", "Indra Sidharta", "Wahyu Wijanarko", "Fahmi Mubarok", "Putu Suwarta", "Sutikno", "Ika Dewi Wijayanti", "Suwarno"],
+  "TM234301": ["Suhud Wahyudi", "Nur Asiyah", "Sentot Didik Surjanto", "Kamiran", "Iis Herisman", "Sena Safarina", "Bambang Arip Dwiyantoro"],
+  "TM234302": ["Wiwiek Hendrowati", "I Nyoman Sutantra", "Muhammad Nur Yuniarto", "Harus Laksana Guntur", "Kafi Hannan Alhadi", "Moch. Solichin"],
+  "TM234303": ["Tri Yogi Yuwono", "Herman Sasongko", "Sutardi", "Nur Ikhwan", "Dhia Fairuz", "Wawan Aries Widodo"],
+  "TM234304": ["I Made Londen Batan", "Sampurno", "Arif Wahjudi", "Mohammad Khoirul Effendi"],
+  "TM234305": ["Putu Suwarta", "Helena Carolina Kis Agustin", "Fahmi Mubarok", "Wahyu Wijanarko", "Ika Dewi Wijayanti", "Sutikno", "Indra Sidharta"],
+  "TM234306": ["Djatmiko Ichsani", "Is Bunyamin Suryo", "Bambang Sudarmanta", "Atok Setiyawan", "Bambang Arip Dwiyantoro", "Ary Bachtiar Krishna Putra"],
+  "TM234307": ["Agus Sigit Pramono", "Yusuf Kaelani", "Julendra B. Ariatedja", "Yohanes", "Alief Wikarta", "Wahyu Wijanarko", "Achmad Syaifudin"],
+  "TM234401": ["Sampurno", "Suhardjono", "Mohammad Khoirul Effendi", "Maulana Yusuf Izuddin"],
+  "TM234402": ["Herman Sasongko", "Sutardi", "Tri Yogi Yuwono", "Wawan Aries Widodo", "Nur Ikhwan", "Dhia Fairuz"],
+  "TM234403": ["Agus Sigit Pramono", "Yusuf Kaelani", "Julendra B. Ariatedja", "Alief Wikarta", "Yohanes", "Wahyu Wijanarko", "Achmad Syaifudin"],
+  "TM234404": ["Abdullah Shahab", "Arif Wahjudi", "Yohanes", "Dhia Fairuz", "Fitria Nur Laily", "Maulana Yusuf Izuddin"],
+  "TM234405": ["Djatmiko Ichsani", "Atok Setiyawan", "Tri Vicca Kusumadewi", "Is Bunyamin Suryo", "Ary Bachtiar Krishna Putra", "Bambang Arip Dwiyantoro", "Prabowo"],
+  "TM234406": ["Bambang Pramujati", "Latifah Nurahmi", "Unggul Wasiwitono", "Adlina Taufik Syamlan"],
+  "TM234501": ["Nur Ikhwan", "Dhia Fairuz", "Tri Vicca Kusumadewi", "Bambang Arip Dwiyantoro"],
+  "TM234502": ["Witantyo", "Unggul Wasiwitono", "Suwarmin", "Mohammad Khoirul Effendi", "Adlina Taufik Syamlan"],
+  "TM234503": ["Wiwiek Hendrowati", "I Nyoman Sutantra", "Kafi Hannan Alhadi", "Suwarmin", "Ary Bachtiar Krishna Putra", "Witantyo", "Tri Vicca Kusumadewi", "Muhammad Nur Yuniarto", "Moch. Solichin", "I Made Londen Batan"],
+  "TM234504": ["Bambang Arip Dwiyantoro", "Prabowo", "Ary Bachtiar Krishna Putra", "Tri Vicca Kusumadewi"],
+  "TM234505": ["Is Bunyamin Suryo", "Dhia Fairuz", "Sutardi", "Tri Vicca Kusumadewi", "Wawan Aries Widodo"],
+  "TM234506": ["Suhardjono", "Sampurno", "Mohammad Khoirul Effendi"],
+  "TM234507": ["Harus Laksana Guntur", "Moch. Solichin"],
+  "TM234601": ["Abdullah Shahab", "Witantyo", "Yudha Prasetyawan", "Tri Vicca Kusumadewi"],
+  "TM234602": ["Wiwiek Hendrowati", "I Nyoman Sutantra", "Moch. Solichin", "Muhammad Nur Yuniarto", "Kafi Hannan Alhadi", "Bambang Sudarmanta", "I Made Londen Batan", "Witantyo", "Suwarmin", "Tri Vicca Kusumadewi", "Nur Ikhwan", "Putu Suwarta", "Harus Laksana Guntur", "Maulana Yusuf Izuddin", "Adlina Taufik Syamlan"],
+  "TM234606": [],
+  "TM234607": ["Atok Setiyawan"],
+  "TM234608": ["Ary Bachtiar Krishna Putra"],
+  "TM234609": ["Djatmiko Ichsani"],
+  "TM234610": ["Djatmiko Ichsani"],
+  "TM234611": ["Nur Ikhwan", "Is Bunyamin Suryo"],
+  "TM234612": [],
+  "TM234613": [],
+  "TM234614": ["I Made Londen Batan"],
+  "TM234615": ["Suhardjono"],
+  "TM234616": [],
+  "TM234617": ["Sampurno"],
+  "TM234618": [],
+  "TM234619": [],
+  "TM234620": ["Latifah Nurahmi"],
+  "TM234621": [],
+  "TM234622": ["Herman Sasongko"],
+  "TM234623": ["Bambang Arip Dwiyantoro"],
+  "TM234624": ["Witantyo"],
+  "TM234625": [],
+  "TM234626": [],
+  "TM234627": ["Unggul Wasiwitono"],
+  "TM234628": ["Wawan Aries Widodo", "Nur Ikhwan"],
+  "TM234629": [],
+  "TM234630": [],
+  "TM234633": ["Alief Wikarta"],
+  "TM234634": ["Tri Yogi Yuwono\\*"],
+  "TM234701": ["Suwarmin", "Witantyo", "Latifah Nurahmi", "Muhammad Nur Yuniarto"],
+  "TM234702": [],
+  "TM234704": ["Tri Yogi Yuwono"],
+  "TM234705": ["Sutardi"],
+  "TM234706": [],
+  "TM234707": [],
+  "TM234708": ["Julendra B. Ariatedja", "Agus Sigit Pramono", "Alief Wikarta"],
+  "TM234709": [],
+  "TM234710": ["Wiwiek Hendrowati"],
+  "TM234711": ["Suwarmin"],
+  "TM234712": ["I Nyoman Sutantra"],
+  "TM234713": ["Agus Sigit Pramono"],
+  "TM234714": ["Yusuf Kaelani"],
+  "TM234715": [],
+  "TM234716": [],
+  "TM234717": ["Yohanes"],
+  "TM234718": ["Herman Sasongko"],
+  "TM234719": ["Bambang Sudarmanta"],
+  "TM234720": ["Bambang Sudarmanta"],
+  "TM234721": ["Prabowo"],
+  "TM234722": [],
+  "TM234723": ["I Made Londen Batan"],
+  "TM234724": ["Witantyo"],
+  "TM234725": ["Suwarmin"],
+  "TM234726": [],
+  "TM234727": [],
+  "TM234728": ["Suwarno"],
+  "TM234729": ["Helena Carolina Kis Agustin", "Indra Sidharta"],
+  "TM234730": ["Indra Sidharta", "Helena Carolina Kis Agustin"],
+  "TM234732": ["Fahmi Mubarok"],
+  "TM234733": ["Putu Suwarta"],
+  "TM234734": ["Fahmi Mubarok", "Suwarno"],
+  "TM234735": ["Helena Carolina Kis Agustin"],
+  "TM234736": ["Sutikno"],
+  "TM234737": [],
+  "TM234738": [],
+  "TM234739": [],
+  "TM234740": ["Muhammad Nur Yuniarto"],
+  "TM234741": [],
+  "TM234742": [],
+  "TM234743": [],
+  "TM234744": ["Mohammad Khoirul Effendi"],
+  "TM234745": [],
+  "TM234746": [],
+  "TM234747": ["Suwarno"],
+  "TM234801": [],
+  "TM234802": [],
+  "UG234901": [],
+  "UG234902": [],
+  "UG234903": [],
+  "UG234904": [],
+  "UG234905": [],
+  "UG234906": [],
+  "UG234911": [],
+  "UG234912": [],
+  "UG234913": [],
+  "UG234914": [],
+  "UG234915": [],
+  "UG234916": [],
+};
+
+function lecturerNames(course){
+  const direct = course?.lecturers ?? course?.dosen ?? course?.pengajar ?? course?.lecturer;
+  let names = [];
+  if(Array.isArray(direct)){
+    names = direct.map(name => String(name).trim()).filter(Boolean);
+  }else if(typeof direct === 'string' && direct.trim() && direct.trim() !== '-'){
+    names = direct.split(';').map(name => name.trim()).filter(Boolean);
+  }
+  if(!names.length) names = LECTURERS_BY_CODE[course?.code] || [];
+  return [...new Set(names)];
+}
+
+function lecturerText(course){
+  const names = lecturerNames(course);
+  return names.length ? names.join('; ') : 'Belum tercantum';
+}
+
+function lecturerCompactText(course, limit = 3){
+  const names = lecturerNames(course);
+  if(!names.length) return 'Belum tercantum';
+  if(names.length <= limit) return names.join('; ');
+  return names.slice(0, limit).join('; ') + ' +' + (names.length - limit) + ' pengajar';
+}
 
 // SKS lookup lintas semester. Beberapa MK pilihan ditawarkan kembali di semester lain,
 // jadi pencarian SKS tidak boleh dibatasi hanya pada katalog semester aktif.
@@ -1082,7 +1539,7 @@ const SCHEMA_EXAMPLE = {
   "courses": [
     {"name":"Bahasa Inggris","code":"UG234914","day":"Senin","time":"07.00-09.30","kelas":"A","room":"GKU-101","sks":2},
     {"name":"Capstone II","code":"TM234602","day":"Selasa","time":"12.30-15.00","kelas":"A","room":"Lab.Komputer","sks":3,"star":true},
-    {"name":"Manajemen Proyek","code":"TM234624","day":"Rabu","time":"07.00-09.30","kelas":"B","room":"R.204","sks":3,"warn":false,"note":""}
+    {"name":"Manajemen Proyek","code":"TM234624","day":"Rabu","time":"07.00-09.30","kelas":"B","room":"R.204","sks":3,"dosen":"Witantyo","warn":false,"note":""}
   ]
 };
 
@@ -1096,10 +1553,22 @@ let currentFilter = 'all';
 let btnRefs = new Map();
 let fadeCheckCurrent = null;
 let toastTimer = null;
+let trackerSemester = 'all';
+let trackerStatusFilter = 'all';
+let demoMode = false;
+const DEMO_SELECTIONS = {
+  // Contoh sengaja hanya menampilkan sebagian jadwal Semester 7.
+  // Dua MK pilihan memakai katalog Semester 7 agar demo tidak mencampur pilihan Semester 6.
+  7:['s1t0-ag13','s1t2-tmpa','s2t0-bio','s3t0-ai','s4t3-pta']
+};
 
 const STORE_SCHED = 'its-tm-schedules-v1';
 const STORE_SEL = 'its-tm-sel-v1';
 const STORE_PROFILE = 'its-tm-profile-v1';
+const STORE_TAKEN = 'its-tm-taken-v1';
+const STORE_PLAN = 'its-tm-semester-plan-v1';
+const BACKUP_FORMAT = 'its-tm-planner-backup';
+const BACKUP_VERSION = 1;
 let viewerProfile = null;
 let canEdit = false;
 const VALID_SEMESTERS = new Set([1,2,3,4,5,6,7,8]);
@@ -1138,6 +1607,300 @@ function saveSelection(sem, sel){
   }catch{}
 }
 
+function getTakenCourses(){
+  try{
+    const parsed = JSON.parse(localStorage.getItem(STORE_TAKEN) || '[]');
+    return new Set(Array.isArray(parsed) ? parsed.map(String) : []);
+  }catch{
+    return new Set();
+  }
+}
+
+function saveTakenCourses(taken){
+  try{ localStorage.setItem(STORE_TAKEN, JSON.stringify([...taken])); }catch{}
+}
+
+function setCourseTaken(code, takenState){
+  const taken = getTakenCourses();
+  if(takenState) taken.add(String(code));
+  else taken.delete(String(code));
+  saveTakenCourses(taken);
+}
+
+function readStorageObject(key, fallback){
+  try{
+    const raw = localStorage.getItem(key);
+    if(raw === null) return fallback;
+    const parsed = JSON.parse(raw);
+    return parsed ?? fallback;
+  }catch{
+    return fallback;
+  }
+}
+
+function buildBackupPayload(){
+  return {
+    format: BACKUP_FORMAT,
+    version: BACKUP_VERSION,
+    app: 'Planner Jadwal S1 Teknik Mesin ITS',
+    exportedAt: new Date().toISOString(),
+    data: {
+      schedules: getSavedSchedules(),
+      selections: readStorageObject(STORE_SEL, {}),
+      takenCourses: [...getTakenCourses()],
+      semesterPlans: getSemesterPlans(),
+      profile: getSavedProfile()
+    }
+  };
+}
+
+function backupFileName(){
+  const d = new Date();
+  const pad = value => String(value).padStart(2,'0');
+  return 'planner-tm-backup-' + d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()) + '.json';
+}
+
+function downloadBackupData(){
+  let payload;
+  try{
+    payload = buildBackupPayload();
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = backupFileName();
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    const status = document.getElementById('dataVaultStatus');
+    if(status) status.textContent = 'Backup terakhir dibuat ' + new Date().toLocaleString('id-ID', {dateStyle:'medium', timeStyle:'short'});
+    toast('Backup data berhasil dibuat ✓');
+  }catch(error){
+    console.error(error);
+    toast('Backup gagal dibuat');
+  }
+}
+
+function isPlainObject(value){
+  return !!value && typeof value === 'object' && !Array.isArray(value);
+}
+
+function normalizeBackupPayload(payload){
+  if(!isPlainObject(payload)) throw new Error('Isi backup tidak valid.');
+  if(payload.format !== BACKUP_FORMAT) throw new Error('File ini bukan backup Planner Teknik Mesin.');
+  if(Number(payload.version) !== BACKUP_VERSION) throw new Error('Versi backup belum didukung.');
+  if(!isPlainObject(payload.data)) throw new Error('Data backup tidak ditemukan.');
+
+  const data = payload.data;
+  if(!isPlainObject(data.schedules)) throw new Error('Data jadwal pada backup tidak valid.');
+  if(!isPlainObject(data.selections)) throw new Error('Data pilihan kelas pada backup tidak valid.');
+  if(!Array.isArray(data.takenCourses)) throw new Error('Data tracker pada backup tidak valid.');
+  if(!isPlainObject(data.semesterPlans)) throw new Error('Data rencana semester pada backup tidak valid.');
+  if(data.profile !== null && data.profile !== undefined && !isPlainObject(data.profile)) throw new Error('Data profil pada backup tidak valid.');
+
+  const cleanSelections = {};
+  Object.entries(data.selections).forEach(([sem, values]) => {
+    if(!VALID_SEMESTERS.has(Number(sem)) || !Array.isArray(values)) return;
+    cleanSelections[String(Number(sem))] = [...new Set(values.map(String).filter(Boolean))];
+  });
+
+  const cleanSchedules = {};
+  Object.entries(data.schedules).forEach(([sem, value]) => {
+    if(!VALID_SEMESTERS.has(Number(sem)) || !isPlainObject(value)) return;
+    cleanSchedules[String(Number(sem))] = value;
+  });
+
+  const cleanPlans = {};
+  Object.entries(data.semesterPlans).forEach(([sem, value]) => {
+    if(!VALID_SEMESTERS.has(Number(sem)) || !isPlainObject(value)) return;
+    cleanPlans[String(Number(sem))] = value;
+  });
+
+  return {
+    schedules: cleanSchedules,
+    selections: cleanSelections,
+    takenCourses: [...new Set(data.takenCourses.map(String).filter(Boolean))],
+    semesterPlans: cleanPlans,
+    profile: data.profile && isPlainObject(data.profile) ? data.profile : null
+  };
+}
+
+function applyRestoredData(data){
+  try{
+    localStorage.setItem(STORE_SCHED, JSON.stringify(data.schedules));
+    localStorage.setItem(STORE_SEL, JSON.stringify(data.selections));
+    localStorage.setItem(STORE_TAKEN, JSON.stringify(data.takenCourses));
+    localStorage.setItem(STORE_PLAN, JSON.stringify(data.semesterPlans));
+    if(data.profile) localStorage.setItem(STORE_PROFILE, JSON.stringify(data.profile));
+  }catch(error){
+    throw new Error('Penyimpanan browser tidak tersedia atau kapasitasnya penuh.');
+  }
+
+  appSem = null;
+  schedule = null;
+  selected = new Set();
+  currentFilter = 'all';
+  trackerSemester = 'all';
+  trackerStatusFilter = 'all';
+  viewerProfile = getSavedProfile() || {name:'Perangkat ini',nrp:'',cohort:''};
+  canEdit = true;
+  updateAccessUI();
+  buildDashboard();
+  buildTracker();
+}
+
+function restoreBackupFile(file){
+  if(!file) return;
+  if(!file.name.toLowerCase().endsWith('.json') && file.type !== 'application/json'){
+    return toast('Pilih file backup dengan format JSON');
+  }
+  const reader = new FileReader();
+  reader.onerror = () => toast('File backup tidak dapat dibaca');
+  reader.onload = event => {
+    try{
+      const payload = JSON.parse(String(event.target.result || ''));
+      const data = normalizeBackupPayload(payload);
+      const exported = payload.exportedAt ? new Date(payload.exportedAt) : null;
+      const dateText = exported && !Number.isNaN(exported.getTime())
+        ? exported.toLocaleString('id-ID', {dateStyle:'medium', timeStyle:'short'})
+        : 'waktu tidak diketahui';
+      if(!confirm('Pulihkan backup dari ' + dateText + '? Data lokal saat ini akan diganti.')) return;
+      applyRestoredData(data);
+      navTracker();
+      const status = document.getElementById('dataVaultStatus');
+      if(status) status.textContent = 'Data berhasil dipulihkan dari backup';
+      toast('Data berhasil dipulihkan ✓');
+    }catch(error){
+      console.error(error);
+      alert('Backup tidak dapat dipulihkan.\n\n' + (error?.message || 'Format file tidak valid.'));
+    }
+  };
+  reader.readAsText(file);
+}
+
+function getSemesterPlans(){
+  try{
+    const parsed = JSON.parse(localStorage.getItem(STORE_PLAN) || '{}');
+    return parsed && typeof parsed === 'object' ? parsed : {};
+  }catch{return {};}
+}
+
+function getSemesterPlan(sem){
+  const plans = getSemesterPlans();
+  return plans[String(sem)] && typeof plans[String(sem)] === 'object' ? plans[String(sem)] : {};
+}
+
+const CHOICE_SLOT_ORDER = [
+  {sem:6,key:'choice1'},
+  {sem:6,key:'choice2'},
+  {sem:7,key:'choice3'},
+  {sem:7,key:'choice4'}
+];
+
+function choiceOwner(code, plans = getSemesterPlans()){
+  code = String(code || '');
+  if(!code) return null;
+  for(const slot of CHOICE_SLOT_ORDER){
+    const plan = plans[String(slot.sem)] || {};
+    if(String(plan[slot.key] || '') === code) return slot;
+  }
+  return null;
+}
+
+function isDuplicateChoice(sem, key, code, plans = getSemesterPlans()){
+  const owner = choiceOwner(code, plans);
+  return !!owner && (Number(owner.sem) !== Number(sem) || owner.key !== key);
+}
+
+function saveSemesterPlanValue(sem, key, value){
+  sem = Number(sem);
+  const plans = getSemesterPlans();
+  const current = plans[String(sem)] && typeof plans[String(sem)] === 'object' ? plans[String(sem)] : {};
+  const clean = String(value || '');
+
+  if(/^choice/.test(key) && clean && isDuplicateChoice(sem, key, clean, plans)){
+    toast('Mata kuliah pilihan ini sudah dipakai pada slot pilihan lain');
+    return false;
+  }
+
+  if(clean) current[key] = clean;
+  else delete current[key];
+  plans[String(sem)] = current;
+  try{ localStorage.setItem(STORE_PLAN, JSON.stringify(plans)); }catch{}
+  return true;
+}
+
+function semesterPlanEntries(sem, includePlaceholders = true){
+  sem = Number(sem);
+  const rule = SEMESTER_RULES[sem];
+  if(!rule) return [];
+  const plan = getSemesterPlan(sem);
+  const entries = [];
+
+  (rule.fixed || []).forEach(code => {
+    const course = catalogCourseByCode(code);
+    if(course) entries.push({...course, semester:sem, requirement:'Wajib', trackable:true});
+  });
+
+  if(rule.religion){
+    const code = plan[rule.religion.key];
+    const course = code ? catalogCourseByCode(code) : null;
+    if(course) entries.push({...course, semester:sem, requirement:'Agama', trackable:true});
+    else if(includePlaceholders) entries.push({code:'S'+sem+'-AGAMA',name:'Pilih satu mata kuliah agama',sks:2,semester:sem,requirement:'Agama',placeholder:true,trackable:false});
+  }
+
+  (rule.choiceSlots || []).forEach(slot => {
+    const code = plan[slot.key];
+    const duplicate = code ? isDuplicateChoice(sem, slot.key, code) : false;
+    const course = code && !duplicate ? catalogCourseByCode(code) : null;
+    if(course) entries.push({...course, semester:sem, requirement:slot.label, trackable:true, planKey:slot.key});
+    else if(includePlaceholders) entries.push({
+      code:'S'+sem+'-'+slot.key.toUpperCase(),
+      name:duplicate ? slot.label+' duplikat, pilih mata kuliah lain' : slot.label+' belum ditentukan',
+      sks:3,semester:sem,requirement:slot.label,placeholder:true,trackable:false,planKey:slot.key,invalid:duplicate
+    });
+  });
+
+  return entries;
+}
+
+function allTrackerEntries(){
+  const entries = fixedCourseEntries();
+  [6,7,8].forEach(sem => entries.push(...semesterPlanEntries(sem, true)));
+  return entries;
+}
+
+function fixedCourseEntries(){
+  const entries = [];
+  for(let sem = 1; sem <= 5; sem++){
+    CATALOG[sem].courses.forEach(course => entries.push({...course, semester:sem, requirement:'Paket semester', trackable:true}));
+  }
+  return entries;
+}
+
+function trackerTargetSks(entries = allTrackerEntries()){
+  return entries.reduce((sum,c) => sum + Number(c.sks || 0), 0);
+}
+
+function trackerTakenSks(entries, taken = getTakenCourses()){
+  const seenCodes = new Set();
+  return entries.reduce((sum,c) => {
+    if(!c.trackable || !taken.has(c.code) || seenCodes.has(c.code)) return sum;
+    seenCodes.add(c.code);
+    return sum + Number(c.sks || 0);
+  }, 0);
+}
+
+function trackerDoneRequirements(entries, taken = getTakenCourses()){
+  const seenCodes = new Set();
+  return entries.reduce((count,c) => {
+    if(!c.trackable || !taken.has(c.code) || seenCodes.has(c.code)) return count;
+    seenCodes.add(c.code);
+    return count + 1;
+  }, 0);
+}
+
 function esc(value){
   return String(value ?? '')
     .replaceAll('&','&amp;')
@@ -1149,7 +1912,7 @@ function esc(value){
 
 function getScheduleForSemester(sem){
   const saved = getSavedSchedules();
-  return saved[sem] || BUILTIN_SCHEDULES[sem] || null;
+  return saved[sem] || null;
 }
 
 function courseSks(course){
@@ -1178,19 +1941,31 @@ function selectedSksBreakdown(items = sortedSelected()){
   }, {wajib:0, pilihan:0, total:0});
 }
 
-
-// ================================================================
-// SIMPLE ACCESS MODE
-// ================================================================
-function normalizeNrp(value){
-  return String(value ?? '').replace(/\D/g,'');
+function plannerSksStatus(items = sortedSelected(), sem = appSem){
+  const breakdown = selectedSksBreakdown(items);
+  const target = semesterTrackedTargetSks(sem);
+  const official = semesterOfficialTargetSks(sem);
+  const excluded = Math.max(0, official - target);
+  const remaining = Math.max(0, target - breakdown.total);
+  const over = Math.max(0, breakdown.total - target);
+  const percent = target ? Math.min(100, Math.round((breakdown.total / target) * 100)) : 0;
+  return {...breakdown, target, official, excluded, remaining, over, percent};
 }
 
-function hasFullAccess(profile){
-  const accessCode = String.fromCharCode(53,48,48,55);
-  return normalizeNrp(profile?.nrp).includes(accessCode);
+function plannerRequirementCounts(sem = appSem){
+  const rule = SEMESTER_RULES[Number(sem)];
+  if(!rule) return null;
+  return {
+    wajib: (rule.fixed || []).length + (rule.religion ? 1 : 0),
+    pilihan: (rule.choiceSlots || []).length,
+    total: (rule.fixed || []).length + (rule.religion ? 1 : 0) + (rule.choiceSlots || []).length
+  };
 }
 
+
+// ================================================================
+// LOCAL APP MODE
+// ================================================================
 function getSavedProfile(){
   try{
     const value = JSON.parse(localStorage.getItem(STORE_PROFILE) || 'null');
@@ -1198,107 +1973,38 @@ function getSavedProfile(){
   }catch{return null;}
 }
 
-function saveProfile(profile){
-  try{ localStorage.setItem(STORE_PROFILE, JSON.stringify(profile)); }catch{}
-}
-
-function setAccessError(message){
-  const el = document.getElementById('accessError');
-  if(!el) return;
-  el.textContent = message;
-  el.hidden = !message;
-}
-
 function updateAccessUI(){
-  document.body.classList.toggle('read-only', !canEdit);
-  document.getElementById('userPill').hidden = false;
-  document.getElementById('userName').textContent = viewerProfile?.name || 'Pengguna';
-  document.getElementById('userAccessMode').textContent = canEdit ? 'Akses Penuh' : 'Lihat Saja';
-  document.getElementById('readonlyBanner').hidden = canEdit;
-
+  canEdit = true;
+  document.body.classList.remove('read-only','access-pending');
+  const pill = document.getElementById('userPill');
+  if(pill) pill.hidden = false;
+  const userName = document.getElementById('userName');
+  if(userName) userName.textContent = 'Perangkat ini';
+  const mode = document.getElementById('userAccessMode');
+  if(mode) mode.textContent = 'Tersimpan Lokal';
+  const readonly = document.getElementById('readonlyBanner');
+  if(readonly) readonly.hidden = true;
   const importTab = document.querySelector('#navTabs [data-nav="import"]');
-  if(importTab) importTab.hidden = !canEdit;
+  if(importTab) importTab.hidden = false;
   const tileImport = document.getElementById('tileImport');
-  if(tileImport) tileImport.hidden = !canEdit;
-
+  if(tileImport) tileImport.hidden = false;
   ['topReset','btnReset','mReset'].forEach(id => {
     const el = document.getElementById(id);
-    if(el) el.hidden = !canEdit;
+    if(el) el.hidden = false;
   });
-
-  const hint = document.querySelector('#view-planner .hint');
-  if(hint){
-    const icon = hint.querySelector('svg')?.outerHTML || '';
-    hint.innerHTML = canEdit
-      ? icon + ' Klik salah satu kelas untuk memilihnya. Satu slot waktu hanya bisa diisi satu mata kuliah. Memilih opsi baru otomatis menggantikan pilihan lama. Klik kelas yang sama sekali lagi untuk membatalkannya.'
-      : icon + ' Anda sedang menggunakan mode lihat saja. Kartu kelas dapat dilihat, tetapi tidak dapat dipilih atau diubah.';
-  }
-
-  const sampleTitle = document.querySelector('#tileSample h3');
-  const sampleDesc = document.querySelector('#tileSample p');
-  if(!canEdit && sampleTitle) sampleTitle.textContent = 'Lihat Jadwal Semester 7';
-  if(!canEdit && sampleDesc) sampleDesc.textContent = 'Buka data jadwal Semester 7 dalam mode baca tanpa mengubah pilihan.';
 }
 
-function applyProfile(profile){
-  viewerProfile = {
-    name: String(profile.name || '').trim(),
-    nrp: normalizeNrp(profile.nrp),
-    cohort: String(profile.cohort || '').trim()
-  };
-  canEdit = hasFullAccess(viewerProfile);
-  saveProfile(viewerProfile);
-  document.getElementById('accessGate').hidden = true;
-  document.body.classList.remove('access-pending');
-  updateAccessUI();
-}
-
-function enterPreview(){
-  viewerProfile = {name:'Preview', nrp:'', cohort:''};
-  canEdit = false;
-  document.getElementById('accessGate').hidden = true;
-  document.body.classList.remove('access-pending');
+function initApp(){
+  viewerProfile = getSavedProfile() || {name:'Perangkat ini',nrp:'',cohort:''};
+  canEdit = true;
   updateAccessUI();
   navDashboard();
-  toast('Mode preview aktif');
-}
-
-function initAccessGate(){
-  const form = document.getElementById('accessForm');
-  form.addEventListener('submit', event => {
-    event.preventDefault();
-    const name = document.getElementById('accessName').value.trim();
-    const nrp = normalizeNrp(document.getElementById('accessNrp').value);
-    const cohort = document.getElementById('accessCohort').value.trim();
-
-    if(name.length < 2) return setAccessError('Masukkan nama yang valid.');
-    if(nrp.length < 4) return setAccessError('Masukkan NRP yang valid.');
-    if(!/^\d{4}$/.test(cohort)) return setAccessError('Angkatan harus terdiri dari 4 angka, misalnya 2024.');
-
-    setAccessError('');
-    applyProfile({name,nrp,cohort});
-    navDashboard();
-    toast(canEdit ? 'Akses penuh aktif' : 'Mode lihat saja aktif');
-  });
-
-  document.getElementById('btnPreview').addEventListener('click', enterPreview);
-
-  document.getElementById('btnSwitchUser').addEventListener('click', () => {
-    try{ localStorage.removeItem(STORE_PROFILE); }catch{}
-    location.reload();
-  });
-
-  const saved = getSavedProfile();
-  if(saved?.name && saved?.nrp && saved?.cohort){
-    applyProfile(saved);
-    navDashboard();
-  }
 }
 
 // ================================================================
 // NAVIGATION
 // ================================================================
-const VIEWS = ['dashboard','import','planner'];
+const VIEWS = ['dashboard','tracker','import','planner'];
 
 function showView(name){
   VIEWS.forEach(v => {
@@ -1323,8 +2029,19 @@ function showView(name){
 }
 
 function navDashboard(){
+  demoMode = false;
+  const demoBanner = document.getElementById('demoBanner');
+  if(demoBanner) demoBanner.hidden = true;
   buildDashboard();
   showView('dashboard');
+}
+
+function navTracker(sem = 'all'){
+  demoMode = false;
+  trackerSemester = sem === 'all' ? 'all' : String(Math.min(8, Math.max(1, Number(sem) || 1)));
+  trackerStatusFilter = 'all';
+  buildTracker();
+  showView('tracker');
 }
 
 function navImport(sem = appSem || Number(document.getElementById('selSem')?.value) || 7){
@@ -1333,6 +2050,10 @@ function navImport(sem = appSem || Number(document.getElementById('selSem')?.val
     return navDashboard();
   }
   const target = VALID_SEMESTERS.has(Number(sem)) ? Number(sem) : 7;
+  if(target <= 5){
+    toast('Semester 1–5 menggunakan Tracker Mata Kuliah, tanpa import jadwal');
+    return navTracker(target);
+  }
   appSem = target;
   const sel = document.getElementById('selSem');
   if(sel) sel.value = String(target);
@@ -1345,29 +2066,38 @@ function navImport(sem = appSem || Number(document.getElementById('selSem')?.val
   showView('import');
 }
 
-function navPicker(sem, data){
+function navPicker(sem, data, options = {}){
   if(!data || !Array.isArray(data.courses)) return;
   appSem = Number(sem);
   schedule = data;
+  demoMode = !!options.demo;
   const validIds = new Set(schedule.courses.map(c => c.id));
-  selected = new Set([...getSelection(appSem)].filter(id => validIds.has(id)));
-  saveSelection(appSem, selected);
+  if(demoMode){
+    selected = new Set((DEMO_SELECTIONS[appSem] || []).filter(id => validIds.has(id)));
+  }else{
+    selected = new Set([...getSelection(appSem)].filter(id => validIds.has(id)));
+    saveSelection(appSem, selected);
+  }
 
   const ctx = document.getElementById('ctxSem');
-  if(ctx) ctx.textContent = 'Semester ' + appSem + (data.term ? ' · ' + data.term : '');
+  if(ctx) ctx.textContent = 'Semester ' + appSem + (data.term ? ' · ' + data.term : '') + (demoMode ? ' · CONTOH' : '');
+  const demoBanner = document.getElementById('demoBanner');
+  if(demoBanner) demoBanner.hidden = !demoMode;
   const plannerTab = document.getElementById('tabPlanner');
   if(plannerTab) plannerTab.hidden = false;
   const reimport = document.getElementById('btnReimport');
-  if(reimport) reimport.hidden = !canEdit;
+  if(reimport) reimport.hidden = demoMode || !canEdit;
 
   initPicker();
   showView('planner');
 }
 
 function openSchedule(sem){
-  const data = getScheduleForSemester(Number(sem));
-  if(data) navPicker(Number(sem), data);
-  else navImport(Number(sem));
+  sem = Number(sem);
+  if(sem <= 5) return navTracker(sem);
+  const data = getScheduleForSemester(sem);
+  if(data) navPicker(sem, data);
+  else navImport(sem);
 }
 
 // ================================================================
@@ -1375,39 +2105,26 @@ function openSchedule(sem){
 // ================================================================
 function buildDashboard(){
   const saved = getSavedSchedules();
-  let s6Pilihan = 0;
-  let s7Pilihan = 0;
+  const taken = getTakenCourses();
+  const all = allTrackerEntries();
+  const totalTrackedSks = trackerTargetSks(all);
+  const takenTrackedSks = trackerTakenSks(all, taken);
+  const doneRequirements = trackerDoneRequirements(all, taken);
+  const totalRequirements = all.length;
+  const remainingTrackedSks = Math.max(0, totalTrackedSks - takenTrackedSks);
+  const sksPct = totalTrackedSks ? Math.round((takenTrackedSks / totalTrackedSks) * 100) : 0;
 
-  [6,7].forEach(sem => {
-    const data = saved[sem] || BUILTIN_SCHEDULES[sem];
-    if(!data) return;
-    const byId = Object.fromEntries(data.courses.map(c => [c.id,c]));
-    const pilihanCodes = new Set(
-      [...getSelection(sem)]
-        .map(id => byId[id])
-        .filter(c => c?.type === 'pilihan')
-        .map(c => c.code)
-    );
-    if(sem === 6) s6Pilihan = pilihanCodes.size;
-    if(sem === 7) s7Pilihan = pilihanCodes.size;
-  });
-
-  const hasProgress = s6Pilihan > 0 || s7Pilihan > 0;
-  const v6 = hasProgress ? s6Pilihan : 1;
-  const v7 = hasProgress ? s7Pilihan : 3;
-  const progressTotal = hasProgress ? v6 + v7 : 4;
-  const targetLabel = hasProgress ? 'Terpilih' : 'Target';
   const sumEl = document.getElementById('dashSummary');
-
   if(sumEl){
     sumEl.innerHTML =
-      '<article class="stat enter"><span class="stat-label">Target Kurikulum</span><span class="stat-value"><b>144</b><i> SKS</i></span><span class="stat-sub">Acuan total beban studi</span></article>' +
-      '<article class="stat enter"><span class="stat-label">Progress Pilihan</span><span class="stat-value"><b>' + progressTotal + '</b><i>/4 MK</i></span><span class="stat-sub">' + targetLabel + ' distribusi Semester 6 dan 7</span></article>' +
-      '<article class="stat dark enter"><span class="stat-label">Distribusi Pilihan</span><span class="stat-value"><b>' + v6 + ' : ' + v7 + '</b></span><span class="stat-sub">Sem 6 · Sem 7</span></article>';
+      '<article class="stat dark enter"><span class="stat-label">Progress SKS Tracker</span><span class="stat-value"><b>' + takenTrackedSks + '</b><i>/' + totalTrackedSks + ' SKS</i></span><span class="bar"><span class="bar-fill" style="width:' + sksPct + '%"></span></span><span class="stat-sub">' + sksPct + '% dari SKS yang dipantau aplikasi</span></article>' +
+      '<article class="stat enter"><span class="stat-label">Total Kurikulum</span><span class="stat-value"><b>' + OFFICIAL_CURRICULUM_SKS + '</b><i> SKS</i></span><span class="stat-sub">' + TRACKER_TARGET_SKS + ' SKS ditracker · ' + EXCLUDED_TRACKER_SKS + ' SKS Pengayaan dikecualikan</span></article>' +
+      '<article class="stat enter"><span class="stat-label">Belum Selesai</span><span class="stat-value"><b>' + remainingTrackedSks + '</b><i> SKS</i></span><span class="stat-sub">' + doneRequirements + '/' + totalRequirements + ' kebutuhan MK sudah selesai</span></article>' +
+      '<article class="stat enter"><span class="stat-label">Semester 6–8</span><span class="stat-value"><b>47</b><i> SKS resmi</i></span><span class="stat-sub">Sem 6: 18 · Sem 7: 23 · Sem 8: 6. Tracker Sem 7: 20 SKS</span></article>';
   }
 
   const info = document.getElementById('dashInfo');
-  if(info) info.textContent = Object.keys(saved).length ? 'Data lokal tersedia' : 'Pilih semester';
+  if(info) info.textContent = takenTrackedSks + ' dari ' + totalTrackedSks + ' SKS tracker selesai';
 
   const grid = document.getElementById('semGrid');
   if(!grid) return;
@@ -1415,30 +2132,56 @@ function buildDashboard(){
 
   for(let sem = 1; sem <= 8; sem++){
     const cat = CATALOG[sem];
-    const data = saved[sem] || BUILTIN_SCHEDULES[sem];
-    const hasSchedule = !!data;
-    const slots = hasSchedule
-      ? new Set(data.courses.map(c => c.dayIdx + '|' + c.timeIdx)).size
-      : 0;
-
+    const isTrackerSem = sem <= 5;
     const card = document.createElement('article');
-    card.className = 'sem-card enter' + (hasSchedule ? ' has-data' : '');
     card.style.animationDelay = (0.04 + (sem - 1) * 0.04) + 's';
-    card.innerHTML =
-      '<span class="sem-badge ' + (hasSchedule ? 'on' : 'off') + '">' + (hasSchedule ? 'Tersedia' : 'Kosong') + '</span>' +
-      '<span class="sem-num">' + String(sem).padStart(2,'0') + '</span>' +
-      '<span class="sem-name">Semester ' + sem + '</span>' +
-      '<span class="sem-status">' + (hasSchedule
-        ? data.courses.length + ' opsi kelas · ' + slots + ' slot waktu'
-        : cat.courses.length + ' MK di katalog · jadwal belum diimport') + '</span>' +
-      '<div style="display:flex;gap:8px;margin-top:auto">' +
-        (hasSchedule
-          ? '<button class="btn primary sm" data-action="openSchedule" data-sem="' + sem + '" style="flex:1">' + (canEdit ? 'Susun Jadwal →' : 'Lihat Jadwal →') + '</button>'
-          : (canEdit
-            ? '<button class="btn ghost sm" data-action="navImport" data-sem="' + sem + '" style="flex:1">Import JSON →</button>'
-            : '<button class="btn ghost sm" type="button" disabled style="flex:1">Jadwal belum tersedia</button>')) +
-        '<button class="btn ghost sm" data-action="navCatalog" data-sem="' + sem + '" title="Lihat katalog" aria-label="Lihat katalog Semester ' + sem + '">📖</button>' +
-      '</div>';
+
+    if(isTrackerSem){
+      const semTaken = cat.courses.filter(c => taken.has(c.code));
+      const semTakenSks = semTaken.reduce((sum,c) => sum + Number(c.sks || 0), 0);
+      const semTotalSks = semesterTrackedTargetSks(sem);
+      const done = semTakenSks >= semTotalSks;
+      const pct = semTotalSks ? Math.round((semTakenSks / semTotalSks) * 100) : 0;
+      card.className = 'sem-card enter has-data' + (done ? ' track-complete' : '');
+      card.innerHTML =
+        '<span class="sem-badge ' + (done ? 'on' : 'off') + '">' + (done ? 'Selesai' : semTakenSks + '/' + semTotalSks + ' SKS') + '</span>' +
+        '<span class="sem-num">' + String(sem).padStart(2,'0') + '</span>' +
+        '<span class="sem-name">Semester ' + sem + '</span>' +
+        '<span class="sem-status">' + semTaken.length + '/' + cat.courses.length + ' MK · ' + semTakenSks + ' dari ' + semTotalSks + ' SKS selesai</span>' +
+        '<div class="sem-progress"><span style="width:' + Math.min(100,pct) + '%"></span></div>' +
+        '<div style="display:flex;gap:8px;margin-top:auto;padding-top:5px">' +
+          '<button class="btn ' + (done ? 'ghost' : 'primary') + ' sm" data-action="openTracker" data-sem="' + sem + '" style="flex:1">' + (done ? 'Lihat Tracker' : 'Lihat & Tandai →') + '</button>' +
+        '</div>';
+    }else{
+      const data = saved[sem];
+      const hasSchedule = !!data;
+      const rule = SEMESTER_RULES[sem];
+      const planEntries = semesterPlanEntries(sem, true);
+      const takenCount = trackerDoneRequirements(planEntries, taken);
+      const takenSks = trackerTakenSks(planEntries, taken);
+      const trackedTarget = semesterTrackedTargetSks(sem);
+      const officialTarget = semesterOfficialTargetSks(sem);
+      const pct = trackedTarget ? Math.round((takenSks / trackedTarget) * 100) : 0;
+      const ruleLabel = sem === 6 ? '5 wajib + 2 pilihan' : (sem === 7 ? '1 agama + 5 wajib + 2 pilihan' : 'KP + Tugas Akhir');
+      const planComplete = !planEntries.some(c => c.placeholder);
+      card.className = 'sem-card enter has-data' + (takenSks >= trackedTarget && planComplete ? ' track-complete' : '');
+      card.innerHTML =
+        '<span class="sem-badge ' + (planComplete ? 'on' : 'off') + '">' + officialTarget + ' SKS' + (officialTarget !== trackedTarget ? ' resmi' : '') + '</span>' +
+        '<span class="sem-num">' + String(sem).padStart(2,'0') + '</span>' +
+        '<span class="sem-name">Semester ' + sem + '</span>' +
+        '<span class="sem-status">' + ruleLabel + (sem === 7 ? ' · tracker 20/23 SKS, tanpa pengayaan' : '') + '</span>' +
+        '<span class="sem-status" style="margin-top:-2px">' + takenSks + '/' + trackedTarget + ' SKS tracker selesai · ' + takenCount + '/' + planEntries.length + ' kebutuhan' + (hasSchedule ? ' · jadwal sudah diimport' : '') + '</span>' +
+        '<div class="sem-progress"><span style="width:' + Math.min(100,pct) + '%"></span></div>' +
+        '<div class="sem-card-actions">' +
+          '<button class="btn primary sm" data-action="navCatalog" data-sem="' + sem + '" style="min-width:0">Rencana Semester →</button>' +
+          (hasSchedule
+            ? '<button class="btn ghost sm" data-action="openSchedule" data-sem="' + sem + '" title="Susun jadwal">Jadwal</button>'
+            : '<button class="btn ghost sm" data-action="navImport" data-sem="' + sem + '" title="Import jadwal">Import</button>') +
+          (sem === 7
+            ? '<button class="sem-demo-action" type="button" data-action="openSample" data-sem="7"><span>★ Lihat contoh tampilan jadwal</span><small>Demo</small></button>'
+            : '') +
+        '</div>';
+    }
     grid.appendChild(card);
   }
 }
@@ -1447,44 +2190,442 @@ function handleDashboardAction(event){
   const btn = event.target.closest('[data-action]');
   if(!btn) return;
   const sem = Number(btn.dataset.sem);
+  if(btn.dataset.action === 'openTracker') navTracker(sem);
   if(btn.dataset.action === 'openSchedule') openSchedule(sem);
   if(btn.dataset.action === 'navImport') navImport(sem);
   if(btn.dataset.action === 'navCatalog') openCatalog(sem);
+  if(btn.dataset.action === 'openSample') navPicker(7, BUILTIN_SCHEDULES[7], {demo:true});
+}
+
+// ================================================================
+// TRACKER MATA KULIAH SEMESTER 1-8
+// ================================================================
+function buildTracker(){
+  const taken = getTakenCourses();
+  const all = allTrackerEntries();
+  const totalSks = trackerTargetSks(all);
+  const takenSks = trackerTakenSks(all, taken);
+  const totalRequirements = all.length;
+  const doneRequirements = trackerDoneRequirements(all, taken);
+  const pct = totalSks ? Math.round((takenSks / totalSks) * 100) : 0;
+
+  const summary = document.getElementById('trackerSummary');
+  if(summary){
+    summary.innerHTML =
+      '<article class="tracker-summary-card primary"><span class="ts-label">Progress SKS Tracker</span><span class="ts-value">' + takenSks + ' / ' + totalSks + ' SKS</span><span class="ts-sub">' + pct + '% dari ' + TRACKER_TARGET_SKS + ' SKS yang dipantau aplikasi</span><div class="tracker-progress"><span style="width:' + Math.min(100,pct) + '%"></span></div></article>' +
+      '<article class="tracker-summary-card"><span class="ts-label">Total Kurikulum</span><span class="ts-value">' + OFFICIAL_CURRICULUM_SKS + ' SKS</span><span class="ts-sub">' + EXCLUDED_TRACKER_SKS + ' SKS Pilihan Pengayaan Semester 7 tidak masuk tracker</span></article>' +
+      '<article class="tracker-summary-card"><span class="ts-label">Kebutuhan MK</span><span class="ts-value">' + doneRequirements + ' / ' + totalRequirements + ' MK</span><span class="ts-sub">Sisa ' + Math.max(0,totalSks-takenSks) + ' SKS tracker · slot belum ditentukan tetap dihitung sebagai target</span></article>';
+  }
+
+  document.querySelectorAll('#trackerSemesters [data-tracker-sem]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.trackerSem === String(trackerSemester));
+  });
+  document.querySelectorAll('#trackerStatus [data-tracker-status]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.trackerStatus === trackerStatusFilter);
+  });
+
+  const countScope = trackerSemester === 'all' ? all : all.filter(c => String(c.semester) === String(trackerSemester));
+  const countTaken = trackerDoneRequirements(countScope, taken);
+  const countPending = countScope.filter(c => c.placeholder || (c.trackable && !taken.has(c.code))).length;
+  const countMap = {all:countScope.length,pending:countPending,taken:countTaken};
+  document.querySelectorAll('#trackerStatus [data-status-count]').forEach(el => {
+    const key = el.dataset.statusCount;
+    el.textContent = String(countMap[key] ?? 0);
+  });
+
+  let rows = all;
+  if(trackerSemester !== 'all') rows = rows.filter(c => String(c.semester) === String(trackerSemester));
+  if(trackerStatusFilter === 'taken') rows = rows.filter(c => c.trackable && taken.has(c.code));
+  if(trackerStatusFilter === 'pending') rows = rows.filter(c => c.placeholder || (c.trackable && !taken.has(c.code)));
+
+  const ctx = document.getElementById('trackerContext');
+  if(ctx){
+    const scope = trackerSemester === 'all' ? 'Semester 1–8' : 'Semester ' + trackerSemester;
+    const scopeAll = trackerSemester === 'all' ? all : all.filter(c => String(c.semester) === String(trackerSemester));
+    const scopeTakenCount = trackerDoneRequirements(scopeAll, taken);
+    const scopeTakenSks = trackerTakenSks(scopeAll, taken);
+    const scopeTargetSks = trackerTargetSks(scopeAll);
+    const planning = scopeAll.filter(c => c.placeholder).length;
+    ctx.innerHTML = '<span><b>' + scope + '</b> · ' + scopeTakenSks + '/' + scopeTargetSks + ' SKS · ' + scopeTakenCount + '/' + scopeAll.length + ' kebutuhan selesai' + (planning ? ' · ' + planning + ' pilihan belum ditentukan' : '') + '</span><span>' + rows.length + ' item ditampilkan</span>';
+  }
+
+  const list = document.getElementById('trackerCourseList');
+  if(!list) return;
+  if(!rows.length){
+    list.innerHTML = '<div class="track-empty">Tidak ada mata kuliah pada filter ini.</div>';
+    return;
+  }
+
+  list.innerHTML = rows.map(c => {
+    const isTaken = c.trackable && taken.has(c.code);
+    const placeholder = !!c.placeholder;
+    const requirement = c.requirement ? '<span class="track-sem">' + esc(c.requirement) + '</span>' : '<span class="track-sem">Semester ' + c.semester + '</span>';
+    const lecturer = placeholder ? 'Tentukan pilihan pada Rencana Semester ' + c.semester : lecturerText(c);
+    return '<article class="track-course' + (isTaken ? ' taken' : '') + (placeholder ? ' placeholder' : '') + '">' +
+      '<div class="track-course-main">' +
+        '<div class="track-course-top"><span class="track-sem">Semester ' + c.semester + '</span>' + requirement + '<span class="track-code">' + esc(c.code) + '</span><span class="track-sks">' + esc(c.sks) + ' SKS</span></div>' +
+        '<h3>' + esc(c.name) + '</h3>' +
+        '<p class="track-lecturer"><b>' + (placeholder ? 'Status:' : 'Pengajar:') + '</b> ' + esc(lecturer) + '</p>' +
+      '</div>' +
+      (placeholder
+        ? '<button class="track-toggle" type="button" data-open-plan="' + c.semester + '">Tentukan pilihan</button>'
+        : '<button class="track-toggle' + (isTaken ? ' taken' : ' pending-action') + '" data-track-code="' + esc(c.code) + '" aria-pressed="' + (isTaken ? 'true' : 'false') + '">' + (isTaken ? '✓ Sudah diambil' : 'Tandai sudah diambil') + '</button>') +
+    '</article>';
+  }).join('');
+}
+
+function buildTrackerPrint(){
+  const ps = document.getElementById('printSheet');
+  if(!ps) return;
+
+  const taken = getTakenCourses();
+  const all = allTrackerEntries();
+  const scopeAll = trackerSemester === 'all'
+    ? all
+    : all.filter(c => String(c.semester) === String(trackerSemester));
+
+  let rows = [...scopeAll];
+  if(trackerStatusFilter === 'taken') rows = rows.filter(c => c.trackable && taken.has(c.code));
+  if(trackerStatusFilter === 'pending') rows = rows.filter(c => c.placeholder || (c.trackable && !taken.has(c.code)));
+
+  const scopeTakenCount = trackerDoneRequirements(scopeAll, taken);
+  const totalSks = trackerTargetSks(scopeAll);
+  const takenSks = trackerTakenSks(scopeAll, taken);
+  const pendingCount = scopeAll.length - scopeTakenCount;
+  const pct = totalSks ? Math.round((takenSks / totalSks) * 100) : 0;
+  const scopeLabel = trackerSemester === 'all' ? 'Semester 1–8' : 'Semester ' + trackerSemester;
+  const filterLabel = trackerStatusFilter === 'taken'
+    ? 'Sudah diambil'
+    : (trackerStatusFilter === 'pending' ? 'Belum diambil' : 'Semua status');
+
+  const now = new Date();
+  const today = now.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
+  const printTime = now.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}).replace('.', ':');
+
+  const bodyRows = rows.length
+    ? rows.map(c => {
+        const isTaken = c.trackable && taken.has(c.code);
+        const isPlanning = !!c.placeholder;
+        const status = isPlanning ? 'Belum ditentukan' : (isTaken ? 'Sudah diambil' : 'Belum diambil');
+        const statusClass = isPlanning ? 'planning' : (isTaken ? 'taken' : 'pending');
+        const requirement = c.requirement || (Number(c.semester) <= 5 ? 'Paket semester' : 'Mata kuliah');
+        const lecturer = isPlanning ? '' : lecturerText(c);
+        return '<tr>' +
+          '<td class="pt-sem">' + esc(c.semester) + '</td>' +
+          '<td><span class="pt-code">' + esc(c.code) + '</span></td>' +
+          '<td><span class="ps-course-name">' + esc(c.name) + '</span>' +
+            (lecturer ? '<span class="ps-course-lecturer">Pengajar: ' + esc(lecturer) + '</span>' : '') +
+          '</td>' +
+          '<td>' + esc(requirement) + '</td>' +
+          '<td class="pt-sks">' + esc(c.sks) + '</td>' +
+          '<td><span class="ps-status ' + statusClass + '">' + status + '</span></td>' +
+        '</tr>';
+      }).join('')
+    : '<tr><td colspan="6" class="ps-empty">Tidak ada mata kuliah pada filter yang dipilih.</td></tr>';
+
+  ps.innerHTML =
+    '<header class="ps-header">' +
+      '<div class="ps-brand">TM</div>' +
+      '<div>' +
+        '<p class="ps-eyebrow">Institut Teknologi Sepuluh Nopember · Departemen Teknik Mesin</p>' +
+        '<h1>Tracker Mata Kuliah</h1>' +
+        '<p class="ps-sub">S1 Teknik Mesin · ' + esc(scopeLabel) + '</p>' +
+      '</div>' +
+      '<div class="ps-term">' + esc(pct) + '% selesai</div>' +
+    '</header>' +
+    '<section class="ps-summary">' +
+      '<div class="ps-stat"><span class="ps-stat-label">Kebutuhan MK</span><span class="ps-stat-value">' + scopeAll.length + ' MK</span></div>' +
+      '<div class="ps-stat"><span class="ps-stat-label">Sudah Diambil</span><span class="ps-stat-value">' + scopeTakenCount + ' MK</span></div>' +
+      '<div class="ps-stat"><span class="ps-stat-label">SKS Selesai</span><span class="ps-stat-value">' + takenSks + ' / ' + totalSks + '</span></div>' +
+      '<div class="ps-stat"><span class="ps-stat-label">Belum Selesai</span><span class="ps-stat-value">' + pendingCount + ' MK</span></div>' +
+    '</section>' +
+    '<div class="pt-filter-note"><strong>Lingkup cetak:</strong> ' + esc(scopeLabel) + ' · Filter: ' + esc(filterLabel) + ' · ' + rows.length + ' item ditampilkan. Total kurikulum 144 SKS; tracker memantau 141 SKS karena Pilihan Pengayaan 3 SKS dikecualikan.</div>' +
+    '<div class="ps-section-head"><h2>Daftar Mata Kuliah</h2><span>' + takenSks + ' dari ' + totalSks + ' SKS tracker selesai</span></div>' +
+    '<div class="ps-table-wrap">' +
+      '<table>' +
+        '<colgroup><col class="pt-c-sem"><col class="pt-c-code"><col class="pt-c-course"><col class="pt-c-req"><col class="pt-c-sks"><col class="pt-c-status"></colgroup>' +
+        '<thead><tr><th>Sem</th><th>Kode</th><th>Mata Kuliah</th><th>Kategori</th><th>SKS</th><th>Status</th></tr></thead>' +
+        '<tbody>' + bodyRows + '</tbody>' +
+      '</table>' +
+    '</div>' +
+    '<footer class="ps-footer">' +
+      '<div><strong>Planner &amp; Tracker S1 Teknik Mesin ITS</strong><br>Progress berasal dari data yang tersimpan di perangkat pengguna.</div>' +
+      '<div class="ps-footer-right">Dicetak ' + esc(today) + ' · ' + esc(printTime) + '<br>' + esc(scopeLabel) + '</div>' +
+    '</footer>';
+}
+
+const PRINT_FRAME_ID = 'plannerPrintFrame';
+
+function printDocumentCss(orientation = 'portrait'){
+  const pageSize = orientation === 'landscape' ? 'A4 landscape' : 'A4 portrait';
+  const paperWidth = orientation === 'landscape' ? '297mm' : '210mm';
+  const paperHeight = orientation === 'landscape' ? '210mm' : '297mm';
+  return `
+    @page{size:${pageSize};margin:12mm}
+    *{box-sizing:border-box}
+    html,body{margin:0;color:#17201D;font-family:Arial,Helvetica,sans-serif}
+    body{font-size:10.5px;line-height:1.45;-webkit-print-color-adjust:exact;print-color-adjust:exact;background:#fff}
+    @media screen{
+      html{background:#E9EBE8;padding:18px}
+      body{width:${paperWidth};min-height:${paperHeight};margin:0 auto;padding:12mm;background:#fff;box-shadow:0 12px 34px -24px rgba(0,0,0,.45)}
+    }
+    @media print{
+      html,body{background:#fff!important}
+      html{padding:0!important}
+      body{width:auto!important;min-height:0!important;margin:0!important;padding:0!important;box-shadow:none!important}
+    }
+    .ps-header{display:grid;grid-template-columns:auto 1fr auto;gap:13px;align-items:center;padding-bottom:13px;border-bottom:1px solid #D9E1DD}
+    .ps-brand{width:44px;height:44px;border-radius:10px;background:#12695C;color:#fff;display:grid;place-items:center;font-family:Georgia,serif;font-size:17px;font-weight:700}
+    .ps-eyebrow{font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#66716C;font-weight:700;margin:0 0 3px}
+    h1{font-family:Georgia,serif;font-size:21px;line-height:1.12;font-weight:700;margin:0;color:#14201D}
+    .ps-sub{font-size:9.3px;color:#66716C;margin:4px 0 0}
+    .ps-term{align-self:start;border:1px solid #CFE0D8;background:#EFF6F2;color:#0C4A41;border-radius:999px;padding:6px 10px;font-size:8px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;white-space:nowrap}
+    .ps-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:12px 0 14px;break-inside:avoid}
+    .ps-stat{border:1px solid #E0E6E2;border-radius:9px;padding:8px 10px;background:#FBFCFB}
+    .ps-stat-label{display:block;font-size:7px;letter-spacing:.1em;text-transform:uppercase;color:#79827E;font-weight:800;margin-bottom:3px}
+    .ps-stat-value{display:block;font-size:16px;line-height:1.05;font-weight:800;color:#153F37}
+    .ps-section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:0 0 7px}
+    .ps-section-head h2{font-family:Georgia,serif;font-size:14px;margin:0;color:#17201D}
+    .ps-section-head span{font-size:8px;color:#7A837F;font-weight:600}
+    .ps-table-wrap{border:1px solid #DDE4E0;border-radius:9px;overflow:hidden}
+    table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:8.9px}
+    thead{display:table-header-group}
+    th{text-align:left;font-size:7.1px;letter-spacing:.09em;text-transform:uppercase;color:#5E6964;background:#F3F6F4;border-bottom:1px solid #D9E1DD;padding:6px 7px;font-weight:800}
+    td{border-bottom:1px solid #E7ECE9;padding:6px 7px;vertical-align:middle;color:#2A332F;overflow-wrap:anywhere}
+    tbody tr:last-child td{border-bottom:none}
+    tbody tr:nth-child(even){background:#FCFDFC}
+    tbody tr{break-inside:avoid;page-break-inside:avoid}
+    .ps-c-day{width:10%}.ps-c-time{width:14%}.ps-c-course{width:36%}.ps-c-status{width:12%}.ps-c-class{width:9%}.ps-c-room{width:19%}
+    .pt-c-sem{width:7%}.pt-c-code{width:14%}.pt-c-course{width:38%}.pt-c-req{width:15%}.pt-c-sks{width:8%}.pt-c-status{width:18%}
+    .ps-day{font-weight:800;color:#174F45}.ps-time{font-variant-numeric:tabular-nums;font-weight:700;color:#46514C;white-space:nowrap}
+    .ps-course-name{display:block;font-size:9.3px;font-weight:800;color:#17201D;line-height:1.3}
+    .ps-course-code{display:block;margin-top:1px;font-family:monospace;font-size:7.5px;color:#7A837F}
+    .ps-course-lecturer{display:block;margin-top:2px;font-size:7px;line-height:1.25;color:#66716C}
+    .ps-tag,.ps-status{display:inline-block;border-radius:999px;padding:3px 6px;font-size:7px;font-weight:800;white-space:nowrap}
+    .ps-tag.wajib,.ps-status.taken{background:#E9F2EE;color:#0C4A41;border:1px solid #CFE0D8}
+    .ps-tag.pilihan,.ps-status.pending{background:#F3F1E9;color:#6F6A58;border:1px solid #E2DED0}
+    .ps-status.planning{background:#FFF6DF;color:#8A6100;border:1px solid #E9D9A7}
+    .pt-sem{font-weight:800;color:#174F45;text-align:center}.pt-code{font-family:monospace;font-size:7.6px;color:#5E6964}.pt-sks{text-align:center;font-weight:800}
+    .pt-filter-note{margin:7px 0 10px;padding:7px 9px;border:1px solid #E0E6E2;border-radius:7px;background:#FBFCFB;color:#66716C;font-size:8px}
+    .ps-empty{text-align:center;padding:22px 12px!important;color:#7A837F!important}
+    .ps-footer{display:flex;justify-content:space-between;gap:12px;align-items:flex-end;margin-top:10px;padding-top:8px;border-top:1px solid #E2E7E4;color:#7A837F;font-size:7.4px;break-inside:avoid}
+    .ps-footer strong{color:#46514C}.ps-footer-right{text-align:right}
+  `;
+}
+
+let activePrintJob = null;
+
+function printDocumentMarkup(html, {title='Cetak', orientation='portrait'} = {}){
+  const safeTitle = String(title).replace(/[<>]/g,'');
+  return '<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' + safeTitle + '</title><style>' + printDocumentCss(orientation) + '</style></head><body>' + html + '</body></html>';
+}
+
+function showPrintPreview(html, {title='Pratinjau Cetak', orientation='portrait', meta=''} = {}){
+  if(!html || !String(html).trim()) return false;
+  activePrintJob = {html, title, orientation};
+  const modal = document.getElementById('printPreviewModal');
+  const frame = document.getElementById('printPreviewFrame');
+  if(!modal || !frame) return openPrintDocument(html, {title, orientation});
+  document.getElementById('printPreviewTitle').textContent = title;
+  document.getElementById('printPreviewMeta').textContent = meta || (orientation === 'landscape' ? 'Format A4 landscape' : 'Format A4 portrait');
+  frame.srcdoc = printDocumentMarkup(html, {title, orientation});
+  modal.hidden = false;
+  document.body.style.overflow = 'hidden';
+  return true;
+}
+
+function closePrintPreview(){
+  const modal = document.getElementById('printPreviewModal');
+  if(modal) modal.hidden = true;
+  document.body.style.overflow = '';
+}
+
+function reloadPrintPreview(){
+  if(!activePrintJob) return;
+  const frame = document.getElementById('printPreviewFrame');
+  if(frame) frame.srcdoc = printDocumentMarkup(activePrintJob.html, activePrintJob);
+}
+
+function executePrintPreview(){
+  if(!activePrintJob) return toast('Dokumen cetak belum tersedia');
+  const frame = document.getElementById('printPreviewFrame');
+  const win = frame?.contentWindow;
+  if(!win) return openPrintDocument(activePrintJob.html, activePrintJob);
+  try{
+    win.focus();
+    win.print();
+  }catch(error){
+    console.error('Print preview gagal:', error);
+    openPrintDocument(activePrintJob.html, activePrintJob);
+  }
+}
+
+function openPrintDocument(html, {title='Cetak', orientation='portrait'} = {}){
+  if(!html || !String(html).trim()) return false;
+
+  document.getElementById(PRINT_FRAME_ID)?.remove();
+  const frame = document.createElement('iframe');
+  frame.id = PRINT_FRAME_ID;
+  frame.title = 'Dokumen cetak';
+  frame.setAttribute('aria-hidden','true');
+  frame.style.cssText = 'position:fixed;left:-12000px;top:0;width:210mm;height:297mm;border:0;background:#fff;z-index:-1;';
+  document.body.appendChild(frame);
+
+  const doc = frame.contentDocument || frame.contentWindow?.document;
+  if(!doc){ frame.remove(); return false; }
+
+  doc.open();
+  doc.write(printDocumentMarkup(html, {title, orientation}));
+  doc.close();
+
+  const cleanup = () => {
+    setTimeout(() => document.getElementById(PRINT_FRAME_ID)?.remove(), 250);
+  };
+
+  const runPrint = () => {
+    const win = frame.contentWindow;
+    if(!win){ cleanup(); return; }
+    try{
+      win.addEventListener('afterprint', cleanup, {once:true});
+      win.focus();
+      win.print();
+      setTimeout(cleanup, 60000);
+    }catch(error){
+      console.error('Print gagal:', error);
+      cleanup();
+      toast('Dialog cetak gagal dibuka. Coba gunakan Ctrl+P.');
+    }
+  };
+
+  const ready = doc.fonts?.ready || Promise.resolve();
+  Promise.race([ready, new Promise(resolve => setTimeout(resolve, 350))])
+    .then(() => setTimeout(runPrint, 40));
+  return true;
+}
+
+function printPlanner(){
+  if(!schedule) return toast('Belum ada jadwal yang dapat dicetak');
+  const items = sortedSelected();
+  if(!items.length) return toast('Pilih minimal satu mata kuliah sebelum mencetak jadwal');
+  buildPrint(items);
+  const html = document.getElementById('printSheet')?.innerHTML || '';
+  const sks = plannerSksStatus(items, appSem);
+  const previewTitle = (demoMode ? 'Contoh Jadwal Semester ' : 'Jadwal Kuliah Semester ') + appSem;
+  const previewMeta = 'A4 landscape · ' + items.length + ' MK · ' + sks.total + '/' + sks.target + ' SKS' + (demoMode ? ' · mode contoh' : '');
+  if(!showPrintPreview(html, {title:previewTitle, orientation:'landscape', meta:previewMeta})){
+    return toast('Tampilan cetak belum siap');
+  }
+}
+
+function printTracker(){
+  buildTrackerPrint();
+  const html = document.getElementById('printSheet')?.innerHTML || '';
+  if(!showPrintPreview(html, {title:'Tracker Mata Kuliah', orientation:'portrait', meta:'A4 portrait · mengikuti filter Tracker yang sedang aktif'})){
+    return toast('Data tracker belum siap dicetak');
+  }
+}
+
+function toggleTrackedCourse(code){
+  const taken = getTakenCourses();
+  const isTaken = taken.has(String(code));
+  setCourseTaken(code, !isTaken);
+  buildTracker();
+  buildDashboard();
+  if(!isTaken && trackerStatusFilter === 'pending') toast('Ditandai sudah diambil. Item keluar dari filter Belum diambil.');
+  else toast(!isTaken ? 'Mata kuliah ditandai sudah diambil' : 'Status mata kuliah dikembalikan ke belum diambil');
 }
 
 // ================================================================
 // CATALOG MODAL
 // ================================================================
 function buildCatalog(sem){
+  sem = Number(sem);
   const cat = CATALOG[sem];
   if(!cat) return;
-  document.getElementById('catTitle').textContent = cat.label;
+  document.getElementById('catTitle').textContent = sem >= 6 ? 'Rencana ' + cat.label : cat.label;
   document.getElementById('catSubtitle').textContent = 'S1 Teknik Mesin · ITS';
+
+  const rule = SEMESTER_RULES[sem];
+  if(rule){
+    const plan = getSemesterPlan(sem);
+    const taken = getTakenCourses();
+    const entries = semesterPlanEntries(sem, true);
+    const completed = entries.filter(c => c.trackable && taken.has(c.code)).length;
+    const selectedSks = entries.filter(c => !c.placeholder).reduce((sum,c) => sum + Number(c.sks || 0), 0);
+    const selectionPending = entries.filter(c => c.placeholder).length;
+
+    let html = '<div class="curr-note"><b>Daftar mata kuliah semester tidak lagi mengikuti file jadwal yang diimport.</b> Import hanya dipakai untuk hari, jam, kelas, dan ruang. Jadi pengguna lain tetap melihat ketentuan Semester ' + sem + ' yang lengkap walaupun belum mempunyai JSON jadwal.</div>';
+    html += '<div class="curr-summary">' +
+      '<div class="curr-stat"><span>Target Semester</span><b>' + semesterOfficialTargetSks(sem) + ' SKS</b><small>' + (sem === 7 ? rule.targetSks + ' SKS ditracker · 3 SKS Pengayaan dikecualikan' : 'Sesuai ketentuan semester') + '</small></div>' +
+      '<div class="curr-stat"><span>Rencana Terisi</span><b>' + selectedSks + ' / ' + rule.targetSks + ' SKS</b><small>' + (selectionPending ? selectionPending + ' pilihan belum ditentukan' : 'Semua pilihan sudah ditentukan') + '</small></div>' +
+      '<div class="curr-stat"><span>Tracking</span><b>' + completed + ' / ' + entries.length + ' MK</b><small>Status tersimpan di perangkat</small></div>' +
+    '</div>';
+
+    if(sem === 7) html += '<div style="margin-bottom:12px"><span class="curr-warning">Pilihan Pengayaan tidak dimasukkan</span></div>';
+    html += '<div class="curr-section"><div class="curr-section-head"><h3>Mata kuliah yang diambil Semester ' + sem + '</h3><span>' + entries.length + ' kebutuhan · ' + rule.targetSks + ' SKS tracker</span></div><div class="curr-list">';
+
+    (rule.fixed || []).forEach(code => {
+      const c = catalogCourseByCode(code);
+      if(!c) return;
+      const isTaken = taken.has(c.code);
+      html += '<div class="curr-row"><div class="curr-main"><div class="curr-top"><span class="curr-kind">Wajib</span><span class="curr-code">' + esc(c.code) + '</span><span class="curr-code">' + c.sks + ' SKS</span></div><h4>' + esc(c.name) + '</h4><p>Pengajar: ' + esc(lecturerText(c)) + '</p></div><button class="track-toggle' + (isTaken ? ' taken' : ' pending-action') + '" data-track-code="' + esc(c.code) + '">' + (isTaken ? '✓ Sudah diambil' : 'Tandai sudah diambil') + '</button></div>';
+    });
+
+    if(rule.religion){
+      const selectedCode = plan[rule.religion.key] || '';
+      const selectedCourse = selectedCode ? catalogCourseByCode(selectedCode) : null;
+      const isTaken = selectedCourse ? taken.has(selectedCourse.code) : false;
+      html += '<div class="curr-row"><div class="curr-main"><div class="curr-top"><span class="curr-kind religion">Agama</span><span class="curr-code">2 SKS</span></div><h4>' + (selectedCourse ? esc(selectedCourse.name) : 'Pilih satu mata kuliah agama') + '</h4><p>' + (selectedCourse ? 'Pengajar: ' + esc(lecturerText(selectedCourse)) : 'Sesuaikan dengan mata kuliah agama yang Anda ambil.') + '</p><select class="curr-select" data-plan-sem="' + sem + '" data-plan-key="' + rule.religion.key + '"><option value="">Pilih agama…</option>';
+      rule.religion.options.forEach(code => {
+        const c = catalogCourseByCode(code);
+        if(c) html += '<option value="' + esc(c.code) + '"' + (selectedCode === c.code ? ' selected' : '') + '>' + esc(c.name) + ' · ' + c.sks + ' SKS</option>';
+      });
+      html += '</select></div>' + (selectedCourse ? '<button class="track-toggle' + (isTaken ? ' taken' : ' pending-action') + '" data-track-code="' + esc(selectedCourse.code) + '">' + (isTaken ? '✓ Sudah diambil' : 'Tandai sudah diambil') + '</button>' : '<button class="track-toggle" type="button" disabled>Pilih agama</button>') + '</div>';
+    }
+
+    const candidates = choiceCandidates(sem);
+    (rule.choiceSlots || []).forEach(slot => {
+      const selectedCode = plan[slot.key] || '';
+      const duplicate = selectedCode ? isDuplicateChoice(sem, slot.key, selectedCode) : false;
+      const selectedCourse = selectedCode && !duplicate ? catalogCourseByCode(selectedCode) : null;
+      const isTaken = selectedCourse ? taken.has(selectedCourse.code) : false;
+      html += '<div class="curr-row"><div class="curr-main"><div class="curr-top"><span class="curr-kind choice">' + esc(slot.label) + '</span><span class="curr-code">3 SKS</span></div><h4>' + (selectedCourse ? esc(selectedCourse.name) : slot.label + ' belum ditentukan') + '</h4><p>' + (selectedCourse ? 'Pengajar: ' + esc(lecturerText(selectedCourse)) : (duplicate ? 'Pilihan ini duplikat dengan slot lain. Pilih mata kuliah berbeda.' : 'Pilih mata kuliah dari katalog pilihan Semester ' + sem + '.')) + '</p><select class="curr-select" data-plan-sem="' + sem + '" data-plan-key="' + slot.key + '"><option value="">Pilih mata kuliah…</option>';
+      candidates.forEach(c => {
+        html += '<option value="' + esc(c.code) + '"' + (selectedCode === c.code ? ' selected' : '') + '>' + esc(c.name) + ' · ' + c.sks + ' SKS</option>';
+      });
+      html += '</select></div>' + (selectedCourse ? '<button class="track-toggle' + (isTaken ? ' taken' : ' pending-action') + '" data-track-code="' + esc(selectedCourse.code) + '">' + (isTaken ? '✓ Sudah diambil' : 'Tandai sudah diambil') + '</button>' : '<button class="track-toggle" type="button" disabled>Belum dipilih</button>') + '</div>';
+    });
+
+    html += '</div></div>';
+
+    if(candidates.length){
+      html += '<details class="curr-details"><summary>Lihat katalog mata kuliah pilihan (' + candidates.length + ')</summary><div class="curr-choice-grid">' + candidates.map(c => '<div class="curr-choice"><b>' + esc(c.name) + '</b><span>' + esc(c.code) + ' · ' + c.sks + ' SKS</span></div>').join('') + '</div></details>';
+    }
+
+    html += '<div class="curr-actions">';
+    if(getScheduleForSemester(sem)) html += '<button class="btn primary" data-action="openSchedule" data-sem="' + sem + '">Buka Penyusun Jadwal</button>';
+    else html += '<button class="btn ghost" data-action="navImport" data-sem="' + sem + '">Import Jadwal Semester ' + sem + '</button>';
+    html += '<button class="btn ghost" data-action="openTracker" data-sem="' + sem + '">Buka Tracker Semester ' + sem + '</button></div>';
+
+    document.getElementById('catMain').innerHTML = '<div style="padding-bottom:18px">' + html + '</div>';
+    return;
+  }
 
   let html = '';
   if(cat.note) html += '<div class="cat-note">ℹ ' + esc(cat.note) + '</div>';
   const catalogSks = cat.courses.reduce((sum, course) => sum + (Number(course.sks) || 0), 0);
-  html += '<div class="cat-meta">' +
-    '<span class="cat-pill">📚 ' + cat.courses.length + ' Mata Kuliah</span>' +
-    '<span class="cat-pill">' + catalogSks + (cat.type === 'fixed' ? ' SKS paket' : ' SKS seluruh opsi') + '</span>' +
-    '<span class="cat-pill">' + (cat.type === 'fixed' ? 'Paket wajib' : 'Katalog mata kuliah pilihan') + '</span>' +
-  '</div>';
-  html += '<div style="overflow-x:auto"><table class="course-table"><thead><tr><th>Kode</th><th>Nama Mata Kuliah</th><th style="text-align:right">SKS</th></tr></thead><tbody>';
+  html += '<div class="cat-meta"><span class="cat-pill">📚 ' + cat.courses.length + ' Mata Kuliah</span><span class="cat-pill">' + catalogSks + ' SKS paket</span><span class="cat-pill">Paket wajib</span></div>';
+  html += '<div style="overflow-x:auto"><table class="course-table"><thead><tr><th>Kode</th><th>Nama Mata Kuliah</th><th>Dosen Pengajar</th><th style="text-align:right">SKS</th></tr></thead><tbody>';
   cat.courses.forEach(c => {
-    html += '<tr><td class="ct-code">' + esc(c.code) + '</td><td>' + esc(c.name) + '</td><td class="ct-sks">' + esc(c.sks) + '</td></tr>';
+    html += '<tr><td class="ct-code">' + esc(c.code) + '</td><td>' + esc(c.name) + '</td><td class="ct-lecturer">' + esc(lecturerText(c)) + '</td><td class="ct-sks">' + esc(c.sks) + '</td></tr>';
   });
   html += '</tbody></table></div>';
-
-  if(getScheduleForSemester(sem)){
-    html += '<button class="ibtn" data-action="openSchedule" data-sem="' + sem + '">' + (canEdit ? 'Buka Penyusun Jadwal Semester ' : 'Lihat Jadwal Semester ') + sem + '</button>';
-  }else if(canEdit){
-    html += '<button class="ibtn" data-action="navImport" data-sem="' + sem + '">Import Jadwal Semester ' + sem + '</button>';
-  }
   document.getElementById('catMain').innerHTML = '<div style="padding-bottom:18px">' + html + '</div>';
 }
 
 function openCatalog(sem){
   appSem = Number(sem);
+  if(appSem <= 5) return navTracker(appSem);
   buildCatalog(appSem);
   document.getElementById('catalogModal').hidden = false;
 }
@@ -1505,6 +2646,7 @@ function normalizeImportedCourse(raw){
     kelas: raw.kelas ?? raw.class ?? '-',
     room: raw.room ?? raw.ruang ?? '-',
     sks: raw.sks,
+    lecturers: raw.lecturers ?? raw.dosen ?? raw.pengajar ?? raw.lecturer ?? '',
     type: raw.type ?? raw.jenis,
     star: !!raw.star,
     warn: !!raw.warn,
@@ -1541,6 +2683,7 @@ function validateAndLoadJSON(text){
   }
 
   const targetSem = Number(document.getElementById('selSem')?.value || data.semester || appSem || 7);
+  if(targetSem <= 5) return showImportError('Semester 1–5 tidak menggunakan import jadwal. Gunakan Tracker Mata Kuliah.');
   if(!VALID_SEMESTERS.has(targetSem)) return showImportError('Semester tujuan harus antara 1 sampai 8.');
 
   const days = [...new Set(normalized.map(c => String(c.day).trim()))]
@@ -1570,6 +2713,7 @@ function validateAndLoadJSON(text){
     kelas: String(c.kelas || '-').trim(),
     room: String(c.room || '-').trim(),
     sks: Number.isFinite(Number(c.sks)) && Number(c.sks) > 0 ? Number(c.sks) : courseSksForSemester(c, targetSem),
+    lecturers: c.lecturers,
     star: c.star,
     warn: c.warn,
     note: c.note ? String(c.note) : null
@@ -1618,6 +2762,7 @@ function buildSampleJson(sem = 7){
       kelas: c.kelas,
       room: c.room,
       sks: courseSksForSemester(c, sem),
+      dosen: lecturerNames(c).join('; '),
       star: !!c.star,
       warn: !!c.warn,
       note: c.note || ''
@@ -1753,9 +2898,12 @@ function initPicker(){
   const totalSlots = new Set(courses.map(c => c.dayIdx + '-' + c.timeIdx)).size;
   const wajibCount = new Set(courses.filter(c => c.type === 'wajib').map(c => c.code)).size;
   const pilihanCount = new Set(courses.filter(c => c.type === 'pilihan').map(c => c.code)).size;
+  const requirementCounts = plannerRequirementCounts(appSem);
   document.getElementById('stSlotMax').textContent = '/' + totalSlots;
-  document.getElementById('stWajibMax').textContent = '/' + wajibCount;
-  document.getElementById('stPilSub').textContent = 'dari ' + pilihanCount + ' MK pilihan';
+  document.getElementById('stWajibMax').textContent = '/' + (requirementCounts?.wajib ?? wajibCount);
+  document.getElementById('stPilSub').textContent = requirementCounts
+    ? 'target ' + requirementCounts.pilihan + ' MK pilihan · ' + pilihanCount + ' tersedia di data jadwal'
+    : 'dari ' + pilihanCount + ' MK pilihan';
   document.getElementById('boardInfo').textContent = totalSlots + ' slot · ' + courses.length + ' opsi';
 
   const viewport = document.getElementById('gridViewport');
@@ -1792,6 +2940,7 @@ function createCourseButton(c, className){
     '<span class="badges">' + badgesHtml(c) + '</span>' +
     '<span class="name">' + esc(c.name) + '</span>' +
     '<span class="meta">' + metaHtml(c) + '</span>' +
+    '<span class="lecturer" title="' + esc(lecturerText(c)) + '">Pengajar: ' + esc(lecturerCompactText(c, 2)) + '</span>' +
     (className === 'lcourse' ? '</span>' : '') +
     '<span class="check">' + checkSvg + '</span>';
   if(canEdit){
@@ -1863,7 +3012,7 @@ function toggleCourse(id){
     else toast('+ ' + c.name);
   }
 
-  saveSelection(appSem, selected);
+  if(!demoMode) saveSelection(appSem, selected);
   update();
 }
 
@@ -1898,24 +3047,35 @@ function update(){
   const wajibCodes = new Set(items.filter(c => c.type === 'wajib').map(c => c.code));
   const pilihanCodes = new Set(items.filter(c => c.type === 'pilihan').map(c => c.code));
   const totalSlots = new Set(schedule.courses.map(c => c.dayIdx + '-' + c.timeIdx)).size;
-  const totalWajib = new Set(schedule.courses.filter(c => c.type === 'wajib').map(c => c.code)).size;
-  const sks = selectedSksBreakdown(items);
+  const scheduleWajib = new Set(schedule.courses.filter(c => c.type === 'wajib').map(c => c.code)).size;
+  const requirementCounts = plannerRequirementCounts(appSem);
+  const totalWajib = requirementCounts?.wajib ?? scheduleWajib;
+  const targetPilihan = requirementCounts?.pilihan;
+  const sks = plannerSksStatus(items, appSem);
 
   setStat(document.getElementById('stSlot'), items.length);
   setStat(document.getElementById('stWajib'), wajibCodes.size);
   setStat(document.getElementById('stPil'), pilihanCodes.size);
   setStat(document.getElementById('stAktif'), items.length);
   document.getElementById('barSlot').style.width = totalSlots ? Math.min(100, items.length / totalSlots * 100) + '%' : '0%';
-  document.getElementById('stWajibSub').textContent = sks.wajib + ' SKS wajib · ' + wajibCodes.size + '/' + totalWajib + ' MK';
-  document.getElementById('stPilSub').textContent = sks.pilihan + ' SKS pilihan · dari ' + new Set(schedule.courses.filter(c => c.type === 'pilihan').map(c => c.code)).size + ' MK tersedia';
-  document.getElementById('stAktifSub').textContent = 'Wajib ' + wajibCodes.size + ' · Pilihan ' + pilihanCodes.size;
+  document.getElementById('stWajibSub').textContent = sks.wajib + ' SKS wajib terpilih · ' + wajibCodes.size + '/' + totalWajib + ' kebutuhan';
+  document.getElementById('stPilSub').textContent = sks.pilihan + ' SKS pilihan terpilih · ' + (targetPilihan != null ? pilihanCodes.size + '/' + targetPilihan + ' target' : 'dari ' + new Set(schedule.courses.filter(c => c.type === 'pilihan').map(c => c.code)).size + ' tersedia');
+  document.getElementById('stAktifSub').textContent = sks.total + '/' + sks.target + ' SKS target · Wajib ' + wajibCodes.size + ' · Pilihan ' + pilihanCodes.size;
   document.getElementById('panelCount').textContent = items.length + ' MK';
   document.getElementById('panelMk').textContent = items.length;
   document.getElementById('panelWajibSks').textContent = sks.wajib;
   document.getElementById('panelPilihanSks').textContent = sks.pilihan;
-  document.getElementById('panelSks').textContent = sks.total;
-  document.getElementById('mbarCount').textContent = items.length + ' MK · ' + sks.total + ' SKS';
-  document.getElementById('mbarSub').textContent = 'Wajib ' + sks.wajib + ' SKS · Pilihan ' + sks.pilihan + ' SKS';
+  const panelTarget = document.getElementById('panelTargetSks');
+  if(panelTarget) panelTarget.textContent = sks.target;
+  const panelRemaining = document.getElementById('panelRemainingSks');
+  if(panelRemaining) panelRemaining.textContent = sks.over ? '+' + sks.over + ' lebih' : sks.remaining;
+  document.getElementById('panelSks').textContent = sks.total + (sks.target ? ' / ' + sks.target : '');
+  document.getElementById('mbarCount').textContent = items.length + ' MK · ' + sks.total + '/' + sks.target + ' SKS';
+  document.getElementById('mbarSub').textContent = sks.remaining ? 'Sisa ' + sks.remaining + ' SKS ke target' : (sks.over ? 'Melebihi target ' + sks.over + ' SKS' : 'Target SKS terpenuhi');
+  const demoDetail = document.getElementById('demoBannerDetail');
+  if(demoDetail && demoMode){
+    demoDetail.textContent = 'Saat ini contoh menampilkan ' + items.length + ' MK dengan ' + sks.total + '/' + sks.target + ' SKS tracker. ' + (sks.remaining ? 'Masih ada ' + sks.remaining + ' SKS yang belum tercakup pada contoh.' : 'Target tracker sudah tercakup pada contoh.') + (sks.official > sks.target ? ' Total resmi semester adalah ' + sks.official + ' SKS termasuk ' + sks.excluded + ' SKS di luar tracker.' : '');
+  }
 
   const listEl = document.getElementById('selList');
   listEl.innerHTML = '';
@@ -1929,12 +3089,13 @@ function update(){
       row.innerHTML =
         '<div class="si-when"><b>' + esc(dayShort) + '</b><span>' + esc(schedule.times[c.timeIdx]) + '</span></div>' +
         '<div class="si-info"><span class="si-name">' + esc(c.name) + (c.star ? ' <span style="color:var(--amber)">★</span>' : '') + (c.warn ? ' <span style="color:var(--warn)">⚠</span>' : '') + '</span>' +
-        '<span class="si-meta">' + metaHtml(c) + ' · ' + (c.type === 'wajib' ? 'Wajib' : 'Pilihan') + (courseSks(c) ? ' · ' + courseSks(c) + ' SKS' : '') + '</span></div>' +
+        '<span class="si-meta">' + metaHtml(c) + ' · ' + (c.type === 'wajib' ? 'Wajib' : 'Pilihan') + (courseSks(c) ? ' · ' + courseSks(c) + ' SKS' : '') + '</span>' +
+        '<span class="si-lecturer" title="' + esc(lecturerText(c)) + '">Pengajar: ' + esc(lecturerCompactText(c, 3)) + '</span></div>' +
         (canEdit ? '<button class="si-item-x" type="button" title="Hapus" aria-label="Hapus ' + esc(c.name) + '">×</button>' : '');
       if(canEdit){
         row.querySelector('.si-item-x').addEventListener('click', () => {
           selected.delete(c.id);
-          saveSelection(appSem, selected);
+          if(!demoMode) saveSelection(appSem, selected);
           update();
           toast('"' + c.name + '" dihapus');
         });
@@ -1950,9 +3111,20 @@ function buildPrint(items){
   const now = new Date();
   const today = now.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
   const printTime = now.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}).replace('.', ':');
-  const sks = selectedSksBreakdown(items);
+  const sks = plannerSksStatus(items, appSem);
   const wajib = new Set(items.filter(c => c.type === 'wajib').map(c => c.code)).size;
   const pilihan = new Set(items.filter(c => c.type !== 'wajib').map(c => c.code)).size;
+  const requirementCounts = plannerRequirementCounts(appSem);
+  const isDemoPrint = demoMode;
+  const printHeading = (isDemoPrint ? 'Contoh Jadwal Semester ' : 'Jadwal Kuliah Semester ') + appSem;
+  const targetNote = sks.over
+    ? 'SKS terpilih melebihi target tracker sebesar ' + sks.over + ' SKS.'
+    : (sks.remaining
+      ? sks.total + ' SKS adalah subtotal mata kuliah yang terjadwal. Masih ada ' + sks.remaining + ' SKS menuju target ' + sks.target + ' SKS.'
+      : 'Target ' + sks.target + ' SKS tracker sudah terpenuhi.');
+  const officialNote = sks.official > sks.target
+    ? ' Total resmi Semester ' + appSem + ' adalah ' + sks.official + ' SKS; ' + sks.excluded + ' SKS berada di luar tracker.'
+    : '';
 
   const rows = items.length
     ? items.map(c => {
@@ -1961,7 +3133,7 @@ function buildPrint(items){
         return '<tr>' +
           '<td><span class="ps-day">' + esc(schedule.days[c.dayIdx]) + '</span></td>' +
           '<td><span class="ps-time">' + esc(schedule.times[c.timeIdx]) + '</span></td>' +
-          '<td><span class="ps-course-name">' + esc(c.name) + '</span><span class="ps-course-code">' + esc(c.code) + (courseSks(c) ? ' · ' + courseSks(c) + ' SKS' : '') + '</span></td>' +
+          '<td><span class="ps-course-name">' + esc(c.name) + '</span><span class="ps-course-code">' + esc(c.code) + (courseSks(c) ? ' · ' + courseSks(c) + ' SKS' : '') + '</span><span class="ps-course-lecturer">Pengajar: ' + esc(lecturerCompactText(c, 3)) + '</span></td>' +
           '<td><span class="ps-tag ' + tagClass + '">' + type + '</span></td>' +
           '<td>' + esc(c.kelas || '—') + '</td>' +
           '<td>' + esc(c.room || '—') + '</td>' +
@@ -1974,18 +3146,19 @@ function buildPrint(items){
       '<div class="ps-brand">TM</div>' +
       '<div>' +
         '<p class="ps-eyebrow">Institut Teknologi Sepuluh Nopember · Departemen Teknik Mesin</p>' +
-        '<h1>Jadwal Kuliah Semester ' + appSem + '</h1>' +
+        '<h1>' + esc(printHeading) + '</h1>' +
         '<p class="ps-sub">S1 Teknik Mesin · ' + esc(schedule.term || 'Periode akademik') + '</p>' +
       '</div>' +
-      '<div class="ps-term">Semester ' + appSem + '</div>' +
+      '<div class="ps-term">' + (isDemoPrint ? 'DEMO · ' : '') + 'Semester ' + appSem + '</div>' +
     '</header>' +
     '<section class="ps-summary">' +
-      '<div class="ps-stat"><span class="ps-stat-label">Mata Kuliah</span><span class="ps-stat-value">' + items.length + ' MK</span></div>' +
-      '<div class="ps-stat"><span class="ps-stat-label">SKS Wajib</span><span class="ps-stat-value">' + sks.wajib + ' SKS</span></div>' +
-      '<div class="ps-stat"><span class="ps-stat-label">SKS Pilihan</span><span class="ps-stat-value">' + sks.pilihan + ' SKS</span></div>' +
-      '<div class="ps-stat"><span class="ps-stat-label">Total SKS</span><span class="ps-stat-value">' + sks.total + ' SKS</span></div>' +
+      '<div class="ps-stat"><span class="ps-stat-label">Mata Kuliah Terjadwal</span><span class="ps-stat-value">' + items.length + ' MK</span></div>' +
+      '<div class="ps-stat"><span class="ps-stat-label">SKS Wajib Terpilih</span><span class="ps-stat-value">' + sks.wajib + ' SKS</span></div>' +
+      '<div class="ps-stat"><span class="ps-stat-label">SKS Pilihan Terpilih</span><span class="ps-stat-value">' + sks.pilihan + ' SKS</span></div>' +
+      '<div class="ps-stat"><span class="ps-stat-label">SKS Terpilih / Target</span><span class="ps-stat-value">' + sks.total + ' / ' + sks.target + '</span></div>' +
     '</section>' +
-    '<div class="ps-section-head"><h2>Rincian Jadwal Mingguan</h2><span>' + wajib + ' MK wajib · ' + pilihan + ' MK pilihan</span></div>' +
+    '<div class="pt-filter-note"><strong>' + (isDemoPrint ? 'Mode contoh:' : 'Status SKS:') + '</strong> ' + esc(targetNote + officialNote) + '</div>' +
+    '<div class="ps-section-head"><h2>Rincian Jadwal Mingguan</h2><span>' + wajib + (requirementCounts ? '/' + requirementCounts.wajib : '') + ' MK wajib terjadwal · ' + pilihan + (requirementCounts ? '/' + requirementCounts.pilihan : '') + ' MK pilihan terjadwal</span></div>' +
     '<div class="ps-table-wrap">' +
       '<table>' +
         '<colgroup><col class="ps-c-day"><col class="ps-c-time"><col class="ps-c-course"><col class="ps-c-status"><col class="ps-c-class"><col class="ps-c-room"></colgroup>' +
@@ -1994,7 +3167,7 @@ function buildPrint(items){
       '</table>' +
     '</div>' +
     '<footer class="ps-footer">' +
-      '<div><strong>Planner Jadwal S1 Teknik Mesin ITS</strong><br>Dokumen ini dibuat dari jadwal yang dipilih pada planner.</div>' +
+      '<div><strong>Planner Jadwal S1 Teknik Mesin ITS</strong><br>' + (isDemoPrint ? 'Dokumen contoh. Subtotal SKS hanya berasal dari mata kuliah yang tampil pada demo.' : 'Dokumen ini dibuat dari jadwal yang dipilih pada planner.') + '</div>' +
       '<div class="ps-footer-right">Dicetak ' + esc(today) + ' · ' + esc(printTime) + '<br>' + esc(schedule.term || '') + '</div>' +
     '</footer>';
 }
@@ -2029,7 +3202,7 @@ async function doCopy(){
   const items = sortedSelected();
   const wajibCount = new Set(items.filter(c => c.type === 'wajib').map(c => c.code)).size;
   const pilihanCount = new Set(items.filter(c => c.type === 'pilihan').map(c => c.code)).size;
-  const lines = ['JADWAL SEMESTER ' + appSem + ' · S1 TEKNIK MESIN ITS', schedule.term || '', '='.repeat(42)];
+  const lines = [(demoMode ? 'CONTOH JADWAL SEMESTER ' : 'JADWAL SEMESTER ') + appSem + ' · S1 TEKNIK MESIN ITS', schedule.term || '', '='.repeat(42)];
 
   schedule.days.forEach((day,dayIdx) => {
     const dayItems = items.filter(c => c.dayIdx === dayIdx);
@@ -2038,12 +3211,14 @@ async function doCopy(){
     dayItems.forEach(c => {
       lines.push('  ' + schedule.times[c.timeIdx] + ' | ' + c.name + ' (' + c.code + ')' +
         (c.kelas === '-' ? '' : ', Kelas ' + c.kelas) + ' | ' + c.room + ' [' + (c.type === 'wajib' ? 'Wajib' : 'Pilihan') + ' · ' + courseSks(c) + ' SKS]' +
+        ' | Pengajar: ' + lecturerCompactText(c, 3) +
         (c.star ? ' ★' : '') + (c.warn ? ' ⚠' : ''));
     });
   });
 
-  const sks = selectedSksBreakdown(items);
-  lines.push('', '-'.repeat(42), 'Total: ' + items.length + ' MK | ' + sks.total + ' SKS | Wajib: ' + wajibCount + ' MK / ' + sks.wajib + ' SKS | Pilihan: ' + pilihanCount + ' MK / ' + sks.pilihan + ' SKS');
+  const sks = plannerSksStatus(items, appSem);
+  lines.push('', '-'.repeat(42), 'Terpilih: ' + items.length + ' MK | ' + sks.total + '/' + sks.target + ' SKS target | Wajib: ' + wajibCount + ' MK / ' + sks.wajib + ' SKS | Pilihan: ' + pilihanCount + ' MK / ' + sks.pilihan + ' SKS');
+  if(demoMode) lines.push('MODE CONTOH: subtotal di atas bukan total Semester ' + appSem + '. Sisa ke target tracker: ' + sks.remaining + ' SKS.');
   const copied = await copyText(lines.join('\n'));
   toast(copied ? 'Ringkasan disalin ✓' : 'Gagal menyalin ringkasan');
 }
@@ -2053,9 +3228,9 @@ function resetSelection(){
   if(!selected.size) return toast('Jadwal masih kosong');
   if(confirm('Hapus semua pilihan?')){
     selected.clear();
-    saveSelection(appSem, selected);
+    if(!demoMode) saveSelection(appSem, selected);
     update();
-    toast('Jadwal direset');
+    toast(demoMode ? 'Pilihan demo direset' : 'Jadwal direset');
   }
 }
 
@@ -2069,6 +3244,7 @@ function bindEvents(){
     const tab = event.target.closest('.tab');
     if(!tab) return;
     if(tab.dataset.nav === 'dashboard') navDashboard();
+    if(tab.dataset.nav === 'tracker') navTracker();
     if(tab.dataset.nav === 'import') navImport();
     if(tab.dataset.nav === 'planner'){
       if(schedule) showView('planner');
@@ -2077,8 +3253,8 @@ function bindEvents(){
     }
   });
 
+  document.getElementById('tileTracker').addEventListener('click', () => navTracker());
   document.getElementById('tileImport').addEventListener('click', () => navImport(7));
-  document.getElementById('tileSample').addEventListener('click', () => navPicker(7, BUILTIN_SCHEDULES[7]));
 
   const dropzone = document.getElementById('dropzone');
   const fileInput = document.getElementById('fileInput');
@@ -2129,12 +3305,68 @@ function bindEvents(){
   document.getElementById('catBack').addEventListener('click', closeCatalog);
   document.getElementById('catalogModal').addEventListener('click', event => { if(event.target.id === 'catalogModal') closeCatalog(); });
   document.getElementById('catMain').addEventListener('click', event => {
+    const trackBtn = event.target.closest('[data-track-code]');
+    if(trackBtn){
+      const code = trackBtn.dataset.trackCode;
+      const taken = getTakenCourses();
+      setCourseTaken(code, !taken.has(code));
+      buildCatalog(appSem);
+      buildDashboard();
+      buildTracker();
+      toast(!taken.has(code) ? 'Mata kuliah ditandai sudah diambil' : 'Status dikembalikan ke belum diambil');
+      return;
+    }
     const btn = event.target.closest('[data-action]');
     if(!btn) return;
     const sem = Number(btn.dataset.sem);
     closeCatalog();
     if(btn.dataset.action === 'openSchedule') openSchedule(sem);
     if(btn.dataset.action === 'navImport') navImport(sem);
+    if(btn.dataset.action === 'openTracker') navTracker(sem);
+  });
+  document.getElementById('catMain').addEventListener('change', event => {
+    const select = event.target.closest('[data-plan-key][data-plan-sem]');
+    if(!select) return;
+    const sem = Number(select.dataset.planSem);
+    const ok = saveSemesterPlanValue(sem, select.dataset.planKey, select.value);
+    buildCatalog(sem);
+    buildDashboard();
+    buildTracker();
+    if(ok) toast('Rencana Semester ' + sem + ' diperbarui');
+  });
+
+  document.getElementById('trackerBack').addEventListener('click', navDashboard);
+  document.getElementById('btnTrackerPrint').addEventListener('click', printTracker);
+  document.getElementById('printPreviewClose').addEventListener('click', closePrintPreview);
+  document.getElementById('printPreviewReload').addEventListener('click', reloadPrintPreview);
+  document.getElementById('printPreviewDo').addEventListener('click', executePrintPreview);
+  document.getElementById('printPreviewModal').addEventListener('click', event => { if(event.target.id === 'printPreviewModal') closePrintPreview(); });
+  document.getElementById('btnBackupData').addEventListener('click', downloadBackupData);
+  const restoreDataInput = document.getElementById('restoreDataInput');
+  document.getElementById('btnRestoreData').addEventListener('click', () => restoreDataInput.click());
+  restoreDataInput.addEventListener('change', event => {
+    const file = event.target.files?.[0];
+    restoreBackupFile(file);
+    event.target.value = '';
+  });
+  document.getElementById('trackerSemesters').addEventListener('click', event => {
+    const btn = event.target.closest('[data-tracker-sem]');
+    if(!btn) return;
+    trackerSemester = btn.dataset.trackerSem;
+    buildTracker();
+  });
+  document.getElementById('trackerStatus').addEventListener('click', event => {
+    const btn = event.target.closest('[data-tracker-status]');
+    if(!btn) return;
+    trackerStatusFilter = btn.dataset.trackerStatus;
+    buildTracker();
+  });
+  document.getElementById('trackerCourseList').addEventListener('click', event => {
+    const planBtn = event.target.closest('[data-open-plan]');
+    if(planBtn) return openCatalog(Number(planBtn.dataset.openPlan));
+    const btn = event.target.closest('[data-track-code]');
+    if(!btn) return;
+    toggleTrackedCourse(btn.dataset.trackCode);
   });
 
   document.querySelectorAll('.vt').forEach(button => button.addEventListener('click', () => setView(button.dataset.view)));
@@ -2147,20 +3379,36 @@ function bindEvents(){
   document.getElementById('btnReimport').addEventListener('click', () => navImport(appSem || 7));
 
   ['topCopy','btnCopy','mCopy'].forEach(id => document.getElementById(id)?.addEventListener('click', doCopy));
-  ['topPrint','btnPrint','mPrint'].forEach(id => document.getElementById(id)?.addEventListener('click', () => window.print()));
+  ['topPrint','btnPrint','mPrint'].forEach(id => document.getElementById(id)?.addEventListener('click', printPlanner));
   ['topReset','btnReset','mReset'].forEach(id => document.getElementById(id)?.addEventListener('click', resetSelection));
 
   document.addEventListener('keydown', event => {
+    const printShortcut = (event.ctrlKey || event.metaKey) && String(event.key).toLowerCase() === 'p';
+    if(printShortcut){
+      const trackerView = document.getElementById('view-tracker');
+      const plannerView = document.getElementById('view-planner');
+      if(trackerView && !trackerView.hidden){ event.preventDefault(); return printTracker(); }
+      if(plannerView && !plannerView.hidden){ event.preventDefault(); return printPlanner(); }
+      return;
+    }
     if(event.key !== 'Escape') return;
-    if(!document.getElementById('catalogModal').hidden) closeCatalog();
+    if(!document.getElementById('printPreviewModal').hidden) closePrintPreview();
+    else if(!document.getElementById('catalogModal').hidden) closeCatalog();
     else if(!document.getElementById('modal').hidden) closeFormatModal();
   });
 
+  // Fallback untuk perintah Print dari menu browser. Tombol aplikasi menggunakan iframe cetak terisolasi.
+  window.addEventListener('beforeprint', () => {
+    const trackerView = document.getElementById('view-tracker');
+    const plannerView = document.getElementById('view-planner');
+    if(trackerView && !trackerView.hidden) buildTrackerPrint();
+    else if(plannerView && !plannerView.hidden && schedule) buildPrint(sortedSelected());
+  });
   window.addEventListener('resize', () => { if(fadeCheckCurrent) fadeCheckCurrent(); }, {passive:true});
 }
 
 bindEvents();
-initAccessGate();
+initApp();
 
 </script>
 </body>
